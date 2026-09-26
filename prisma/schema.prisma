@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id                          String   @id @default(uuid())
+  name                        String
+  industry                    String?
+  profitableMarginThreshold   Float    @default(20.0)
+  lowMarginThreshold          Float    @default(5.0)
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  members                     OrganizationMember[]
+  clients                     Client[]
+  uploads                     Upload[]
+  transactions                Transaction[]
+  summaries                   ClientPeriodSummary[]
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  fullName     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memberships  OrganizationMember[]
+  uploads      Upload[]
+}
+
+model OrganizationMember {
+  id             String       @id @default(uuid())
+  organizationId String
+  userId         String?
+  role           String       // "owner", "admin", "member"
+  invitedEmail   String?
+  status         String       @default("active") // "active", "invited"
+  createdAt      DateTime     @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([userId])
+}
+
+model Client {
+  id                String       @id @default(uuid())
+  organizationId    String
+  name              String
+  externalReference String?
+  isActive          Boolean      @default(true)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  transactions      Transaction[]
+  summaries         ClientPeriodSummary[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model Upload {
+  id                String       @id @default(uuid())
+  organizationId    String
+  uploadedByUserId  String
+  fileName          String
+  uploadType        String       // "sales", "cost", "combined"
+  columnMapping     String?      // JSON stringified
+  status            String       @default("completed") // "processing", "completed", "failed"
+  totalRows         Int          @default(0)
+  validRows         Int          @default(0)
+  failedRows        Int          @default(0)
+  errorLog          String?      // JSON stringified array of {rowNumber, errorMessage}
+  createdAt         DateTime     @default(now())
+
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  uploadedBy        User         @relation(fields: [uploadedByUserId], references: [id], onDelete: Cascade)
+  transactions      Transaction[]
+
+  @@index([organizationId])
+}
+
+model Transaction {
+  id              String       @id @default(uuid())
+  organizationId  String
+  clientId        String
+  uploadId        String?
+  transactionDate DateTime
+  type            String       // "revenue", "cost"
+  category        String       // e.g., "Product Sales", "Fulfillment", "Support", "Shipping", "Discounts", "Overhead"
+  amount          Float        // Always positive, sign is implied by type
+  description     String?
+  createdAt       DateTime     @default(now())
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  client          Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  upload          Upload?      @relation(fields: [uploadId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, clientId, transactionDate])
+  @@index([uploadId])
+}
+
+model ClientPeriodSummary {
+  id              String       @id @default(uuid())
+  organizationId  String
+  clientId        String
+  periodType      String       @default("month")
+  periodStartDate DateTime     // First of month
+  totalRevenue    Float        @default(0)
+  totalCost       Float        @default(0)
+  grossProfit     Float        @default(0)
+  marginPercent   Float?       // null if no revenue
+  classification  String       // "profitable", "low_margin", "loss_making", "no_revenue"
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  client          Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, periodStartDate])
+  @@index([organizationId, periodStartDate])
+}
