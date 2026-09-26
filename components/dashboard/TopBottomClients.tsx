@@ -32,27 +32,26 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
     );
   }
 
-  // Calculate max profit for proportional bar width
   const maxTopProfit = Math.max(1, ...(topClients.map((c) => c.profit) || [1]));
   const maxBottomAbsProfit = Math.max(1, ...(bottomClients.map((c) => Math.abs(c.profit)) || [1]));
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Top 5 Most Profitable Clients */}
-      <div className="glass-panel p-5 rounded-xl border border-zinc-800/80 flex flex-col justify-between">
-        <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+      <div className="p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm flex flex-col justify-between">
+        <div className="flex items-center justify-between pb-3 border-b border-[#d1d1db]">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-[#1e874c]/10 text-[#1e874c]">
               <Trophy className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">Top 5 Most Profitable Clients</h3>
-              <p className="text-xs text-zinc-400">Highest gross profit generation in period</p>
+              <h3 className="text-sm font-display font-bold text-[#121217]">Top 5 Most Profitable Accounts</h3>
+              <p className="text-xs text-[#6c6c89]">Highest gross profit generation in period</p>
             </div>
           </div>
           <Link
             href="/clients?sort=profit_desc"
-            className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium"
+            className="text-xs text-[#5423e7] hover:text-[#4518cc] flex items-center gap-1 font-semibold"
           >
             <span>View All</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -61,7 +60,7 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
 
         <div className="space-y-3 mt-4">
           {topClients.length === 0 ? (
-            <div className="py-8 text-center text-xs text-zinc-400">
+            <div className="py-8 text-center text-xs text-[#6c6c89]">
               No clients found for this period.
             </div>
           ) : (
@@ -71,32 +70,32 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
                 <Link
                   key={client.id}
                   href={`/clients/${client.id}`}
-                  className="group block p-2.5 rounded-lg hover:bg-zinc-800/50 border border-transparent hover:border-zinc-700/60 transition-all"
+                  className="group block p-3 rounded-2xl hover:bg-[#f7f7f8] border border-transparent hover:border-[#d1d1db] transition-all"
                 >
                   <div className="flex items-center justify-between text-xs mb-1.5">
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-[11px] font-bold text-zinc-400 w-4">
+                      <span className="text-[11px] font-bold text-[#6c6c89] w-4">
                         #{idx + 1}
                       </span>
-                      <span className="font-semibold text-zinc-200 group-hover:text-indigo-300 truncate">
+                      <span className="font-bold text-[#121217] group-hover:text-[#5423e7] truncate">
                         {client.name}
                       </span>
                       <ClassificationBadge classification={client.classification} showDot={false} />
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-zinc-400 tabular-nums text-[11px]">
+                      <span className="text-[#6c6c89] tabular-nums text-[11px] font-medium">
                         {formatPercent(client.marginPercent)}
                       </span>
-                      <span className="font-bold text-emerald-400 tabular-nums">
+                      <span className="font-bold text-[#1e874c] tabular-nums">
                         {formatCurrency(client.profit)}
                       </span>
                     </div>
                   </div>
 
                   {/* Horizontal Bar */}
-                  <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-[#f7f7f8] border border-[#d1d1db] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full transition-all duration-500"
+                      className="h-full bg-[#1e874c] rounded-full transition-all duration-500"
                       style={{ width: `${widthPct}%` }}
                     />
                   </div>
@@ -108,20 +107,20 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
       </div>
 
       {/* Bottom 5 Least Profitable Clients */}
-      <div className="glass-panel p-5 rounded-xl border border-zinc-800/80 flex flex-col justify-between">
-        <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-rose-500/10 text-rose-400">
+      <div className="p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm flex flex-col justify-between">
+        <div className="flex items-center justify-between pb-3 border-b border-[#d1d1db]">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-[#d50b3e]/10 text-[#d50b3e]">
               <AlertOctagon className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">Bottom 5 Least Profitable Clients</h3>
-              <p className="text-xs text-zinc-400">Lowest and negative profit accounts</p>
+              <h3 className="text-sm font-display font-bold text-[#121217]">Bottom 5 Least Profitable Accounts</h3>
+              <p className="text-xs text-[#6c6c89]">Lowest margin and loss-making accounts</p>
             </div>
           </div>
           <Link
             href="/clients?status=loss_making"
-            className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 font-medium"
+            className="text-xs text-[#d50b3e] hover:text-[#b00832] flex items-center gap-1 font-semibold"
           >
             <span>Review Losses</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -130,7 +129,7 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
 
         <div className="space-y-3 mt-4">
           {bottomClients.length === 0 ? (
-            <div className="py-8 text-center text-xs text-zinc-400">
+            <div className="py-8 text-center text-xs text-[#6c6c89]">
               No clients found for this period.
             </div>
           ) : (
@@ -141,25 +140,25 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
                 <Link
                   key={client.id}
                   href={`/clients/${client.id}`}
-                  className="group block p-2.5 rounded-lg hover:bg-zinc-800/50 border border-transparent hover:border-zinc-700/60 transition-all"
+                  className="group block p-3 rounded-2xl hover:bg-[#f7f7f8] border border-transparent hover:border-[#d1d1db] transition-all"
                 >
                   <div className="flex items-center justify-between text-xs mb-1.5">
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-[11px] font-bold text-zinc-400 w-4">
+                      <span className="text-[11px] font-bold text-[#6c6c89] w-4">
                         #{idx + 1}
                       </span>
-                      <span className="font-semibold text-zinc-200 group-hover:text-rose-300 truncate">
+                      <span className="font-bold text-[#121217] group-hover:text-[#d50b3e] truncate">
                         {client.name}
                       </span>
                       <ClassificationBadge classification={client.classification} showDot={false} />
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-zinc-400 tabular-nums text-[11px]">
+                      <span className="text-[#6c6c89] tabular-nums text-[11px] font-medium">
                         {formatPercent(client.marginPercent)}
                       </span>
                       <span
                         className={`font-bold tabular-nums ${
-                          isLoss ? "text-rose-400" : "text-amber-400"
+                          isLoss ? "text-[#d50b3e]" : "text-[#996500]"
                         }`}
                       >
                         {formatCurrency(client.profit)}
@@ -168,12 +167,10 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
                   </div>
 
                   {/* Horizontal Bar */}
-                  <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-[#f7f7f8] border border-[#d1d1db] rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
-                        isLoss
-                          ? "bg-gradient-to-r from-rose-600 to-rose-400"
-                          : "bg-gradient-to-r from-amber-600 to-amber-400"
+                        isLoss ? "bg-[#d50b3e]" : "bg-[#ffc233]"
                       }`}
                       style={{ width: `${widthPct}%` }}
                     />

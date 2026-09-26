@@ -180,83 +180,104 @@ export default function UploadsPage() {
       pageTitle="Data Uploads & Ingestion"
       pageDescription="Import sales revenue and cost expenses via CSV with automatic field mapping and validation"
     >
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Upload Wizard Section */}
         {role !== "member" ? (
-          <div className="glass-panel p-6 rounded-xl border border-zinc-800/80">
+          <div className="lemon-card p-6 sm:p-10">
             {step === "idle" ? (
-              <div className="space-y-5">
-                {/* Upload Format Selector & Template Links */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-zinc-800">
+              <div className="space-y-6">
+                {/* Header & Templates */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#d1d1db]">
                   <div>
-                    <h3 className="text-sm font-semibold text-white">Import New CSV File</h3>
-                    <p className="text-xs text-zinc-400">
-                      Upload your transaction data. Up to 10MB per file.
+                    <div className="eyebrow text-[#6c6c89] text-[12px] uppercase tracking-[2px] font-semibold mb-1">
+                      Data Ingestion
+                    </div>
+                    <h3 className="font-display text-xl sm:text-2xl font-normal text-[#121217]">
+                      Import New CSV File
+                    </h3>
+                    <p className="text-xs text-[#6c6c89] mt-0.5">
+                      Upload your transaction data. Maximum file size is 10MB per batch.
                     </p>
                   </div>
 
                   {/* Sample CSV Download buttons */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-zinc-400 hidden sm:inline">Templates:</span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs text-[#6c6c89] font-medium hidden sm:inline">Templates:</span>
                     <a
                       href="/api/uploads/template?type=combined"
                       download
-                      className="px-2.5 py-1 rounded bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-[11px] font-medium text-zinc-300 flex items-center gap-1.5 transition-colors"
+                      className="px-3 py-1.5 rounded-full bg-[#f7f7f8] hover:bg-[#ffc233]/20 border border-[#d1d1db] text-[11px] font-medium text-[#121217] flex items-center gap-1.5 transition-colors"
                     >
-                      <Download className="w-3 h-3 text-indigo-400" />
+                      <Download className="w-3 h-3 text-[#5423e7]" />
                       <span>Combined CSV</span>
                     </a>
                     <a
                       href="/api/uploads/template?type=sales"
                       download
-                      className="px-2.5 py-1 rounded bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-[11px] font-medium text-zinc-300 flex items-center gap-1.5 transition-colors"
+                      className="px-3 py-1.5 rounded-full bg-[#f7f7f8] hover:bg-[#ffc233]/20 border border-[#d1d1db] text-[11px] font-medium text-[#121217] flex items-center gap-1.5 transition-colors"
                     >
-                      <Download className="w-3 h-3 text-indigo-400" />
+                      <Download className="w-3 h-3 text-[#5423e7]" />
                       <span>Sales Only</span>
                     </a>
                     <a
                       href="/api/uploads/template?type=cost"
                       download
-                      className="px-2.5 py-1 rounded bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-[11px] font-medium text-zinc-300 flex items-center gap-1.5 transition-colors"
+                      className="px-3 py-1.5 rounded-full bg-[#f7f7f8] hover:bg-[#ffc233]/20 border border-[#d1d1db] text-[11px] font-medium text-[#121217] flex items-center gap-1.5 transition-colors"
                     >
-                      <Download className="w-3 h-3 text-indigo-400" />
+                      <Download className="w-3 h-3 text-[#5423e7]" />
                       <span>Costs Only</span>
                     </a>
                   </div>
                 </div>
 
-                {/* Upload Type Radio */}
-                <div className="flex flex-wrap gap-2 text-xs">
-                  {[
-                    {
-                      key: "combined",
-                      label: "Combined File (Revenue & Cost)",
-                      desc: "Has 'Type' column",
-                    },
-                    {
-                      key: "sales",
-                      label: "Sales / Revenue File",
-                      desc: "All rows treated as revenue",
-                    },
-                    {
-                      key: "cost",
-                      label: "Cost / Expense File",
-                      desc: "All rows treated as cost",
-                    },
-                  ].map((t) => (
-                    <button
-                      key={t.key}
-                      onClick={() => setUploadType(t.key as any)}
-                      className={`px-3 py-2 rounded-xl text-left border transition-all ${
-                        uploadType === t.key
-                          ? "bg-indigo-600/15 border-indigo-500 text-white"
-                          : "bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-zinc-200"
-                      }`}
-                    >
-                      <div className="font-semibold text-xs">{t.label}</div>
-                      <div className="text-[10px] text-zinc-400">{t.desc}</div>
-                    </button>
-                  ))}
+                {/* Upload Type Radio Selection */}
+                <div>
+                  <label className="block text-xs font-semibold text-[#121217] mb-2">
+                    Select File Structure
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {[
+                      {
+                        key: "combined",
+                        label: "Combined File",
+                        desc: "Contains both Revenue & Cost with a Type column",
+                      },
+                      {
+                        key: "sales",
+                        label: "Sales / Revenue File",
+                        desc: "All transaction rows treated as income",
+                      },
+                      {
+                        key: "cost",
+                        label: "Cost / Expense File",
+                        desc: "All transaction rows treated as expense",
+                      },
+                    ].map((t) => {
+                      const isSelected = uploadType === t.key;
+                      return (
+                        <button
+                          key={t.key}
+                          type="button"
+                          onClick={() => setUploadType(t.key as any)}
+                          className={`p-3.5 rounded-2xl text-left border transition-all ${
+                            isSelected
+                              ? "bg-[#5423e7]/5 border-[#5423e7] shadow-sm"
+                              : "bg-[#f7f7f8] border-[#d1d1db] hover:border-[#121217]/40"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-semibold text-xs text-[#121217]">{t.label}</span>
+                            {isSelected && (
+                              <span className="w-2 h-2 rounded-full bg-[#5423e7]" />
+                            )}
+                          </div>
+                          <div className="text-[11px] text-[#6c6c89] mt-1 leading-relaxed">
+                            {t.desc}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 {/* Drag and Drop Zone */}
@@ -269,7 +290,7 @@ export default function UploadsPage() {
                     }
                   }}
                   onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-zinc-700 hover:border-indigo-500/60 bg-zinc-900/40 hover:bg-zinc-900/80 rounded-2xl p-8 sm:p-12 text-center cursor-pointer transition-all duration-200 group"
+                  className="border-2 border-dashed border-[#d1d1db] hover:border-[#5423e7] bg-[#f7f7f8] hover:bg-white rounded-3xl p-8 sm:p-12 text-center cursor-pointer transition-all duration-200 group"
                 >
                   <input
                     ref={fileInputRef}
@@ -283,17 +304,17 @@ export default function UploadsPage() {
                     }}
                   />
 
-                  <div className="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 rounded-2xl bg-[#5423e7]/10 text-[#5423e7] flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                     {isParsing ? (
-                      <RefreshCw className="w-6 h-6 animate-spin" />
+                      <RefreshCw className="w-6 h-6 animate-spin text-[#5423e7]" />
                     ) : (
-                      <UploadCloud className="w-6 h-6" />
+                      <UploadCloud className="w-7 h-7 text-[#5423e7]" />
                     )}
                   </div>
-                  <h4 className="text-sm font-semibold text-white mb-1">
+                  <h4 className="font-display text-base font-normal text-[#121217] mb-1">
                     {isParsing ? "Analyzing CSV Headers..." : "Click or drag CSV file to upload"}
                   </h4>
-                  <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+                  <p className="text-xs text-[#6c6c89] max-w-sm mx-auto">
                     Supported format: Comma-separated (.csv). Automatic header detection for Client,
                     Date, Amount, Category, and Type.
                   </p>
@@ -302,15 +323,17 @@ export default function UploadsPage() {
             ) : (
               /* Step 2: Column Mapping Screen */
               <div className="space-y-6">
-                <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xs font-bold">
+                <div className="flex items-center justify-between pb-4 border-b border-[#d1d1db]">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#5423e7] text-white flex items-center justify-center text-xs font-bold">
                       2
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-white">Map CSV Columns</h3>
-                      <p className="text-xs text-zinc-400">
-                        File: {parsedData?.fileName} ({parsedData?.totalRows} rows found)
+                      <h3 className="font-display text-lg font-normal text-[#121217]">
+                        Map CSV Columns
+                      </h3>
+                      <p className="text-xs text-[#6c6c89]">
+                        File: <span className="font-semibold text-[#121217]">{parsedData?.fileName}</span> ({parsedData?.totalRows} rows identified)
                       </p>
                     </div>
                   </div>
@@ -319,25 +342,25 @@ export default function UploadsPage() {
                       setStep("idle");
                       setParsedData(null);
                     }}
-                    className="text-xs text-zinc-400 hover:text-white px-2.5 py-1 rounded bg-zinc-800 border border-zinc-700"
+                    className="text-xs text-[#6c6c89] hover:text-[#121217] px-3 py-1.5 rounded-lg bg-white border border-[#d1d1db] transition-colors"
                   >
                     Cancel
                   </button>
                 </div>
 
                 {/* Mapping Selectors Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-zinc-900/60 p-4 rounded-xl border border-zinc-800">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-[#f7f7f8] p-5 rounded-2xl border border-[#d1d1db]">
                   <div>
-                    <label className="text-xs font-medium text-white flex items-center gap-1 mb-1.5">
+                    <label className="text-xs font-semibold text-[#121217] flex items-center gap-1 mb-1.5">
                       <span>Client / Account Name</span>
-                      <span className="text-rose-400">*</span>
+                      <span className="text-[#d50b3e]">*</span>
                     </label>
                     <select
                       value={columnMapping.clientName || ""}
                       onChange={(e) =>
                         setColumnMapping({ ...columnMapping, clientName: e.target.value })
                       }
-                      className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2 text-zinc-200 focus:outline-none focus:border-indigo-500"
+                      className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
                     >
                       <option value="">-- Select Column --</option>
                       {parsedData?.headers.map((h) => (
@@ -349,16 +372,16 @@ export default function UploadsPage() {
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-white flex items-center gap-1 mb-1.5">
+                    <label className="text-xs font-semibold text-[#121217] flex items-center gap-1 mb-1.5">
                       <span>Transaction Date</span>
-                      <span className="text-rose-400">*</span>
+                      <span className="text-[#d50b3e]">*</span>
                     </label>
                     <select
                       value={columnMapping.transactionDate || ""}
                       onChange={(e) =>
                         setColumnMapping({ ...columnMapping, transactionDate: e.target.value })
                       }
-                      className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2 text-zinc-200 focus:outline-none focus:border-indigo-500"
+                      className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
                     >
                       <option value="">-- Select Column --</option>
                       {parsedData?.headers.map((h) => (
@@ -370,16 +393,16 @@ export default function UploadsPage() {
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-white flex items-center gap-1 mb-1.5">
+                    <label className="text-xs font-semibold text-[#121217] flex items-center gap-1 mb-1.5">
                       <span>Amount ($)</span>
-                      <span className="text-rose-400">*</span>
+                      <span className="text-[#d50b3e]">*</span>
                     </label>
                     <select
                       value={columnMapping.amount || ""}
                       onChange={(e) =>
                         setColumnMapping({ ...columnMapping, amount: e.target.value })
                       }
-                      className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2 text-zinc-200 focus:outline-none focus:border-indigo-500"
+                      className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
                     >
                       <option value="">-- Select Column --</option>
                       {parsedData?.headers.map((h) => (
@@ -392,7 +415,7 @@ export default function UploadsPage() {
 
                   {uploadType === "combined" && (
                     <div>
-                      <label className="text-xs font-medium text-white flex items-center gap-1 mb-1.5">
+                      <label className="text-xs font-semibold text-[#121217] flex items-center gap-1 mb-1.5">
                         <span>Type (Revenue vs. Cost)</span>
                       </label>
                       <select
@@ -400,7 +423,7 @@ export default function UploadsPage() {
                         onChange={(e) =>
                           setColumnMapping({ ...columnMapping, type: e.target.value })
                         }
-                        className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2 text-zinc-200 focus:outline-none focus:border-indigo-500"
+                        className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
                       >
                         <option value="">-- None (Default: Revenue) --</option>
                         {parsedData?.headers.map((h) => (
@@ -413,7 +436,7 @@ export default function UploadsPage() {
                   )}
 
                   <div>
-                    <label className="text-xs font-medium text-white flex items-center gap-1 mb-1.5">
+                    <label className="text-xs font-semibold text-[#121217] flex items-center gap-1 mb-1.5">
                       <span>Category / Line Item</span>
                     </label>
                     <select
@@ -421,7 +444,7 @@ export default function UploadsPage() {
                       onChange={(e) =>
                         setColumnMapping({ ...columnMapping, category: e.target.value })
                       }
-                      className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2 text-zinc-200 focus:outline-none focus:border-indigo-500"
+                      className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
                     >
                       <option value="">-- None (Auto-Assign) --</option>
                       {parsedData?.headers.map((h) => (
@@ -433,7 +456,7 @@ export default function UploadsPage() {
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-white flex items-center gap-1 mb-1.5">
+                    <label className="text-xs font-semibold text-[#121217] flex items-center gap-1 mb-1.5">
                       <span>Description / Memo</span>
                     </label>
                     <select
@@ -441,7 +464,7 @@ export default function UploadsPage() {
                       onChange={(e) =>
                         setColumnMapping({ ...columnMapping, description: e.target.value })
                       }
-                      className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2 text-zinc-200 focus:outline-none focus:border-indigo-500"
+                      className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
                     >
                       <option value="">-- None (Optional) --</option>
                       {parsedData?.headers.map((h) => (
@@ -455,23 +478,23 @@ export default function UploadsPage() {
 
                 {/* Sample Rows Preview */}
                 <div>
-                  <h4 className="text-xs font-semibold text-white mb-2">First 5 Sample Rows</h4>
-                  <div className="overflow-x-auto rounded-lg border border-zinc-800">
+                  <h4 className="text-xs font-semibold text-[#121217] mb-2">First 5 Sample Rows</h4>
+                  <div className="overflow-x-auto rounded-xl border border-[#d1d1db]">
                     <table className="w-full text-left text-[11px]">
-                      <thead className="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
+                      <thead className="bg-[#f7f7f8] border-b border-[#d1d1db] text-[#6c6c89] font-medium">
                         <tr>
                           {parsedData?.headers.map((h) => (
-                            <th key={h} className="p-2.5 whitespace-nowrap">
+                            <th key={h} className="p-3 whitespace-nowrap">
                               {h}
                             </th>
                           ))}
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-zinc-850">
+                      <tbody className="divide-y divide-[#d1d1db] bg-white">
                         {parsedData?.sampleRows.slice(0, 5).map((row, i) => (
-                          <tr key={i} className="hover:bg-zinc-900/40">
+                          <tr key={i} className="hover:bg-[#f7f7f8]">
                             {parsedData?.headers.map((h) => (
-                              <td key={h} className="p-2.5 text-zinc-300 whitespace-nowrap">
+                              <td key={h} className="p-3 text-[#121217] whitespace-nowrap">
                                 {row[h] || "—"}
                               </td>
                             ))}
@@ -483,20 +506,20 @@ export default function UploadsPage() {
                 </div>
 
                 {/* Confirm & Process Button */}
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-800">
+                <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#d1d1db]">
                   <button
                     onClick={() => {
                       setStep("idle");
                       setParsedData(null);
                     }}
-                    className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-200 transition-colors"
+                    className="px-4 py-2.5 rounded-lg bg-white hover:bg-[#f7f7f8] border border-[#d1d1db] text-xs font-medium text-[#121217] transition-colors"
                   >
                     Back
                   </button>
                   <button
                     onClick={handleConfirmImport}
                     disabled={isImporting}
-                    className="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-lg shadow-indigo-600/20 transition-all flex items-center gap-2 disabled:opacity-50"
+                    className="px-6 py-2.5 rounded-lg bg-[#121217] hover:bg-black text-xs font-medium text-white shadow-sm transition-all flex items-center gap-2 disabled:opacity-50"
                   >
                     {isImporting ? (
                       <>
@@ -507,6 +530,7 @@ export default function UploadsPage() {
                       <>
                         <Check className="w-3.5 h-3.5" />
                         <span>Confirm & Import Data</span>
+                        <ArrowRight className="w-3.5 h-3.5 ml-1" />
                       </>
                     )}
                   </button>
@@ -515,43 +539,49 @@ export default function UploadsPage() {
             )}
           </div>
         ) : (
-          <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/40 text-xs text-zinc-400 flex items-center gap-2">
-            <Info className="w-4 h-4 text-indigo-400 shrink-0" />
+          <div className="p-5 rounded-2xl border border-[#d1d1db] bg-white text-xs text-[#6c6c89] flex items-center gap-3">
+            <Info className="w-4 h-4 text-[#5423e7] shrink-0" />
             <span>You have Member (read-only) access. File uploads require Admin or Owner permissions.</span>
           </div>
         )}
 
         {/* Uploads History Table */}
-        <div className="glass-panel rounded-xl border border-zinc-800/80 overflow-hidden">
-          <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+        <div className="lemon-card p-6 sm:p-8">
+          <div className="pb-5 border-b border-[#d1d1db] flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-white">Import History</h3>
-              <p className="text-xs text-zinc-400">Past data uploads with processing statistics and rollback</p>
+              <div className="eyebrow text-[#6c6c89] text-[12px] uppercase tracking-[2px] font-semibold mb-1">
+                Audit Trail
+              </div>
+              <h3 className="font-display text-xl font-normal text-[#121217]">Import History</h3>
+              <p className="text-xs text-[#6c6c89] mt-0.5">
+                Past data uploads with processing statistics and instant rollback
+              </p>
             </div>
             <button
               onClick={fetchUploads}
-              className="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-zinc-300"
+              className="p-2 rounded-lg bg-white hover:bg-[#f7f7f8] border border-[#d1d1db] text-[#121217] transition-colors"
+              title="Refresh History"
             >
               <RefreshCw className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto mt-4">
             <table className="w-full text-left text-xs">
-              <thead className="bg-zinc-900/80 border-b border-zinc-800 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
+              <thead className="bg-[#f7f7f8] border-b border-[#d1d1db] text-[11px] font-semibold text-[#6c6c89] uppercase tracking-wider">
                 <tr>
-                  <th className="py-3 px-4">File Name</th>
-                  <th className="py-3 px-4">Type</th>
-                  <th className="py-3 px-4">Uploaded By</th>
-                  <th className="py-3 px-4">Date</th>
-                  <th className="py-3 px-4 text-right">Total Rows</th>
-                  <th className="py-3 px-4 text-right">Valid Rows</th>
-                  <th className="py-3 px-4 text-right">Failed Rows</th>
-                  <th className="py-3 px-4 text-center">Status</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="py-3.5 px-4">File Name</th>
+                  <th className="py-3.5 px-4">Type</th>
+                  <th className="py-3.5 px-4">Uploaded By</th>
+                  <th className="py-3.5 px-4">Date</th>
+                  <th className="py-3.5 px-4 text-right">Total Rows</th>
+                  <th className="py-3.5 px-4 text-right">Valid Rows</th>
+                  <th className="py-3.5 px-4 text-right">Failed Rows</th>
+                  <th className="py-3.5 px-4 text-center">Status</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/60">
+              <tbody className="divide-y divide-[#d1d1db]">
                 {loading ? (
                   <tr>
                     <td colSpan={9} className="p-4">
@@ -560,49 +590,49 @@ export default function UploadsPage() {
                   </tr>
                 ) : uploads.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="py-12 text-center text-xs text-zinc-400">
-                      No files uploaded yet.
+                    <td colSpan={9} className="py-12 text-center text-xs text-[#6c6c89]">
+                      No files uploaded yet. Upload a CSV to get started.
                     </td>
                   </tr>
                 ) : (
                   uploads.map((item) => (
-                    <tr key={item.id} className="hover:bg-zinc-850/40">
-                      <td className="py-3 px-4 font-semibold text-white flex items-center gap-2">
-                        <FileText className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                    <tr key={item.id} className="hover:bg-[#f7f7f8] transition-colors">
+                      <td className="py-3.5 px-4 font-medium text-[#121217] flex items-center gap-2">
+                        <FileText className="w-4 h-4 text-[#5423e7] shrink-0" />
                         <span className="truncate max-w-[180px]">{item.fileName}</span>
                       </td>
-                      <td className="py-3 px-4 capitalize text-zinc-300">{item.uploadType}</td>
-                      <td className="py-3 px-4 text-zinc-400">
+                      <td className="py-3.5 px-4 capitalize text-[#6c6c89]">{item.uploadType}</td>
+                      <td className="py-3.5 px-4 text-[#6c6c89]">
                         {item.uploadedBy?.fullName || "User"}
                       </td>
-                      <td className="py-3 px-4 text-zinc-400">
+                      <td className="py-3.5 px-4 text-[#6c6c89]">
                         {new Date(item.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="py-3 px-4 text-right tabular-nums text-zinc-300">
+                      <td className="py-3.5 px-4 text-right tabular-nums text-[#121217]">
                         {item.totalRows}
                       </td>
-                      <td className="py-3 px-4 text-right tabular-nums font-semibold text-emerald-400">
+                      <td className="py-3.5 px-4 text-right tabular-nums font-semibold text-[#1e874c]">
                         {item.validRows}
                       </td>
-                      <td className="py-3 px-4 text-right tabular-nums font-semibold">
+                      <td className="py-3.5 px-4 text-right tabular-nums font-semibold">
                         {item.failedRows > 0 ? (
-                          <span className="text-rose-400">{item.failedRows}</span>
+                          <span className="text-[#d50b3e]">{item.failedRows}</span>
                         ) : (
-                          <span className="text-zinc-500">0</span>
+                          <span className="text-[#6c6c89]">0</span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-center">
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <td className="py-3.5 px-4 text-center">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-[#1e874c]/10 text-[#1e874c]">
                           <CheckCircle2 className="w-3 h-3" />
                           <span>Completed</span>
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-right">
+                      <td className="py-3.5 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">
                           {item.failedRows > 0 && (
                             <button
                               onClick={() => setViewErrorsItem(item)}
-                              className="px-2 py-1 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-[11px] font-medium border border-rose-500/20"
+                              className="px-2.5 py-1 rounded-full bg-[#d50b3e]/10 hover:bg-[#d50b3e]/20 text-[#d50b3e] text-[11px] font-medium border border-[#d50b3e]/20 transition-colors"
                             >
                               Errors ({item.failedRows})
                             </button>
@@ -611,7 +641,7 @@ export default function UploadsPage() {
                             <button
                               onClick={() => setDeleteConfirmId(item.id)}
                               title="Delete Upload and Rollback"
-                              className="p-1 rounded text-zinc-400 hover:text-rose-400 hover:bg-zinc-800 transition-colors"
+                              className="p-1.5 rounded-lg text-[#6c6c89] hover:text-[#d50b3e] hover:bg-[#f7f7f8] transition-colors"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -629,33 +659,33 @@ export default function UploadsPage() {
 
       {/* Delete / Rollback Confirmation Modal */}
       {deleteConfirmId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="glass-panel p-6 rounded-2xl border border-zinc-700 max-w-md w-full space-y-4">
-            <div className="flex items-center gap-3 text-rose-400">
-              <div className="p-2 rounded-xl bg-rose-500/10 border border-rose-500/20">
-                <AlertTriangle className="w-6 h-6" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#d1d1db] shadow-2xl max-w-md w-full space-y-4">
+            <div className="flex items-center gap-3 text-[#d50b3e]">
+              <div className="p-3 rounded-2xl bg-[#d50b3e]/10">
+                <AlertTriangle className="w-6 h-6 text-[#d50b3e]" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Delete Upload & Rollback?</h3>
-                <p className="text-xs text-zinc-400">This action will delete all imported records.</p>
+                <h3 className="text-base font-bold text-[#121217]">Delete Upload & Rollback?</h3>
+                <p className="text-xs text-[#6c6c89]">This action will delete all imported records.</p>
               </div>
             </div>
 
-            <p className="text-xs text-zinc-300 leading-relaxed">
+            <p className="text-xs text-[#6c6c89] leading-relaxed">
               Deleting this upload will permanently remove all transactions associated with this file
               and automatically trigger an idempotent recalculation of client profitability summaries.
             </p>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#d1d1db]">
               <button
                 onClick={() => setDeleteConfirmId(null)}
-                className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-medium text-zinc-300"
+                className="px-4 py-2 rounded-lg bg-white hover:bg-[#f7f7f8] border border-[#d1d1db] text-xs font-medium text-[#121217]"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleDeleteUpload(deleteConfirmId)}
-                className="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white shadow-lg shadow-rose-600/25"
+                className="px-4 py-2 rounded-lg bg-[#d50b3e] hover:bg-[#d50b3e]/90 text-xs font-medium text-white shadow-sm"
               >
                 Delete & Recalculate
               </button>
@@ -666,24 +696,24 @@ export default function UploadsPage() {
 
       {/* View Errors Modal */}
       {viewErrorsItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="glass-panel p-6 rounded-2xl border border-zinc-700 max-w-xl w-full space-y-4 max-h-[80vh] flex flex-col">
-            <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
-              <div className="flex items-center gap-2 text-rose-400">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#d1d1db] shadow-2xl max-w-xl w-full space-y-4 max-h-[80vh] flex flex-col">
+            <div className="flex items-center justify-between pb-3 border-b border-[#d1d1db]">
+              <div className="flex items-center gap-2 text-[#d50b3e]">
                 <AlertCircle className="w-5 h-5" />
-                <h3 className="text-sm font-bold text-white">
+                <h3 className="text-sm font-bold text-[#121217]">
                   Failed Rows Error Log — {viewErrorsItem.fileName}
                 </h3>
               </div>
               <button
                 onClick={() => setViewErrorsItem(null)}
-                className="text-zinc-400 hover:text-white"
+                className="text-[#6c6c89] hover:text-[#121217]"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="overflow-y-auto space-y-2 flex-1 pr-1 text-xs">
+            <div className="overflow-y-auto space-y-2.5 flex-1 pr-1 text-xs">
               {viewErrorsItem.errorLog ? (
                 (() => {
                   try {
@@ -691,27 +721,27 @@ export default function UploadsPage() {
                     return errs.map((e: any, idx: number) => (
                       <div
                         key={idx}
-                        className="p-3 rounded-lg bg-rose-950/20 border border-rose-500/30 text-rose-300 space-y-1"
+                        className="p-3.5 rounded-xl bg-[#f7f7f8] border border-[#d1d1db] text-[#121217] space-y-1"
                       >
-                        <div className="font-semibold text-rose-200">
+                        <div className="font-semibold text-[#d50b3e]">
                           Row {e.rowNumber} • Field: {e.field}
                         </div>
-                        <div className="text-[11px] text-zinc-300">{e.message}</div>
+                        <div className="text-[11px] text-[#6c6c89]">{e.message}</div>
                       </div>
                     ));
                   } catch {
-                    return <div className="text-zinc-400">Could not parse error log.</div>;
+                    return <div className="text-[#6c6c89]">Could not parse error log.</div>;
                   }
                 })()
               ) : (
-                <div className="text-zinc-400">No error details available.</div>
+                <div className="text-[#6c6c89]">No error details available.</div>
               )}
             </div>
 
-            <div className="pt-2 border-t border-zinc-800 flex justify-end">
+            <div className="pt-3 border-t border-[#d1d1db] flex justify-end">
               <button
                 onClick={() => setViewErrorsItem(null)}
-                className="px-4 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white"
+                className="px-4 py-2 rounded-lg bg-[#121217] text-white text-xs font-medium"
               >
                 Close
               </button>

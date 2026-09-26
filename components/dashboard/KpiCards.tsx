@@ -55,23 +55,21 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
   const renderDelta = (delta: number, inverse = false, isPercentPoints = false) => {
     if (delta === 0) {
       return (
-        <span className="inline-flex items-center text-xs text-zinc-400 font-medium">
+        <span className="inline-flex items-center text-xs text-[#6c6c89] font-medium">
           <Minus className="w-3 h-3 mr-0.5" /> 0.0%
         </span>
       );
     }
 
     const isPositive = delta > 0;
-    // For costs, higher is worse (unless inverse is true)
     const isGood = inverse ? !isPositive : isPositive;
-
     const sign = isPositive ? "+" : "";
     const suffix = isPercentPoints ? " pts" : "%";
 
     return (
       <span
-        className={`inline-flex items-center text-xs font-semibold ${
-          isGood ? "text-emerald-400" : "text-rose-400"
+        className={`inline-flex items-center text-xs font-bold ${
+          isGood ? "text-[#1e874c]" : "text-[#d50b3e]"
         }`}
       >
         {isPositive ? (
@@ -93,9 +91,9 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
       delta: renderDelta(data.revenueDelta),
       subtext: "vs prior period",
       icon: DollarSign,
-      color: "text-indigo-400",
-      bgColor: "bg-indigo-500/10",
-      borderColor: "border-zinc-800/80",
+      color: "text-[#5423e7]",
+      bgColor: "bg-[#5423e7]/10",
+      borderColor: "border-[#d1d1db]",
     },
     {
       title: "Total Costs",
@@ -103,9 +101,9 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
       delta: renderDelta(data.costDelta, true),
       subtext: "vs prior period",
       icon: TrendingDown,
-      color: "text-amber-400",
-      bgColor: "bg-amber-500/10",
-      borderColor: "border-zinc-800/80",
+      color: "text-[#6c6c89]",
+      bgColor: "bg-[#6c6c89]/10",
+      borderColor: "border-[#d1d1db]",
     },
     {
       title: "Gross Profit",
@@ -113,9 +111,9 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
       delta: renderDelta(data.profitDelta),
       subtext: "net operating margin",
       icon: TrendingUp,
-      color: data.grossProfit >= 0 ? "text-emerald-400" : "text-rose-400",
-      bgColor: data.grossProfit >= 0 ? "bg-emerald-500/10" : "bg-rose-500/10",
-      borderColor: "border-zinc-800/80",
+      color: data.grossProfit >= 0 ? "text-[#1e874c]" : "text-[#d50b3e]",
+      bgColor: data.grossProfit >= 0 ? "bg-[#1e874c]/10" : "bg-[#d50b3e]/10",
+      borderColor: "border-[#d1d1db]",
     },
     {
       title: "Overall Margin %",
@@ -125,34 +123,34 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
       icon: Percent,
       color:
         data.marginPercent !== null && data.marginPercent >= 20
-          ? "text-emerald-400"
+          ? "text-[#1e874c]"
           : data.marginPercent !== null && data.marginPercent >= 5
-          ? "text-amber-400"
-          : "text-rose-400",
-      bgColor: "bg-indigo-500/10",
-      borderColor: "border-zinc-800/80",
+          ? "text-[#996500]"
+          : "text-[#d50b3e]",
+      bgColor: "bg-[#5423e7]/10",
+      borderColor: "border-[#d1d1db]",
     },
     {
       title: "Active Clients",
       value: data.activeClientsCount.toString(),
       delta: (
-        <span className="text-xs text-zinc-400">
+        <span className="text-xs text-[#6c6c89] font-medium">
           {data.activeClientsDelta >= 0 ? `+${data.activeClientsDelta}` : data.activeClientsDelta} accounts
         </span>
       ),
       subtext: "billed in period",
       icon: Users,
-      color: "text-sky-400",
-      bgColor: "bg-sky-500/10",
-      borderColor: "border-zinc-800/80",
+      color: "text-[#0075ad]",
+      bgColor: "bg-[#0075ad]/10",
+      borderColor: "border-[#d1d1db]",
     },
     {
       title: "Loss-Making Clients",
       value: data.lossMakingCount.toString(),
       delta: (
         <span
-          className={`text-xs font-semibold ${
-            data.lossMakingCount > 0 ? "text-rose-400" : "text-emerald-400"
+          className={`text-xs font-bold ${
+            data.lossMakingCount > 0 ? "text-[#d50b3e]" : "text-[#1e874c]"
           }`}
         >
           {data.lossMakingCount > 0
@@ -162,9 +160,9 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
       ),
       subtext: data.lossMakingCount > 0 ? "requires immediate action" : "healthy margin portfolio",
       icon: AlertTriangle,
-      color: data.lossMakingCount > 0 ? "text-rose-400" : "text-emerald-400",
-      bgColor: data.lossMakingCount > 0 ? "bg-rose-500/15" : "bg-emerald-500/10",
-      borderColor: data.lossMakingCount > 0 ? "border-rose-500/40" : "border-zinc-800/80",
+      color: data.lossMakingCount > 0 ? "text-[#d50b3e]" : "text-[#1e874c]",
+      bgColor: data.lossMakingCount > 0 ? "bg-[#d50b3e]/15" : "bg-[#1e874c]/10",
+      borderColor: data.lossMakingCount > 0 ? "border-[#d50b3e]/40" : "border-[#d1d1db]",
       highlight: data.lossMakingCount > 0,
     },
   ];
@@ -176,24 +174,24 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
         return (
           <div
             key={i}
-            className={`glass-panel p-4 rounded-xl border ${c.borderColor} flex flex-col justify-between transition-all hover:border-zinc-700 ${
-              c.highlight ? "bg-rose-950/20 shadow-lg shadow-rose-950/20" : ""
+            className={`p-5 rounded-[24px] bg-white border ${c.borderColor} shadow-sm flex flex-col justify-between transition-all hover:shadow-md ${
+              c.highlight ? "bg-[#d50b3e]/5" : ""
             }`}
           >
             <div className="flex items-center justify-between gap-2 mb-2">
-              <span className="text-xs font-medium text-zinc-400 truncate">{c.title}</span>
+              <span className="text-xs font-semibold text-[#6c6c89] truncate">{c.title}</span>
               <div className={`p-1.5 rounded-lg ${c.bgColor} ${c.color} shrink-0`}>
                 <Icon className="w-3.5 h-3.5" />
               </div>
             </div>
 
             <div className="space-y-1">
-              <div className="text-xl font-bold tracking-tight text-white tabular-nums">
+              <div className="text-2xl font-display font-bold tracking-tight text-[#121217] tabular-nums">
                 {c.value}
               </div>
               <div className="flex items-center justify-between gap-1 pt-0.5">
                 <div>{c.delta}</div>
-                <span className="text-[10px] text-zinc-400 truncate">{c.subtext}</span>
+                <span className="text-[10px] text-[#6c6c89] truncate">{c.subtext}</span>
               </div>
             </div>
           </div>

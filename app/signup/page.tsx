@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Layers,
   ArrowRight,
   Sparkles,
   UploadCloud,
@@ -85,27 +84,31 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090a0f] text-zinc-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-[#f7f7f8] text-[#121217] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-body">
+      {/* Decorative subtle brand background circle */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#5423e7]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#ffc233]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-lg relative z-10">
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-            <Layers className="w-5 h-5 text-white" />
+        {/* Brand Logo */}
+        <Link href="/" className="flex items-center justify-center gap-2.5 mb-6 group">
+          <div className="w-9 h-9 rounded-2xl bg-[#ffc233] flex items-center justify-center shadow-sm text-lg group-hover:scale-105 transition-transform">
+            🍋
           </div>
-          <span className="text-2xl font-bold tracking-tight text-white">ProfitLens</span>
-        </div>
+          <span className="font-display text-2xl font-normal tracking-tight text-[#121217]">
+            profitlens
+          </span>
+        </Link>
 
-        <h2 className="text-center text-xl font-bold tracking-tight text-white">
+        <h2 className="text-center font-display text-2xl sm:text-3xl font-normal tracking-tight text-[#121217]">
           {step === 1 ? "Create your company workspace" : "How would you like to start?"}
         </h2>
-        <p className="mt-2 text-center text-xs text-zinc-400">
+        <p className="mt-1.5 text-center text-xs text-[#6c6c89]">
           {step === 1 ? (
             <>
               Already have an account?{" "}
-              <Link href="/login" className="font-semibold text-indigo-400 hover:text-indigo-300">
-                Log in
+              <Link href="/login" className="font-medium text-[#5423e7] hover:underline">
+                Sign in
               </Link>
             </>
           ) : (
@@ -115,10 +118,10 @@ export default function SignupPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-lg relative z-10 px-4 sm:px-0">
-        <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-zinc-800 shadow-2xl space-y-6">
+        <div className="bg-white p-6 sm:p-10 rounded-[32px] sm:rounded-[40px] border border-[#d1d1db] shadow-[0_4px_24px_rgba(18,18,23,0.06)] space-y-6">
           {authError && (
-            <div className="p-3 rounded-lg border border-rose-500/30 bg-rose-500/10 text-xs text-rose-300 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <div className="p-3.5 rounded-xl border border-[#d50b3e]/20 bg-[#d50b3e]/5 text-xs text-[#d50b3e] flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-[#d50b3e] shrink-0" />
               <span>{authError}</span>
             </div>
           )}
@@ -127,7 +130,7 @@ export default function SignupPage() {
             <form onSubmit={handleStep1Submit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#121217] mb-1.5">
                     Your Full Name
                   </label>
                   <input
@@ -135,12 +138,12 @@ export default function SignupPage() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
-                    className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
                     placeholder="Jane Doe"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#121217] mb-1.5">
                     Work Email
                   </label>
                   <input
@@ -148,14 +151,14 @@ export default function SignupPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
                     placeholder="jane@company.com"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                <label className="block text-xs font-semibold text-[#121217] mb-1.5">
                   Password
                 </label>
                 <input
@@ -164,15 +167,15 @@ export default function SignupPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
                   placeholder="•••••••• (min 6 characters)"
                 />
               </div>
 
-              <div className="pt-2 border-t border-zinc-800">
+              <div className="pt-2 border-t border-[#d1d1db]">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                    <label className="block text-xs font-semibold text-[#121217] mb-1.5">
                       Company Name
                     </label>
                     <input
@@ -180,18 +183,18 @@ export default function SignupPage() {
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
                       required
-                      className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
                       placeholder="Acme Global Inc"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                    <label className="block text-xs font-semibold text-[#121217] mb-1.5">
                       Industry
                     </label>
                     <select
                       value={industry}
                       onChange={(e) => setIndustry(e.target.value)}
-                      className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
                     >
                       <option value="B2B SaaS & Professional Services">
                         B2B SaaS & Services
@@ -206,31 +209,31 @@ export default function SignupPage() {
               </div>
 
               {/* Thresholds setup */}
-              <div className="p-3.5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-2">
-                <span className="text-[11px] font-semibold text-zinc-300 block">
-                  Default Gross Margin Thresholds:
+              <div className="p-4 rounded-2xl bg-[#f7f7f8] border border-[#d1d1db] space-y-2.5">
+                <span className="text-[11px] font-semibold text-[#121217] block">
+                  Default Gross Margin Classification Rules:
                 </span>
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div>
-                    <span className="text-[10px] text-emerald-400 font-medium block">
+                    <span className="text-[10px] text-[#1e874c] font-bold block">
                       Profitable (≥ %)
                     </span>
                     <input
                       type="number"
                       value={profitableThreshold}
                       onChange={(e) => setProfitableThreshold(e.target.value)}
-                      className="w-full bg-zinc-950 border border-zinc-700 rounded p-1.5 text-white text-xs mt-0.5"
+                      className="w-full bg-white border border-[#d1d1db] rounded-lg p-2 text-[#121217] text-xs mt-1"
                     />
                   </div>
                   <div>
-                    <span className="text-[10px] text-amber-400 font-medium block">
+                    <span className="text-[10px] text-[#121217] font-bold block">
                       Low-Margin Floor (≥ %)
                     </span>
                     <input
                       type="number"
                       value={lowMarginThreshold}
                       onChange={(e) => setLowMarginThreshold(e.target.value)}
-                      className="w-full bg-zinc-950 border border-zinc-700 rounded p-1.5 text-white text-xs mt-0.5"
+                      className="w-full bg-white border border-[#d1d1db] rounded-lg p-2 text-[#121217] text-xs mt-1"
                     />
                   </div>
                 </div>
@@ -239,14 +242,16 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-2.5 px-4 rounded-lg bg-[#121217] hover:bg-black text-white text-xs font-medium transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {loading ? (
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                 ) : (
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <>
+                    <span>Continue to Step 2</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </>
                 )}
-                <span>Continue to Step 2</span>
               </button>
             </form>
           ) : (
@@ -254,23 +259,23 @@ export default function SignupPage() {
             <div className="space-y-4">
               <div
                 onClick={handleChooseSampleData}
-                className="p-5 rounded-2xl border border-indigo-500/40 bg-indigo-500/10 hover:bg-indigo-500/15 cursor-pointer transition-all space-y-2 group"
+                className="p-5 rounded-2xl border border-[#5423e7] bg-[#5423e7]/5 hover:bg-[#5423e7]/10 cursor-pointer transition-all space-y-2.5 group"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-indigo-300 font-bold text-sm">
-                    <Sparkles className="w-4 h-4 text-amber-400" />
+                  <div className="flex items-center gap-2 text-[#121217] font-bold text-sm">
+                    <Sparkles className="w-4 h-4 text-[#5423e7]" />
                     <span>Explore with Sample Data (Recommended)</span>
                   </div>
-                  <span className="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-semibold">
+                  <span className="text-[10px] bg-[#ffc233] text-[#121217] px-2 py-0.5 rounded-full font-bold">
                     Instant Setup
                   </span>
                 </div>
-                <p className="text-xs text-zinc-300 leading-relaxed">
+                <p className="text-xs text-[#6c6c89] leading-relaxed">
                   Populate your dashboard with 18 realistic B2B accounts across 12 months. Test all
                   charts, margin insights, and filters immediately. Can be cleared at any time in
                   Settings.
                 </p>
-                <div className="pt-1 flex items-center gap-1.5 text-xs font-semibold text-indigo-400 group-hover:text-indigo-300">
+                <div className="pt-1 flex items-center gap-1.5 text-xs font-semibold text-[#5423e7] group-hover:underline">
                   <span>Populate & Open Dashboard</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>
@@ -278,19 +283,19 @@ export default function SignupPage() {
 
               <div
                 onClick={handleChooseUploadNow}
-                className="p-5 rounded-2xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-850 cursor-pointer transition-all space-y-2 group"
+                className="p-5 rounded-2xl border border-[#d1d1db] bg-[#f7f7f8] hover:bg-white cursor-pointer transition-all space-y-2.5 group"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-zinc-200 font-bold text-sm">
-                    <UploadCloud className="w-4 h-4 text-zinc-400" />
+                  <div className="flex items-center gap-2 text-[#121217] font-bold text-sm">
+                    <UploadCloud className="w-4 h-4 text-[#6c6c89]" />
                     <span>Upload Your Own CSV Files</span>
                   </div>
                 </div>
-                <p className="text-xs text-zinc-400 leading-relaxed">
+                <p className="text-xs text-[#6c6c89] leading-relaxed">
                   Skip demo data and jump straight to the upload wizard to ingest your company&apos;s
                   actual revenue and expense files.
                 </p>
-                <div className="pt-1 flex items-center gap-1.5 text-xs font-semibold text-zinc-300 group-hover:text-white">
+                <div className="pt-1 flex items-center gap-1.5 text-xs font-semibold text-[#121217] group-hover:underline">
                   <span>Go to Upload Wizard</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>

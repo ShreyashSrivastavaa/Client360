@@ -9,10 +9,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  LineChart,
-  Line,
-  ReferenceLine,
   PieChart,
   Pie,
   Cell,
@@ -60,22 +56,22 @@ export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProp
     );
   }
 
-  // Distribution Donut Data
+  // Distribution Donut Data using exact style reference tokens
   const pieData = [
     {
       name: "Profitable (≥20%)",
       value: distribution?.profitable || 0,
-      color: "#10b981", // Emerald
+      color: "#1e874c", // Emerald
     },
     {
       name: "Low-Margin (5-20%)",
       value: distribution?.lowMargin || 0,
-      color: "#f59e0b", // Amber
+      color: "#ffc233", // Lemon Zest
     },
     {
       name: "Loss-Making (<5%)",
       value: distribution?.lossMaking || 0,
-      color: "#f43f5e", // Rose
+      color: "#d50b3e", // Crimson
     },
   ].filter((d) => d.value > 0);
 
@@ -84,41 +80,41 @@ export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProp
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="glass-panel p-3 rounded-lg border border-zinc-700 shadow-xl text-xs space-y-1.5 min-w-[160px]">
-          <div className="font-semibold text-white border-b border-zinc-800 pb-1">
+        <div className="bg-white p-3.5 rounded-2xl border border-[#d1d1db] shadow-xl text-xs space-y-1.5 min-w-[170px]">
+          <div className="font-bold text-[#121217] border-b border-[#d1d1db] pb-1">
             {data.label}
           </div>
-          <div className="flex justify-between items-center text-zinc-300">
-            <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-indigo-500" /> Revenue:
+          <div className="flex justify-between items-center text-[#6c6c89]">
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="w-2 h-2 rounded-full bg-[#5423e7]" /> Revenue:
             </span>
-            <span className="font-semibold text-white tabular-nums">
+            <span className="font-bold text-[#121217] tabular-nums">
               {formatCurrency(data.revenue)}
             </span>
           </div>
-          <div className="flex justify-between items-center text-zinc-300">
-            <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-amber-500" /> Cost:
+          <div className="flex justify-between items-center text-[#6c6c89]">
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="w-2 h-2 rounded-full bg-[#6c6c89]" /> Cost:
             </span>
-            <span className="font-semibold text-white tabular-nums">
+            <span className="font-bold text-[#121217] tabular-nums">
               {formatCurrency(data.cost)}
             </span>
           </div>
-          <div className="flex justify-between items-center text-zinc-300 pt-1 border-t border-zinc-800/80">
-            <span className="flex items-center gap-1.5 font-medium text-emerald-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" /> Profit:
+          <div className="flex justify-between items-center text-[#6c6c89] pt-1 border-t border-[#d1d1db]">
+            <span className="flex items-center gap-1.5 font-bold text-[#1e874c]">
+              <span className="w-2 h-2 rounded-full bg-[#1e874c]" /> Profit:
             </span>
             <span
               className={`font-bold tabular-nums ${
-                data.profit >= 0 ? "text-emerald-400" : "text-rose-400"
+                data.profit >= 0 ? "text-[#1e874c]" : "text-[#d50b3e]"
               }`}
             >
               {formatCurrency(data.profit)}
             </span>
           </div>
-          <div className="flex justify-between items-center text-zinc-400 text-[11px]">
+          <div className="flex justify-between items-center text-[#6c6c89] text-[11px]">
             <span>Margin %:</span>
-            <span className="font-semibold text-zinc-200 tabular-nums">
+            <span className="font-bold text-[#121217] tabular-nums">
               {formatPercent(data.margin)}
             </span>
           </div>
@@ -131,54 +127,54 @@ export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProp
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Chart 1: Revenue vs Cost vs Profit */}
-      <div className="lg:col-span-2 glass-panel p-5 rounded-xl border border-zinc-800/80 flex flex-col justify-between">
+      <div className="lg:col-span-2 p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm flex flex-col justify-between">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div>
-            <h3 className="text-sm font-semibold text-white tracking-tight">
+            <h3 className="text-base font-display font-bold text-[#121217] tracking-tight">
               Revenue, Cost & Profit Trends
             </h3>
-            <p className="text-xs text-zinc-400">Monthly breakdown across all active clients</p>
+            <p className="text-xs text-[#6c6c89]">Monthly ledger breakdown across active clients</p>
           </div>
-          <div className="flex items-center gap-4 text-xs font-medium">
-            <span className="flex items-center gap-1.5 text-zinc-300">
-              <span className="w-2.5 h-2.5 rounded-sm bg-indigo-500" /> Revenue
+          <div className="flex items-center gap-4 text-xs font-semibold">
+            <span className="flex items-center gap-1.5 text-[#121217]">
+              <span className="w-2.5 h-2.5 rounded-sm bg-[#5423e7]" /> Revenue
             </span>
-            <span className="flex items-center gap-1.5 text-zinc-300">
-              <span className="w-2.5 h-2.5 rounded-sm bg-amber-500/80" /> Cost
+            <span className="flex items-center gap-1.5 text-[#121217]">
+              <span className="w-2.5 h-2.5 rounded-sm bg-[#6c6c89]" /> Cost
             </span>
-            <span className="flex items-center gap-1.5 text-zinc-300">
-              <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500" /> Gross Profit
+            <span className="flex items-center gap-1.5 text-[#121217]">
+              <span className="w-2.5 h-2.5 rounded-sm bg-[#1e874c]" /> Gross Profit
             </span>
           </div>
         </div>
 
         <div className="h-72 w-full">
           {trends.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-zinc-400 text-xs">
+            <div className="h-full flex items-center justify-center text-[#6c6c89] text-xs">
               No trend data available for this range.
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={trends} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e5eb" vertical={false} />
                 <XAxis
                   dataKey="label"
-                  stroke="#71717a"
+                  stroke="#6c6c89"
                   fontSize={11}
                   tickLine={false}
-                  axisLine={{ stroke: "#3f3f46" }}
+                  axisLine={{ stroke: "#d1d1db" }}
                 />
                 <YAxis
-                  stroke="#71717a"
+                  stroke="#6c6c89"
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(val) => `$${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}`}
                 />
                 <Tooltip content={<CustomBarTooltip />} />
-                <Bar dataKey="revenue" name="Revenue" fill="#6366f1" radius={[3, 3, 0, 0]} maxBarSize={28} />
-                <Bar dataKey="cost" name="Cost" fill="#f59e0b" radius={[3, 3, 0, 0]} maxBarSize={28} />
-                <Bar dataKey="profit" name="Gross Profit" fill="#10b981" radius={[3, 3, 0, 0]} maxBarSize={28} />
+                <Bar dataKey="revenue" name="Revenue" fill="#5423e7" radius={[4, 4, 0, 0]} maxBarSize={28} />
+                <Bar dataKey="cost" name="Cost" fill="#6c6c89" radius={[4, 4, 0, 0]} maxBarSize={28} />
+                <Bar dataKey="profit" name="Gross Profit" fill="#1e874c" radius={[4, 4, 0, 0]} maxBarSize={28} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -186,17 +182,17 @@ export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProp
       </div>
 
       {/* Chart 2: Client Distribution Donut */}
-      <div className="glass-panel p-5 rounded-xl border border-zinc-800/80 flex flex-col justify-between">
+      <div className="p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm flex flex-col justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-white tracking-tight">
+          <h3 className="text-base font-display font-bold text-[#121217] tracking-tight">
             Client Profitability Mix
           </h3>
-          <p className="text-xs text-zinc-400">Share of accounts by margin health</p>
+          <p className="text-xs text-[#6c6c89]">Share of accounts by gross margin tier</p>
         </div>
 
         <div className="h-56 relative flex items-center justify-center my-2">
           {pieData.length === 0 ? (
-            <div className="text-xs text-zinc-400">No active accounts</div>
+            <div className="text-xs text-[#6c6c89]">No active accounts</div>
           ) : (
             <>
               <ResponsiveContainer width="100%" height="100%">
@@ -211,17 +207,18 @@ export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProp
                     dataKey="value"
                   >
                     {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} stroke="#090a0f" strokeWidth={2} />
+                      <Cell key={`cell-${index}`} fill={entry.color} stroke="#ffffff" strokeWidth={2} />
                     ))}
                   </Pie>
                   <Tooltip
                     formatter={(value: any, name: any) => [`${value} Accounts`, name]}
                     contentStyle={{
-                      backgroundColor: "#18181b",
-                      borderColor: "#3f3f46",
-                      borderRadius: "8px",
+                      backgroundColor: "#ffffff",
+                      borderColor: "#d1d1db",
+                      borderRadius: "16px",
                       fontSize: "12px",
-                      color: "#fff",
+                      color: "#121217",
+                      boxShadow: "0 4px 20px rgba(18,18,23,0.08)",
                     }}
                   />
                 </PieChart>
@@ -229,10 +226,10 @@ export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProp
 
               {/* Centered Total Counter */}
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-bold text-white tabular-nums">
+                <span className="text-2xl font-display font-bold text-[#121217] tabular-nums">
                   {distribution?.total || 0}
                 </span>
-                <span className="text-[10px] text-zinc-400 font-medium tracking-wider uppercase">
+                <span className="text-[10px] text-[#6c6c89] font-bold tracking-[2px] uppercase">
                   Accounts
                 </span>
               </div>
@@ -241,28 +238,28 @@ export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProp
         </div>
 
         {/* Custom Legend */}
-        <div className="space-y-2 pt-2 border-t border-zinc-800/80">
+        <div className="space-y-2 pt-2 border-t border-[#d1d1db]">
           <div className="flex items-center justify-between text-xs">
-            <span className="flex items-center gap-2 text-zinc-300">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Profitable (≥20%)
+            <span className="flex items-center gap-2 text-[#121217] font-medium">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#1e874c]" /> Profitable (≥20%)
             </span>
-            <span className="font-semibold text-emerald-400 tabular-nums">
+            <span className="font-bold text-[#1e874c] tabular-nums">
               {distribution?.profitable || 0}
             </span>
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="flex items-center gap-2 text-zinc-300">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500" /> Low-Margin (5-20%)
+            <span className="flex items-center gap-2 text-[#121217] font-medium">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#ffc233]" /> Low-Margin (5-20%)
             </span>
-            <span className="font-semibold text-amber-400 tabular-nums">
+            <span className="font-bold text-[#996500] tabular-nums">
               {distribution?.lowMargin || 0}
             </span>
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="flex items-center gap-2 text-zinc-300">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Loss-Making (&lt;5%)
+            <span className="flex items-center gap-2 text-[#121217] font-medium">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#d50b3e]" /> Loss-Making (&lt;5%)
             </span>
-            <span className="font-semibold text-rose-400 tabular-nums">
+            <span className="font-bold text-[#d50b3e] tabular-nums">
               {distribution?.lossMaking || 0}
             </span>
           </div>

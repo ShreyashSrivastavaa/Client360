@@ -19,6 +19,8 @@ import {
   AlertTriangle,
   Mail,
   Shield,
+  ArrowRight,
+  LogOut,
 } from "lucide-react";
 
 interface MemberItem {
@@ -220,9 +222,9 @@ export default function SettingsPage() {
       pageTitle="Settings & Configuration"
       pageDescription="Configure company profile, margin classification rules, team access, and sample data"
     >
-      <div className="flex flex-col md:flex-row gap-6 items-start">
+      <div className="flex flex-col md:flex-row gap-8 items-start">
         {/* Settings Navigation Sidebar */}
-        <div className="w-full md:w-60 glass-panel p-2 rounded-xl border border-zinc-800 shrink-0 space-y-1">
+        <div className="w-full md:w-64 bg-white p-3 rounded-[24px] border border-[#d1d1db] shadow-[0_4px_24px_rgba(18,18,23,0.04)] shrink-0 space-y-1">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.key;
@@ -230,13 +232,13 @@ export default function SettingsPage() {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as any)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium transition-all text-left ${
+                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all text-left ${
                   isActive
-                    ? "bg-indigo-600/20 text-indigo-300 font-semibold border border-indigo-500/30"
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-850"
+                    ? "bg-[#5423e7]/10 text-[#5423e7] font-semibold"
+                    : "text-[#6c6c89] hover:text-[#121217] hover:bg-[#f7f7f8]"
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? "text-indigo-400" : "text-zinc-400"}`} />
+                <Icon className={`w-4 h-4 ${isActive ? "text-[#5423e7]" : "text-[#6c6c89]"}`} />
                 <span>{tab.label}</span>
               </button>
             );
@@ -244,20 +246,25 @@ export default function SettingsPage() {
         </div>
 
         {/* Tab Content Area */}
-        <div className="flex-1 w-full glass-panel p-6 rounded-xl border border-zinc-800">
+        <div className="flex-1 w-full lemon-card p-6 sm:p-10">
           {/* TAB 1: Company Profile */}
           {activeTab === "profile" && (
-            <form onSubmit={handleSaveProfile} className="space-y-5 max-w-xl">
+            <form onSubmit={handleSaveProfile} className="space-y-6 max-w-xl">
               <div>
-                <h3 className="text-base font-bold text-white">Company Profile</h3>
-                <p className="text-xs text-zinc-400">
-                  General workspace information for reporting headers and exports
+                <div className="eyebrow text-[#6c6c89] text-[12px] uppercase tracking-[2px] font-semibold mb-1">
+                  Workspace
+                </div>
+                <h3 className="font-display text-xl sm:text-2xl font-normal text-[#121217]">
+                  Company Profile
+                </h3>
+                <p className="text-xs text-[#6c6c89] mt-0.5">
+                  General workspace information for reporting headers and client exports
                 </p>
               </div>
 
               <div className="space-y-4 pt-2">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                  <label className="block text-xs font-semibold text-[#121217] mb-1.5">
                     Organization Name
                   </label>
                   <input
@@ -265,21 +272,21 @@ export default function SettingsPage() {
                     value={orgName}
                     onChange={(e) => setOrgName(e.target.value)}
                     disabled={role === "member"}
-                    className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500 disabled:opacity-50"
+                    className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] disabled:opacity-50"
                     placeholder="Acme Global Inc"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+                  <label className="block text-xs font-semibold text-[#121217] mb-1.5">
                     Industry / Sector
                   </label>
                   <select
                     value={industry}
                     onChange={(e) => setIndustry(e.target.value)}
                     disabled={role === "member"}
-                    className="w-full text-xs bg-zinc-950 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500 disabled:opacity-50"
+                    className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] disabled:opacity-50"
                   >
                     <option value="">-- Select Industry --</option>
                     <option value="B2B SaaS & Professional Services">
@@ -295,11 +302,11 @@ export default function SettingsPage() {
               </div>
 
               {role !== "member" && (
-                <div className="pt-4 border-t border-zinc-800">
+                <div className="pt-4 border-t border-[#d1d1db]">
                   <button
                     type="submit"
                     disabled={isSavingProfile}
-                    className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-md shadow-indigo-600/20 disabled:opacity-50 transition-all flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-lg bg-[#121217] hover:bg-black text-xs font-medium text-white shadow-sm disabled:opacity-50 transition-all flex items-center gap-2"
                   >
                     {isSavingProfile ? (
                       <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -317,18 +324,23 @@ export default function SettingsPage() {
           {activeTab === "thresholds" && (
             <form onSubmit={handleSaveThresholds} className="space-y-6 max-w-xl">
               <div>
-                <h3 className="text-base font-bold text-white">Margin Classification Rules</h3>
-                <p className="text-xs text-zinc-400">
+                <div className="eyebrow text-[#6c6c89] text-[12px] uppercase tracking-[2px] font-semibold mb-1">
+                  Profitability Logic
+                </div>
+                <h3 className="font-display text-xl sm:text-2xl font-normal text-[#121217]">
+                  Margin Classification Rules
+                </h3>
+                <p className="text-xs text-[#6c6c89] mt-0.5">
                   Tune the gross profit percentage thresholds that determine account classifications
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 space-y-2">
+                <div className="p-5 rounded-2xl border border-[#1e874c]/20 bg-[#1e874c]/5 space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                    <span className="text-xs font-bold text-emerald-300">
-                      Profitable Threshold (% and above)
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#1e874c]" />
+                    <span className="text-xs font-bold text-[#1e874c]">
+                      Profitable Threshold (≥)
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -338,19 +350,19 @@ export default function SettingsPage() {
                       value={profitableThreshold}
                       onChange={(e) => setProfitableThreshold(e.target.value)}
                       disabled={role === "member"}
-                      className="w-28 text-sm font-bold bg-zinc-950 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-emerald-500"
+                      className="w-28 text-sm font-bold bg-white border border-[#d1d1db] rounded-lg p-2 text-[#121217] focus:outline-none focus:border-[#1e874c]"
                       required
                     />
-                    <span className="text-sm font-bold text-zinc-400">%</span>
+                    <span className="text-sm font-bold text-[#6c6c89]">%</span>
                   </div>
-                  <p className="text-[11px] text-zinc-400">Default: ≥ 20.0% gross margin</p>
+                  <p className="text-[11px] text-[#6c6c89]">Accounts with gross margin at or above this value</p>
                 </div>
 
-                <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 space-y-2">
+                <div className="p-5 rounded-2xl border border-[#ffc233]/40 bg-[#ffc233]/10 space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                    <span className="text-xs font-bold text-amber-300">
-                      Low-Margin Floor (% and above)
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#ffc233]" />
+                    <span className="text-xs font-bold text-[#121217]">
+                      Low-Margin Floor (≥)
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -360,28 +372,28 @@ export default function SettingsPage() {
                       value={lowMarginThreshold}
                       onChange={(e) => setLowMarginThreshold(e.target.value)}
                       disabled={role === "member"}
-                      className="w-28 text-sm font-bold bg-zinc-950 border border-zinc-700 rounded-lg p-2 text-white focus:outline-none focus:border-amber-500"
+                      className="w-28 text-sm font-bold bg-white border border-[#d1d1db] rounded-lg p-2 text-[#121217] focus:outline-none focus:border-[#ffc233]"
                       required
                     />
-                    <span className="text-sm font-bold text-zinc-400">%</span>
+                    <span className="text-sm font-bold text-[#6c6c89]">%</span>
                   </div>
-                  <p className="text-[11px] text-zinc-400">Default: 5.0% to 19.99%</p>
+                  <p className="text-[11px] text-[#6c6c89]">Accounts below profitable and above this value</p>
                 </div>
               </div>
 
               {/* Visual classification spectrum */}
-              <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-3">
-                <span className="text-xs font-semibold text-zinc-300 block">
+              <div className="p-5 rounded-2xl bg-[#f7f7f8] border border-[#d1d1db] space-y-3">
+                <span className="text-xs font-semibold text-[#121217] block">
                   Classification Spectrum Preview:
                 </span>
-                <div className="h-6 w-full rounded-lg overflow-hidden flex text-[10px] font-bold text-center">
-                  <div className="bg-rose-500/80 text-white flex items-center justify-center w-1/4">
+                <div className="h-7 w-full rounded-xl overflow-hidden flex text-[10px] font-bold text-center">
+                  <div className="bg-[#d50b3e] text-white flex items-center justify-center w-1/4">
                     Loss-Making (&lt;{lowMarginThreshold}%)
                   </div>
-                  <div className="bg-amber-500/80 text-black flex items-center justify-center w-1/3">
+                  <div className="bg-[#ffc233] text-[#121217] flex items-center justify-center w-1/3">
                     Low-Margin ({lowMarginThreshold}% – {profitableThreshold}%)
                   </div>
-                  <div className="bg-emerald-500/80 text-black flex items-center justify-center flex-1">
+                  <div className="bg-[#1e874c] text-white flex items-center justify-center flex-1">
                     Profitable (≥{profitableThreshold}%)
                   </div>
                 </div>
@@ -392,7 +404,7 @@ export default function SettingsPage() {
                   <button
                     type="submit"
                     disabled={isSavingThresholds}
-                    className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-lg shadow-indigo-600/20 disabled:opacity-50 transition-all flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-lg bg-[#121217] hover:bg-black text-xs font-medium text-white shadow-sm disabled:opacity-50 transition-all flex items-center gap-2"
                   >
                     {isSavingThresholds ? (
                       <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -408,18 +420,23 @@ export default function SettingsPage() {
 
           {/* TAB 3: Team Members */}
           {activeTab === "team" && (
-            <div className="space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-800">
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#d1d1db]">
                 <div>
-                  <h3 className="text-base font-bold text-white">Team Members</h3>
-                  <p className="text-xs text-zinc-400">
+                  <div className="eyebrow text-[#6c6c89] text-[12px] uppercase tracking-[2px] font-semibold mb-1">
+                    Access Control
+                  </div>
+                  <h3 className="font-display text-xl sm:text-2xl font-normal text-[#121217]">
+                    Team Members
+                  </h3>
+                  <p className="text-xs text-[#6c6c89] mt-0.5">
                     Manage workspace roles (Owner, Admin, Member)
                   </p>
                 </div>
                 {role !== "member" && (
                   <button
                     onClick={() => setInviteModalOpen(true)}
-                    className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white flex items-center gap-1.5 shadow-md shadow-indigo-600/20 self-start sm:self-auto"
+                    className="px-4 py-2 rounded-lg bg-[#121217] hover:bg-black text-xs font-medium text-white flex items-center gap-1.5 shadow-sm self-start sm:self-auto"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Invite Member</span>
@@ -427,9 +444,9 @@ export default function SettingsPage() {
                 )}
               </div>
 
-              <div className="overflow-x-auto rounded-lg border border-zinc-800">
+              <div className="overflow-x-auto rounded-2xl border border-[#d1d1db]">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-zinc-900 border-b border-zinc-800 text-[11px] font-semibold text-zinc-400 uppercase">
+                  <thead className="bg-[#f7f7f8] border-b border-[#d1d1db] text-[11px] font-semibold text-[#6c6c89] uppercase">
                     <tr>
                       <th className="py-3 px-4">Member Name</th>
                       <th className="py-3 px-4">Email</th>
@@ -438,47 +455,47 @@ export default function SettingsPage() {
                       <th className="py-3 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zinc-850">
+                  <tbody className="divide-y divide-[#d1d1db] bg-white">
                     {loadingMembers ? (
                       <tr>
-                        <td colSpan={5} className="p-4 text-center text-zinc-400">
+                        <td colSpan={5} className="p-4 text-center text-[#6c6c89]">
                           Loading team members...
                         </td>
                       </tr>
                     ) : members.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="p-6 text-center text-zinc-400">
+                        <td colSpan={5} className="p-6 text-center text-[#6c6c89]">
                           No team members found.
                         </td>
                       </tr>
                     ) : (
                       members.map((m) => (
-                        <tr key={m.id} className="hover:bg-zinc-900/40">
-                          <td className="py-3 px-4 font-semibold text-white">
+                        <tr key={m.id} className="hover:bg-[#f7f7f8]">
+                          <td className="py-3.5 px-4 font-semibold text-[#121217]">
                             {m.user?.fullName || "Invited Colleague"}
                           </td>
-                          <td className="py-3 px-4 text-zinc-300 font-mono text-[11px]">
+                          <td className="py-3.5 px-4 text-[#6c6c89] font-mono text-[11px]">
                             {m.user?.email || m.invitedEmail}
                           </td>
-                          <td className="py-3 px-4">
+                          <td className="py-3.5 px-4">
                             <RoleBadge role={m.role} />
                           </td>
-                          <td className="py-3 px-4">
+                          <td className="py-3.5 px-4">
                             <span
-                              className={`text-[10px] font-medium px-2 py-0.5 rounded capitalize ${
+                              className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full capitalize ${
                                 m.status === "active"
-                                  ? "bg-emerald-500/10 text-emerald-400"
-                                  : "bg-amber-500/10 text-amber-400"
+                                  ? "bg-[#1e874c]/10 text-[#1e874c]"
+                                  : "bg-[#ffc233]/20 text-[#121217]"
                               }`}
                             >
                               {m.status}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-right">
+                          <td className="py-3.5 px-4 text-right">
                             {role !== "member" && m.role !== "owner" && (
                               <button
                                 onClick={() => setDeleteMemberId(m.id)}
-                                className="p-1 rounded text-zinc-400 hover:text-rose-400 hover:bg-zinc-800 transition-colors"
+                                className="p-1.5 rounded-lg text-[#6c6c89] hover:text-[#d50b3e] hover:bg-[#f7f7f8] transition-colors"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
@@ -497,22 +514,27 @@ export default function SettingsPage() {
           {activeTab === "account" && (
             <div className="space-y-6 max-w-xl">
               <div>
-                <h3 className="text-base font-bold text-white">My Account</h3>
-                <p className="text-xs text-zinc-400">Your personal profile and credentials</p>
+                <div className="eyebrow text-[#6c6c89] text-[12px] uppercase tracking-[2px] font-semibold mb-1">
+                  Credentials
+                </div>
+                <h3 className="font-display text-xl sm:text-2xl font-normal text-[#121217]">
+                  My Account
+                </h3>
+                <p className="text-xs text-[#6c6c89] mt-0.5">Your personal profile and credentials</p>
               </div>
 
               <div className="space-y-4 pt-2">
-                <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-3">
+                <div className="p-5 rounded-2xl bg-[#f7f7f8] border border-[#d1d1db] space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-base font-bold text-white shadow-lg shadow-indigo-600/20">
+                    <div className="w-12 h-12 rounded-full bg-[#5423e7] flex items-center justify-center text-base font-bold text-white shadow-md">
                       {user?.fullName?.charAt(0) || "U"}
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-white">{user?.fullName}</div>
-                      <div className="text-xs text-zinc-400 font-mono">{user?.email}</div>
+                      <div className="text-sm font-bold text-[#121217]">{user?.fullName}</div>
+                      <div className="text-xs text-[#6c6c89] font-mono">{user?.email}</div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 pt-2 border-t border-zinc-800 text-xs text-zinc-400">
+                  <div className="flex items-center gap-2 pt-3 border-t border-[#d1d1db] text-xs text-[#6c6c89]">
                     <span>Role in Organization:</span>
                     <RoleBadge role={role} />
                   </div>
@@ -521,9 +543,10 @@ export default function SettingsPage() {
                 <div className="pt-2">
                   <button
                     onClick={logout}
-                    className="px-4 py-2 rounded-lg bg-rose-600/15 hover:bg-rose-600/25 border border-rose-500/30 text-rose-300 text-xs font-semibold transition-colors"
+                    className="px-4 py-2.5 rounded-lg bg-[#d50b3e]/10 hover:bg-[#d50b3e]/20 border border-[#d50b3e]/20 text-[#d50b3e] text-xs font-semibold transition-colors flex items-center gap-2"
                   >
-                    Sign Out of ProfitLens
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Sign Out of ProfitLens</span>
                   </button>
                 </div>
               </div>
@@ -534,45 +557,50 @@ export default function SettingsPage() {
           {activeTab === "data" && (
             <div className="space-y-6 max-w-xl">
               <div>
-                <h3 className="text-base font-bold text-white">Demo & Data Management</h3>
-                <p className="text-xs text-zinc-400">
+                <div className="eyebrow text-[#6c6c89] text-[12px] uppercase tracking-[2px] font-semibold mb-1">
+                  Testing & Sandbox
+                </div>
+                <h3 className="font-display text-xl sm:text-2xl font-normal text-[#121217]">
+                  Demo & Data Management
+                </h3>
+                <p className="text-xs text-[#6c6c89] mt-0.5">
                   Tools to seed realistic demo data or reset workspace data for testing
                 </p>
               </div>
 
               <div className="space-y-4">
-                <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/60 space-y-2.5">
-                  <div className="flex items-center gap-2 text-xs font-bold text-white">
-                    <Database className="w-4 h-4 text-indigo-400" />
+                <div className="p-5 rounded-2xl border border-[#d1d1db] bg-[#f7f7f8] space-y-3">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#121217]">
+                    <Database className="w-4 h-4 text-[#5423e7]" />
                     <span>Load 12-Month Realistic Sample Dataset</span>
                   </div>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
+                  <p className="text-xs text-[#6c6c89] leading-relaxed">
                     Seeds 18 realistic B2B client accounts across 12 monthly periods with software
                     subscriptions, engineering services, support, discounts, and SLA credits.
                   </p>
                   <button
                     onClick={handleLoadDemo}
                     disabled={isSeeding || role === "member"}
-                    className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-200 border border-zinc-700 disabled:opacity-50 transition-colors flex items-center gap-2"
+                    className="px-5 py-2.5 rounded-lg bg-[#121217] hover:bg-black text-xs font-medium text-white disabled:opacity-50 transition-colors flex items-center gap-2"
                   >
                     {isSeeding ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : null}
                     <span>{isSeeding ? "Reloading Dataset..." : "Load Sample Data"}</span>
                   </button>
                 </div>
 
-                <div className="p-4 rounded-xl border border-rose-500/25 bg-rose-950/15 space-y-2.5">
-                  <div className="flex items-center gap-2 text-xs font-bold text-rose-300">
-                    <Trash2 className="w-4 h-4 text-rose-400" />
+                <div className="p-5 rounded-2xl border border-[#d50b3e]/20 bg-[#d50b3e]/5 space-y-3">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#d50b3e]">
+                    <Trash2 className="w-4 h-4 text-[#d50b3e]" />
                     <span>Clear All Organization Data</span>
                   </div>
-                  <p className="text-xs text-zinc-300 leading-relaxed">
+                  <p className="text-xs text-[#6c6c89] leading-relaxed">
                     Deletes all transactions, client records, and upload files for this organization.
                     Leaves an empty workspace ready for fresh CSV testing.
                   </p>
                   <button
                     onClick={() => setClearConfirmOpen(true)}
                     disabled={role === "member"}
-                    className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white shadow-lg shadow-rose-600/20 disabled:opacity-50 transition-colors"
+                    className="px-5 py-2.5 rounded-lg bg-[#d50b3e] hover:bg-[#d50b3e]/90 text-xs font-medium text-white shadow-sm disabled:opacity-50 transition-colors"
                   >
                     Clear All Data
                   </button>
@@ -585,17 +613,17 @@ export default function SettingsPage() {
 
       {/* Invite Modal */}
       {inviteModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <form
             onSubmit={handleInviteMember}
-            className="glass-panel p-6 rounded-2xl border border-zinc-700 max-w-md w-full space-y-4"
+            className="bg-white p-6 sm:p-8 rounded-3xl border border-[#d1d1db] shadow-2xl max-w-md w-full space-y-4"
           >
-            <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
-              <h3 className="text-sm font-bold text-white">Invite New Team Member</h3>
+            <div className="flex items-center justify-between pb-3 border-b border-[#d1d1db]">
+              <h3 className="font-display text-base font-normal text-[#121217]">Invite New Team Member</h3>
               <button
                 type="button"
                 onClick={() => setInviteModalOpen(false)}
-                className="text-zinc-400 hover:text-white"
+                className="text-[#6c6c89] hover:text-[#121217]"
               >
                 ✕
               </button>
@@ -603,23 +631,23 @@ export default function SettingsPage() {
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block font-medium text-zinc-300 mb-1">Email Address</label>
+                <label className="block font-semibold text-[#121217] mb-1">Email Address</label>
                 <input
                   type="email"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="colleague@company.com"
-                  className="w-full bg-zinc-950 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7]"
                   required
                 />
               </div>
 
               <div>
-                <label className="block font-medium text-zinc-300 mb-1">Assigned Role</label>
+                <label className="block font-semibold text-[#121217] mb-1">Assigned Role</label>
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as any)}
-                  className="w-full bg-zinc-950 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7]"
                 >
                   <option value="member">Member (Read-only dashboard access)</option>
                   <option value="admin">Admin (Can upload data & adjust thresholds)</option>
@@ -627,18 +655,18 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#d1d1db]">
               <button
                 type="button"
                 onClick={() => setInviteModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-300"
+                className="px-4 py-2 rounded-lg bg-white hover:bg-[#f7f7f8] border border-[#d1d1db] text-xs font-medium text-[#121217]"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isInviting}
-                className="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-md shadow-indigo-600/20 disabled:opacity-50"
+                className="px-5 py-2 rounded-lg bg-[#121217] hover:bg-black text-xs font-medium text-white shadow-sm disabled:opacity-50"
               >
                 {isInviting ? "Inviting..." : "Send Invitation"}
               </button>
@@ -649,22 +677,22 @@ export default function SettingsPage() {
 
       {/* Delete Member Confirmation Modal */}
       {deleteMemberId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="glass-panel p-6 rounded-2xl border border-zinc-700 max-w-sm w-full space-y-4">
-            <h3 className="text-sm font-bold text-white">Remove Team Member?</h3>
-            <p className="text-xs text-zinc-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#d1d1db] shadow-2xl max-w-sm w-full space-y-4">
+            <h3 className="font-display text-base font-normal text-[#121217]">Remove Team Member?</h3>
+            <p className="text-xs text-[#6c6c89]">
               This will revoke their access to this company workspace immediately.
             </p>
-            <div className="flex justify-end gap-2 pt-2 border-t border-zinc-800">
+            <div className="flex justify-end gap-2 pt-3 border-t border-[#d1d1db]">
               <button
                 onClick={() => setDeleteMemberId(null)}
-                className="px-3 py-1.5 rounded-lg bg-zinc-800 text-xs text-zinc-300"
+                className="px-3.5 py-1.5 rounded-lg bg-white border border-[#d1d1db] text-xs text-[#121217]"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleRemoveMember(deleteMemberId)}
-                className="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white"
+                className="px-4 py-1.5 rounded-lg bg-[#d50b3e] text-xs font-medium text-white"
               >
                 Confirm Removal
               </button>
@@ -675,28 +703,30 @@ export default function SettingsPage() {
 
       {/* Clear Data Confirmation Modal */}
       {clearConfirmOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="glass-panel p-6 rounded-2xl border border-zinc-700 max-w-md w-full space-y-4">
-            <div className="flex items-center gap-3 text-rose-400">
-              <AlertTriangle className="w-6 h-6" />
-              <h3 className="text-base font-bold text-white">Reset & Clear All Data?</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#d1d1db] shadow-2xl max-w-md w-full space-y-4">
+            <div className="flex items-center gap-3 text-[#d50b3e]">
+              <div className="p-3 rounded-2xl bg-[#d50b3e]/10">
+                <AlertTriangle className="w-6 h-6 text-[#d50b3e]" />
+              </div>
+              <h3 className="font-display text-base font-normal text-[#121217]">Reset & Clear All Data?</h3>
             </div>
-            <p className="text-xs text-zinc-300 leading-relaxed">
+            <p className="text-xs text-[#6c6c89] leading-relaxed">
               Are you sure you want to clear all data for{" "}
-              <strong>{organization?.name}</strong>? This will remove all clients, transactions,
+              <strong className="text-[#121217]">{organization?.name}</strong>? This will remove all clients, transactions,
               and past uploads. You will be left with an empty dashboard ready for new uploads.
             </p>
-            <div className="flex justify-end gap-2 pt-2 border-t border-zinc-800">
+            <div className="flex justify-end gap-2 pt-3 border-t border-[#d1d1db]">
               <button
                 onClick={() => setClearConfirmOpen(false)}
-                className="px-3 py-1.5 rounded-lg bg-zinc-800 text-xs text-zinc-300"
+                className="px-4 py-2 rounded-lg bg-white border border-[#d1d1db] text-xs text-[#121217]"
               >
                 Cancel
               </button>
               <button
                 onClick={handleClearData}
                 disabled={isClearing}
-                className="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white shadow-lg shadow-rose-600/20 disabled:opacity-50"
+                className="px-5 py-2 rounded-lg bg-[#d50b3e] hover:bg-[#d50b3e]/90 text-xs font-medium text-white shadow-sm disabled:opacity-50"
               >
                 {isClearing ? "Clearing..." : "Yes, Clear All Data"}
               </button>
