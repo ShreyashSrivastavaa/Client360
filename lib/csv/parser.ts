@@ -136,7 +136,7 @@ export function autoDetectColumnMapping(headers: string[], uploadType: "combined
  * Validates parsed CSV rows against chosen column mapping
  */
 export function validateCsvRows(
-  rows: Record<string, string>[],
+  rows: Record<string, any>[],
   mapping: ColumnMapping,
   uploadType: "combined" | "sales" | "cost"
 ): CsvValidationResult {

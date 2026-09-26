@@ -48,7 +48,7 @@ export function testCsvParser() {
   assert.strictEqual(mapping.description, "Memo");
 
   // 4. Validate rows
-  const mockRows = [
+  const mockRows: Record<string, any>[] = [
     {
       "Account Name": "Acme Corp",
       "Invoice Date": "2026-03-01",
