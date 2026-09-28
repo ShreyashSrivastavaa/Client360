@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/auth";
-import { parseCsvText, autoDetectColumnMapping } from "@/lib/csv/parser";
+import { parseCsvText, autoDetectColumnMapping, MAX_FILE_SIZE_BYTES, MAX_CSV_ROWS } from "@/lib/csv/parser";
 import { prisma } from "@/lib/db";
-
-const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
   const auth = await getAuthenticatedUser();
@@ -57,6 +56,15 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Rate limit uploads per user (max 10 uploads per minute)
+  const rl = rateLimit(auth.user.id, { keyPrefix: "upload", limit: 10, windowMs: 60 * 1000 });
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: "Too many upload requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": "60" } }
+    );
+  }
+
   try {
     const contentType = req.headers.get("content-type") || "";
     let csvText = "";
@@ -74,7 +82,7 @@ export async function POST(req: NextRequest) {
 
       if (file.size > MAX_FILE_SIZE_BYTES) {
         return NextResponse.json(
-          { error: "File size exceeds the 10MB limit. Please upload a smaller file." },
+          { error: `File size exceeds the 10MB limit (${(file.size / (1024 * 1024)).toFixed(1)}MB provided).` },
           { status: 400 }
         );
       }
@@ -99,7 +107,7 @@ export async function POST(req: NextRequest) {
 
       if (Buffer.byteLength(csvText, "utf8") > MAX_FILE_SIZE_BYTES) {
         return NextResponse.json(
-          { error: "File exceeds 10MB size limit." },
+          { error: "Payload exceeds 10MB size limit." },
           { status: 400 }
         );
       }
@@ -113,7 +121,14 @@ export async function POST(req: NextRequest) {
 
     if (headers.length === 0 || rows.length === 0) {
       return NextResponse.json(
-        { error: "Could not parse any columns or rows from CSV. Please check the file formatting." },
+        { error: "Could not parse any columns or rows from CSV. Please check delimiters and header row." },
+        { status: 400 }
+      );
+    }
+
+    if (rows.length > MAX_CSV_ROWS) {
+      return NextResponse.json(
+        { error: `File has ${rows.length} rows, which exceeds the maximum of ${MAX_CSV_ROWS} rows per upload batch.` },
         { status: 400 }
       );
     }
@@ -134,6 +149,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: any) {
     console.error("Upload parse error:", error);
-    return NextResponse.json({ error: error.message || "Failed to parse CSV upload" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to parse CSV upload. Please check the file formatting." }, { status: 500 });
   }
 }

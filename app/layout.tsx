@@ -1,25 +1,46 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { Bebas_Neue, Inter } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/lib/toast-context";
 import { AuthProvider } from "@/lib/auth-context";
 import { PeriodProvider } from "@/lib/period-context";
 
-const plusJakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
+const bebasNeue = Bebas_Neue({
+  variable: "--font-salmond",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400"],
 });
 
 const inter = Inter({
-  variable: "--font-inter",
+  variable: "--font-graphikx",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "ProfitLens — Client Profitability Analytics Platform",
-  description: "Zesty client profitability analytics. Know which clients make you money and which quietly drain profits.",
+  metadataBase: new URL("https://client360-ten.vercel.app"),
+  title: {
+    default: "Client360 — B2B Client Profitability Analytics",
+    template: "%s | Client360",
+  },
+  description: "Maximalist B2B client profitability analytics. Know which accounts drive margin and which quietly drain profits.",
+  openGraph: {
+    title: "Client360 — B2B Client Profitability Analytics",
+    description: "Maximalist B2B client profitability analytics. Know which accounts drive margin and which quietly drain profits.",
+    url: "https://client360-ten.vercel.app",
+    siteName: "Client360",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Client360 — B2B Client Profitability Analytics",
+    description: "Maximalist B2B client profitability analytics. Know which accounts drive margin and which quietly drain profits.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -30,9 +51,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${plusJakarta.variable} ${inter.variable} h-full antialiased`}
+      className={`${bebasNeue.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#f7f7f8] text-[#121217] font-sans selection:bg-[#ffc233] selection:text-[#121217]">
+      <body className="min-h-full flex flex-col bg-[#823513] text-[#faae33] font-sans selection:bg-[#faae33] selection:text-[#281006]">
         <AuthProvider>
           <PeriodProvider>
             <ToastProvider>

@@ -1,0 +1,16 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /signup
+Allow: /privacy
+Allow: /terms
+
+# Block private application, workspace, and API routes
+Disallow: /dashboard/
+Disallow: /clients/
+Disallow: /uploads/
+Disallow: /settings/
+Disallow: /api/
+
+Sitemap: https://client360-ten.vercel.app/sitemap.xml

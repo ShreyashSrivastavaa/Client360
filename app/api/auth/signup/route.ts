@@ -1,18 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { hashPassword, setAuthCookie } from "@/lib/auth";
+import { rateLimit } from "@/lib/rate-limit";
+import { z } from "zod";
+
+const signupSchema = z.object({
+  email: z.string().email("Invalid email format").max(255),
+  password: z.string().min(8, "Password must be at least 8 characters long").max(100),
+  fullName: z.string().min(2, "Full name must be at least 2 characters").max(100),
+  companyName: z.string().min(2, "Company name must be at least 2 characters").max(100),
+  industry: z.string().max(100).optional().nullable(),
+  profitableMarginThreshold: z.coerce.number().min(1).max(100).optional().default(20.0),
+  lowMarginThreshold: z.coerce.number().min(0).max(99).optional().default(5.0),
+}).refine((data) => data.profitableMarginThreshold > data.lowMarginThreshold, {
+  message: "Profitable margin threshold must be greater than low-margin threshold",
+  path: ["profitableMarginThreshold"],
+});
 
 export async function POST(req: NextRequest) {
-  try {
-    const { email, password, fullName, companyName, industry, profitableMarginThreshold, lowMarginThreshold } =
-      await req.json();
+  // 1. Rate limiting by IP (max 5 signups per minute)
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
+  const rl = rateLimit(ip, { keyPrefix: "signup", limit: 5, windowMs: 60 * 1000 });
 
-    if (!email || !password || !fullName || !companyName) {
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: "Too many registration attempts. Please try again shortly." },
+      { status: 429, headers: { "Retry-After": "60" } }
+    );
+  }
+
+  try {
+    const body = await req.json();
+    const parsed = signupSchema.safeParse(body);
+
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Email, password, full name, and company name are required" },
+        { error: parsed.error.issues[0]?.message || "Invalid registration input" },
         { status: 400 }
       );
     }
+
+    const {
+      email,
+      password,
+      fullName,
+      companyName,
+      industry,
+      profitableMarginThreshold,
+      lowMarginThreshold,
+    } = parsed.data;
 
     const existingUser = await prisma.user.findUnique({
       where: { email: email.toLowerCase().trim() },
@@ -27,7 +63,7 @@ export async function POST(req: NextRequest) {
 
     const passwordHash = await hashPassword(password);
 
-    // Create User, Organization, and Owner Membership in transaction
+    // Create User, Organization, and Owner Membership in atomic transaction
     const result = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
@@ -41,8 +77,8 @@ export async function POST(req: NextRequest) {
         data: {
           name: companyName.trim(),
           industry: industry?.trim() || null,
-          profitableMarginThreshold: profitableMarginThreshold ? parseFloat(profitableMarginThreshold) : 20.0,
-          lowMarginThreshold: lowMarginThreshold ? parseFloat(lowMarginThreshold) : 5.0,
+          profitableMarginThreshold,
+          lowMarginThreshold,
           members: {
             create: {
               userId: user.id,
@@ -73,6 +109,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: any) {
     console.error("Signup error:", error);
-    return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Registration failed. Please try again." }, { status: 500 });
   }
 }

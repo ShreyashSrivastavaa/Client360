@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { recalculateClientSummaries } from "@/lib/calculations/engine";
+import { z } from "zod";
+
+const updateOrgSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  industry: z.string().max(100).optional().nullable(),
+  profitableMarginThreshold: z.coerce.number().min(0.1).max(100).optional(),
+  lowMarginThreshold: z.coerce.number().min(0).max(99.9).optional(),
+});
 
 export async function GET() {
   const auth = await getAuthenticatedUser();
@@ -28,36 +36,50 @@ export async function PATCH(req: NextRequest) {
   }
 
   try {
-    const { name, industry, profitableMarginThreshold, lowMarginThreshold } = await req.json();
+    const body = await req.json();
+    const parsed = updateOrgSchema.safeParse(body);
 
-    const dataToUpdate: any = {};
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || "Invalid settings input" },
+        { status: 400 }
+      );
+    }
+
+    const { name, industry, profitableMarginThreshold, lowMarginThreshold } = parsed.data;
+
+    // Validate relative order of thresholds
+    const currentProfitable = profitableMarginThreshold ?? auth.organization.profitableMarginThreshold;
+    const currentLow = lowMarginThreshold ?? auth.organization.lowMarginThreshold;
+
+    if (currentProfitable <= currentLow) {
+      return NextResponse.json(
+        { error: "Profitable margin threshold must be greater than low-margin threshold." },
+        { status: 400 }
+      );
+    }
+
+    const dataToUpdate: Record<string, any> = {};
     if (name) dataToUpdate.name = name.trim();
     if (industry !== undefined) dataToUpdate.industry = industry ? industry.trim() : null;
 
     let thresholdsChanged = false;
-
     if (profitableMarginThreshold !== undefined) {
-      const p = parseFloat(profitableMarginThreshold);
-      if (!isNaN(p)) {
-        dataToUpdate.profitableMarginThreshold = p;
-        thresholdsChanged = true;
-      }
+      dataToUpdate.profitableMarginThreshold = profitableMarginThreshold;
+      thresholdsChanged = true;
     }
-
     if (lowMarginThreshold !== undefined) {
-      const l = parseFloat(lowMarginThreshold);
-      if (!isNaN(l)) {
-        dataToUpdate.lowMarginThreshold = l;
-        thresholdsChanged = true;
-      }
+      dataToUpdate.lowMarginThreshold = lowMarginThreshold;
+      thresholdsChanged = true;
     }
 
+    // Tenant isolation: update strictly scoped to authenticated organization id
     const updatedOrg = await prisma.organization.update({
       where: { id: auth.organization.id },
       data: dataToUpdate,
     });
 
-    // If thresholds changed, immediately re-classify all monthly client period summaries!
+    // Re-classify all summaries for this org if threshold parameters shifted
     if (thresholdsChanged) {
       await recalculateClientSummaries(auth.organization.id);
     }
@@ -65,6 +87,6 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ data: updatedOrg });
   } catch (error: any) {
     console.error("Org update error:", error);
-    return NextResponse.json({ error: error.message || "Failed to update organization" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to update organization" }, { status: 500 });
   }
 }

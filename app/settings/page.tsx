@@ -17,9 +17,6 @@ import {
   RefreshCw,
   Check,
   AlertTriangle,
-  Mail,
-  Shield,
-  ArrowRight,
   LogOut,
 } from "lucide-react";
 

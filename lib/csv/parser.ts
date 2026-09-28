@@ -26,6 +26,7 @@ export interface ValidatedTransactionRow {
   clientName: string;
   transactionDate: Date;
   amount: number;
+  amountCents: number; // Integer cents representation for money
   type: "revenue" | "cost";
   category: string;
   description: string;
@@ -38,10 +39,38 @@ export interface CsvValidationResult {
   previewRows: Array<Record<string, any>>;
 }
 
+export const MAX_CSV_ROWS = 50000;
+export const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+
+/**
+ * Strips UTF-8 Byte Order Mark (BOM) if present at start of CSV text
+ */
+export function stripBOM(content: string): string {
+  if (content.charCodeAt(0) === 0xfeff) {
+    return content.slice(1);
+  }
+  return content;
+}
+
+/**
+ * Protect against CSV / Spreadsheet formula injection (DDE injection)
+ * Characters: = , + , - , @
+ */
+export function sanitizeCellFormula(val: string): string {
+  if (!val) return "";
+  const trimmed = val.trim();
+  if (/^[=+\-@\t\r]/.test(trimmed)) {
+    // Prepend single quote to neutralize formula evaluation in Excel/Sheets
+    return `'${trimmed}`;
+  }
+  return trimmed;
+}
+
 /**
  * Clean and parse currency/numeric strings (e.g. "$1,250.00", "(200.00)", " 340.50 ")
+ * Returns both regular float and precision integer cents to eliminate float rounding errors.
  */
-export function parseNumericAmount(val: any): { amount: number; isNegative: boolean } | null {
+export function parseNumericAmount(val: any): { amount: number; amountCents: number; isNegative: boolean } | null {
   if (val === null || val === undefined) return null;
   let str = String(val).trim();
   if (!str) return null;
@@ -51,12 +80,20 @@ export function parseNumericAmount(val: any): { amount: number; isNegative: bool
     isNegative = true;
     str = str.slice(1, -1);
   }
+
+  // Remove currency signs, commas, and whitespace
   str = str.replace(/[^0-9.-]/g, "");
+  if (!str || str === "-" || str === ".") return null;
+
   const num = parseFloat(str);
   if (isNaN(num)) return null;
 
+  const finalAmount = Math.abs(num);
+  const amountCents = Math.round(finalAmount * 100);
+
   return {
-    amount: Math.abs(num),
+    amount: finalAmount,
+    amountCents,
     isNegative: isNegative || num < 0,
   };
 }
@@ -69,14 +106,18 @@ export function parseFlexibleDate(val: any): Date | null {
   const str = String(val).trim();
   if (!str) return null;
 
-  // Direct ISO parsing
+  // Direct ISO parsing YYYY-MM-DD
   const d1 = new Date(str);
   if (!isNaN(d1.getTime()) && str.includes("-")) {
+    const parts = str.split("-");
+    if (parts.length === 3 && parts[0].length === 4) {
+      return new Date(Date.UTC(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10)));
+    }
     return d1;
   }
 
   // Handle slash formats MM/DD/YYYY or DD/MM/YYYY
-  const slashParts = str.split("/");
+  const slashParts = str.split(/[\/\.]/);
   if (slashParts.length === 3) {
     const p0 = parseInt(slashParts[0], 10);
     const p1 = parseInt(slashParts[1], 10);
@@ -101,7 +142,7 @@ export function parseFlexibleDate(val: any): Date | null {
 }
 
 /**
- * Intelligent field auto-matching heuristics
+ * Heuristics to auto-map CSV column headers
  */
 export function autoDetectColumnMapping(headers: string[], uploadType: "combined" | "sales" | "cost"): ColumnMapping {
   const lowerHeaders = headers.map((h) => h.toLowerCase().trim());
@@ -133,7 +174,7 @@ export function autoDetectColumnMapping(headers: string[], uploadType: "combined
 }
 
 /**
- * Validates parsed CSV rows against chosen column mapping
+ * Validates parsed CSV rows against chosen column mapping with formula sanitization and bounds checking
  */
 export function validateCsvRows(
   rows: Record<string, any>[],
@@ -143,16 +184,19 @@ export function validateCsvRows(
   const validRows: ValidatedTransactionRow[] = [];
   const errors: RowValidationError[] = [];
 
-  rows.forEach((row, index) => {
+  const rowCount = Math.min(rows.length, MAX_CSV_ROWS);
+
+  for (let index = 0; index < rowCount; index++) {
+    const row = rows[index];
     const rowNumber = index + 2; // +1 for 0-index, +1 for header row
-    const rawClient = row[mapping.clientName]?.trim();
+    const rawClient = row[mapping.clientName]?.toString().trim();
     const rawDate = row[mapping.transactionDate];
     const rawAmount = row[mapping.amount];
-    const rawType = mapping.type ? row[mapping.type]?.toLowerCase().trim() : undefined;
-    const rawCategory = mapping.category ? row[mapping.category]?.trim() : "";
-    const rawDescription = mapping.description ? row[mapping.description]?.trim() : "";
+    const rawType = mapping.type ? row[mapping.type]?.toString().toLowerCase().trim() : undefined;
+    const rawCategory = mapping.category ? row[mapping.category]?.toString().trim() : "";
+    const rawDescription = mapping.description ? row[mapping.description]?.toString().trim() : "";
 
-    // Check Client Name
+    // 1. Check Client Name
     if (!rawClient) {
       errors.push({
         rowNumber,
@@ -160,10 +204,10 @@ export function validateCsvRows(
         message: "Client name is empty or missing",
         rawRow: row,
       });
-      return;
+      continue;
     }
 
-    // Check Date
+    // 2. Check Date
     const parsedDate = parseFlexibleDate(rawDate);
     if (!parsedDate) {
       errors.push({
@@ -172,29 +216,29 @@ export function validateCsvRows(
         message: `Date '${rawDate}' cannot be parsed. Expected YYYY-MM-DD or MM/DD/YYYY`,
         rawRow: row,
       });
-      return;
+      continue;
     }
 
-    // Check Amount
+    // 3. Check Amount
     const parsedAmountResult = parseNumericAmount(rawAmount);
     if (!parsedAmountResult) {
       errors.push({
         rowNumber,
         field: "amount",
-        message: `Amount '${rawAmount}' is not a valid number`,
+        message: `Amount '${rawAmount}' is not a valid number or currency`,
         rawRow: row,
       });
-      return;
+      continue;
     }
 
-    // Determine type: revenue or cost
+    // 4. Determine type: revenue or cost
     let finalType: "revenue" | "cost" = "revenue";
     if (uploadType === "cost") {
       finalType = "cost";
     } else if (uploadType === "sales") {
       finalType = "revenue";
     } else if (rawType) {
-      if (rawType.includes("cost") || rawType.includes("expense")) {
+      if (rawType.includes("cost") || rawType.includes("expense") || rawType === "c") {
         finalType = "cost";
       } else {
         finalType = "revenue";
@@ -203,18 +247,29 @@ export function validateCsvRows(
       finalType = mapping.defaultType;
     }
 
-    const category = rawCategory || (finalType === "revenue" ? "Sales & Subscriptions" : "General Delivery Cost");
+    // If negative amount was parsed on revenue, handle as negative or refund
+    const finalAmount = parsedAmountResult.amount;
+    const finalAmountCents = parsedAmountResult.amountCents;
+
+    const sanitizedClient = sanitizeCellFormula(rawClient);
+    const sanitizedCategory = sanitizeCellFormula(
+      rawCategory || (finalType === "revenue" ? "Sales & Subscriptions" : "General Delivery Cost")
+    );
+    const sanitizedDescription = sanitizeCellFormula(
+      rawDescription || `${finalType === "revenue" ? "Revenue" : "Expense"} transaction`
+    );
 
     validRows.push({
       rowNumber,
-      clientName: rawClient,
+      clientName: sanitizedClient,
       transactionDate: parsedDate,
-      amount: parsedAmountResult.amount,
+      amount: finalAmount,
+      amountCents: finalAmountCents,
       type: finalType,
-      category,
-      description: rawDescription || `${finalType === "revenue" ? "Revenue" : "Expense"} transaction`,
+      category: sanitizedCategory,
+      description: sanitizedDescription,
     });
-  });
+  }
 
   const previewRows = validRows.slice(0, 20).map((r) => ({
     rowNumber: r.rowNumber,
@@ -235,12 +290,14 @@ export function validateCsvRows(
 }
 
 /**
- * Fast synchronous CSV parser
+ * Fast synchronous CSV parser with UTF-8 BOM removal and greedy whitespace skipping
  */
 export function parseCsvText(csvText: string): { headers: string[]; rows: Record<string, string>[] } {
-  const result = Papa.parse<Record<string, string>>(csvText, {
+  const cleanText = stripBOM(csvText);
+  const result = Papa.parse<Record<string, string>>(cleanText, {
     header: true,
     skipEmptyLines: "greedy",
+    transformHeader: (header: string) => header.trim(),
   });
 
   const headers = result.meta.fields || [];

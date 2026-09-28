@@ -24,86 +24,90 @@ export function InsightsPanel({ insights, isLoading }: InsightsPanelProps) {
   const getIcon = (type: string) => {
     switch (type) {
       case "danger":
-        return <AlertCircle className="w-4 h-4 text-[#d50b3e] shrink-0 mt-0.5" />;
+        return <AlertCircle className="w-4 h-4 text-[#d1255c] shrink-0 mt-0.5" />;
       case "warning":
-        return <AlertTriangle className="w-4 h-4 text-[#996500] shrink-0 mt-0.5" />;
+        return <AlertTriangle className="w-4 h-4 text-[#faae33] shrink-0 mt-0.5" />;
       case "success":
-        return <CheckCircle2 className="w-4 h-4 text-[#1e874c] shrink-0 mt-0.5" />;
+        return <CheckCircle2 className="w-4 h-4 text-[#faae33] shrink-0 mt-0.5" />;
       default:
-        return <Info className="w-4 h-4 text-[#5423e7] shrink-0 mt-0.5" />;
+        return <Info className="w-4 h-4 text-[#faae33]/80 shrink-0 mt-0.5" />;
     }
   };
 
   const getCardStyle = (type: string) => {
     switch (type) {
       case "danger":
-        return "bg-[#d50b3e]/5 border-[#d50b3e]/30";
+        return "bg-[#281006] border-[#d1255c]";
       case "warning":
-        return "bg-[#ffc233]/15 border-[#ffc233]/50";
+        return "bg-[#281006] border-[#faae33]";
       case "success":
-        return "bg-[#1e874c]/5 border-[#1e874c]/30";
+        return "bg-[#281006] border-[#9f531b]";
       default:
-        return "bg-[#5423e7]/5 border-[#5423e7]/30";
+        return "bg-[#281006] border-[#6b2e12]";
     }
   };
 
   return (
-    <div className="p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm">
-      <div className="flex items-center justify-between pb-3 border-b border-[#d1d1db]">
+    <div className="p-6 sm:p-8 rounded-[6px] bg-[#402011] border border-[#6b2e12]">
+      <div className="flex items-center justify-between pb-3 border-b border-[#6b2e12]">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-[#5423e7]/10 text-[#5423e7]">
+          <div className="p-2 rounded-full bg-[#281006] text-[#faae33] border border-[#6b2e12]">
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-display font-bold text-[#121217]">Diagnostic Insights & Alerts</h3>
-            <p className="text-xs text-[#6c6c89]">Automated margin rules calculated over current portfolio data</p>
+            <h3 className="text-base font-salmond font-bold text-[#faae33] tracking-wider uppercase">
+              DIAGNOSTIC INSIGHTS & ALERTS
+            </h3>
+            <p className="text-xs text-[#faae33]/70 font-graphikx">Automated margin rules calculated over current portfolio data</p>
           </div>
         </div>
-        <span className="text-[11px] font-semibold text-[#6c6c89]">
-          {insights.length} active alerts
+        <span className="text-xs font-salmond uppercase tracking-wider text-[#faae33]/60">
+          {insights.length} {insights.length === 1 ? "RULE" : "RULES"} TRIGGERED
         </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-        {insights.map((item) => (
-          <div
-            key={item.id}
-            className={`p-4 rounded-2xl border flex flex-col justify-between transition-all hover:shadow-sm ${getCardStyle(
-              item.type
-            )}`}
-          >
-            <div className="space-y-2">
-              <div className="flex items-start gap-2.5">
-                {getIcon(item.type)}
-                <div className="min-w-0 flex-1">
-                  <h4 className="text-xs font-bold text-[#121217] tracking-tight leading-snug">
-                    {item.title}
-                  </h4>
-                  {item.metric && (
-                    <span className="inline-block mt-1 text-[11px] font-bold font-mono px-2 py-0.5 bg-white rounded-md border border-[#d1d1db] text-[#121217]">
-                      {item.metric}
-                    </span>
-                  )}
+      <div className="space-y-3 mt-4">
+        {insights.length === 0 ? (
+          <div className="py-8 text-center text-xs font-salmond uppercase text-[#faae33]/60">
+            No active alerts detected. All clients meet configured margin criteria.
+          </div>
+        ) : (
+          insights.map((insight) => (
+            <div
+              key={insight.id}
+              className={`p-4 rounded-[6px] border ${getCardStyle(insight.type)} flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all`}
+            >
+              <div className="flex items-start gap-3 min-w-0">
+                {getIcon(insight.type)}
+                <div className="space-y-0.5 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-xs font-bold text-[#faae33] uppercase font-salmond tracking-wider">
+                      {insight.title}
+                    </h4>
+                    {insight.metric && (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-salmond bg-[#281006] border border-[#6b2e12] text-[#faae33]">
+                        {insight.metric}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-[#faae33]/80 leading-relaxed font-graphikx">
+                    {insight.description}
+                  </p>
                 </div>
               </div>
-              <p className="text-[11px] text-[#6c6c89] leading-relaxed pl-6">
-                {item.description}
-              </p>
-            </div>
 
-            {item.actionText && item.actionUrl && (
-              <div className="pt-3 pl-6 mt-2 border-t border-[#d1d1db]">
+              {insight.actionUrl && (
                 <Link
-                  href={item.actionUrl}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-[#121217] hover:text-[#5423e7] transition-colors"
+                  href={insight.actionUrl}
+                  className="btn-ghost-outline self-start sm:self-center shrink-0 flex items-center gap-1.5 text-xs font-salmond tracking-wider py-1 px-3"
                 >
-                  <span>{item.actionText}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>{insight.actionText?.toUpperCase() || "VIEW DRILLDOWN"}</span>
+                  <ArrowRight className="w-3 h-3" />
                 </Link>
-              </div>
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

@@ -10,16 +10,14 @@ import {
   Settings,
   LogOut,
   ChevronDown,
-  Layers,
   Menu,
   X,
-  PlusCircle,
   Database,
   Calendar,
   Sparkles,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
-import { usePeriod, PERIOD_OPTIONS, PeriodKey } from "@/lib/period-context";
+import { usePeriod, PERIOD_OPTIONS } from "@/lib/period-context";
 import { RoleBadge } from "@/components/ui/Badge";
 import { useToast } from "@/lib/toast-context";
 import { apiFetch } from "@/lib/api-client";
@@ -41,10 +39,10 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
   const [isSeeding, setIsSeeding] = useState(false);
 
   const navItems = [
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Clients", href: "/clients", icon: Users },
-    { label: "Uploads", href: "/uploads", icon: UploadCloud },
-    { label: "Settings", href: "/settings", icon: Settings },
+    { label: "DASHBOARD", href: "/dashboard", icon: LayoutDashboard },
+    { label: "CLIENTS", href: "/clients", icon: Users },
+    { label: "UPLOADS", href: "/uploads", icon: UploadCloud },
+    { label: "SETTINGS", href: "/settings", icon: Settings },
   ];
 
   const handleLoadDemoData = async () => {
@@ -61,34 +59,34 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
   };
 
   return (
-    <div className="min-h-screen flex bg-[#f7f7f8] text-[#121217] antialiased selection:bg-[#ffc233] selection:text-[#121217]">
-      {/* Desktop Sidebar (White #ffffff, hairline #d1d1db border) */}
-      <aside className="hidden lg:flex flex-col w-64 border-r border-[#d1d1db] bg-white shrink-0 z-30 sticky top-0 h-screen justify-between">
+    <div className="min-h-screen flex bg-[#823513] text-[#faae33] antialiased selection:bg-[#faae33] selection:text-[#281006]">
+      {/* Desktop Sidebar: Charred Clove #281006 with Cardamom Brown border */}
+      <aside className="hidden lg:flex flex-col w-64 border-r border-[#6b2e12] bg-[#281006] shrink-0 z-30 sticky top-0 h-screen justify-between">
         <div className="flex flex-col flex-1 overflow-y-auto">
           {/* Brand header */}
-          <div className="h-16 flex items-center gap-3 px-5 border-b border-[#d1d1db]">
-            <div className="w-8 h-8 rounded-lg bg-[#5423e7] flex items-center justify-center shadow-sm">
-              <span className="text-white text-base font-extrabold">P</span>
+          <div className="h-18 flex items-center gap-3 px-5 border-b border-[#6b2e12]">
+            <div className="w-9 h-9 rounded-full bg-[#faae33] text-[#281006] flex items-center justify-center font-salmond font-bold text-lg">
+              HT
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <span className="font-display font-extrabold tracking-tight text-[#121217] text-base">
-                  ProfitLens
+                <span className="font-salmond text-xl tracking-tight text-[#faae33]">
+                  CLIENT360
                 </span>
-                <span className="px-1.5 py-0.2 text-[10px] font-semibold bg-[#ffc233] text-[#121217] rounded">
+                <span className="px-2 py-0.5 text-[10px] font-salmond bg-[#faae33] text-[#281006] rounded-full font-bold">
                   PRO
                 </span>
               </div>
-              <span className="text-[11px] text-[#6c6c89] font-medium truncate max-w-[140px]">
+              <span className="text-[11px] text-[#faae33]/70 truncate max-w-[140px] uppercase font-mono tracking-wider">
                 {organization?.name || "Workspace"}
               </span>
             </div>
           </div>
 
           {/* Navigation links */}
-          <nav className="p-3 space-y-1">
-            <div className="px-3 pt-3 pb-2 text-[11px] font-semibold tracking-[2px] text-[#6c6c89] uppercase">
-              Main Menu
+          <nav className="p-3 space-y-1.5">
+            <div className="px-3 pt-3 pb-2 text-[11px] font-salmond tracking-[2px] text-[#faae33]/60 uppercase">
+              MAIN MENU
             </div>
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -101,50 +99,50 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-xs font-salmond tracking-wider uppercase transition-all ${
                     isActive
-                      ? "bg-[#5423e7] text-white shadow-sm font-semibold"
-                      : "text-[#6c6c89] hover:text-[#121217] hover:bg-[#f7f7f8]"
+                      ? "bg-[#faae33] text-[#281006] font-bold"
+                      : "text-[#faae33]/80 hover:text-[#faae33] hover:bg-[#402011]"
                   }`}
                 >
-                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-white" : "text-[#6c6c89]"}`} />
+                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-[#281006]" : "text-[#faae33]"}`} />
                   <span>{item.label}</span>
                 </Link>
               );
             })}
           </nav>
 
-          {/* Lemon Zest Quick Action Banner */}
+          {/* Demo Data Quick Action (Dark Spice card) */}
           <div className="px-3 py-2 mt-auto">
-            <div className="p-3.5 rounded-2xl border border-[#ffc233]/40 bg-[#ffc233]/15 flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#121217]">
-                <Sparkles className="w-3.5 h-3.5 text-[#996500]" />
-                <span>Demo Environment</span>
+            <div className="p-3.5 rounded-[6px] border border-[#6b2e12] bg-[#402011] flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-xs font-salmond text-[#faae33] uppercase">
+                <Sparkles className="w-3.5 h-3.5 text-[#faae33]" />
+                <span>DEMO ENVIRONMENT</span>
               </div>
-              <p className="text-[11px] text-[#6c6c89] leading-relaxed">
-                Need fresh mock data? Re-seed 18 accounts across 12 months with 1 click.
+              <p className="text-[11px] text-[#faae33]/70 leading-relaxed font-graphikx">
+                Reset mock database with 18 accounts across 12 months with 1 click.
               </p>
               <button
                 onClick={handleLoadDemoData}
                 disabled={isSeeding}
-                className="w-full flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white hover:bg-[#f7f7f8] text-[#121217] border border-[#d1d1db] transition-colors disabled:opacity-50 shadow-sm"
+                className="btn-ghost-outline w-full flex items-center justify-center gap-1.5 text-xs font-salmond uppercase disabled:opacity-50"
               >
-                <Database className="w-3.5 h-3.5 text-[#5423e7]" />
-                <span>{isSeeding ? "Seeding..." : "Load Demo Data"}</span>
+                <Database className="w-3.5 h-3.5 text-[#faae33]" />
+                <span>{isSeeding ? "SEEDING..." : "RE-SEED TURSO"}</span>
               </button>
             </div>
           </div>
         </div>
 
         {/* User Card & Logout */}
-        <div className="p-3 border-t border-[#d1d1db] bg-white">
-          <div className="flex items-center justify-between p-2 rounded-xl bg-[#f7f7f8] border border-[#d1d1db]">
+        <div className="p-3 border-t border-[#6b2e12] bg-[#281006]">
+          <div className="flex items-center justify-between p-2 rounded-[6px] bg-[#402011] border border-[#6b2e12]">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-[#5423e7] text-white flex items-center justify-center text-xs font-bold shrink-0">
+              <div className="w-8 h-8 rounded-full bg-[#faae33] text-[#281006] flex items-center justify-center text-xs font-bold shrink-0">
                 {user?.fullName?.charAt(0) || "U"}
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold text-[#121217] truncate max-w-[100px]">
+                <span className="text-xs font-bold text-[#faae33] truncate max-w-[100px]">
                   {user?.fullName || "User"}
                 </span>
                 <RoleBadge role={role} />
@@ -153,7 +151,7 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
             <button
               onClick={logout}
               title="Sign Out"
-              className="text-[#6c6c89] hover:text-[#d50b3e] p-1.5 rounded-md hover:bg-white transition-colors"
+              className="text-[#faae33]/70 hover:text-[#d1255c] p-1.5 rounded-full hover:bg-[#281006] transition-colors"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -162,23 +160,23 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
       </aside>
 
       {/* Main Content Viewport */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[#823513]">
         {/* Top Header Bar */}
-        <header className="h-16 border-b border-[#d1d1db] bg-white sticky top-0 z-20 px-4 sm:px-6 flex items-center justify-between gap-4">
+        <header className="h-16 border-b border-[#6b2e12] bg-[#281006] sticky top-0 z-20 px-4 sm:px-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             {/* Mobile menu trigger */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden text-[#6c6c89] hover:text-[#121217] p-1.5 rounded-lg border border-[#d1d1db] hover:bg-[#f7f7f8]"
+              className="lg:hidden text-[#faae33] hover:text-[#faae33] p-1.5 rounded-full border border-[#6b2e12] hover:bg-[#402011]"
             >
               <Menu className="w-5 h-5" />
             </button>
             <div className="flex flex-col min-w-0">
-              <h1 className="text-base sm:text-lg font-display font-bold text-[#121217] truncate tracking-tight">
-                {pageTitle || "Dashboard"}
+              <h1 className="text-lg sm:text-2xl font-salmond font-bold text-[#faae33] truncate tracking-wide">
+                {pageTitle || "DASHBOARD"}
               </h1>
               {pageDescription && (
-                <p className="text-xs text-[#6c6c89] truncate hidden sm:block">
+                <p className="text-xs text-[#faae33]/70 truncate hidden sm:block font-graphikx">
                   {pageDescription}
                 </p>
               )}
@@ -191,11 +189,11 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
             <div className="relative">
               <button
                 onClick={() => setPeriodDropdownOpen(!periodDropdownOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-[#d1d1db] hover:border-[#6c6c89] text-xs font-medium text-[#121217] shadow-sm transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#402011] border border-[#6b2e12] hover:border-[#faae33] text-xs font-salmond tracking-wider text-[#faae33] transition-all"
               >
-                <Calendar className="w-3.5 h-3.5 text-[#5423e7] shrink-0" />
-                <span>{periodLabel}</span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#6c6c89]" />
+                <Calendar className="w-3.5 h-3.5 text-[#faae33] shrink-0" />
+                <span>{periodLabel.toUpperCase()}</span>
+                <ChevronDown className="w-3.5 h-3.5 text-[#faae33]" />
               </button>
 
               {periodDropdownOpen && (
@@ -204,9 +202,9 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
                     className="fixed inset-0 z-40"
                     onClick={() => setPeriodDropdownOpen(false)}
                   />
-                  <div className="absolute right-0 mt-1.5 w-52 rounded-2xl bg-white border border-[#d1d1db] shadow-xl py-1.5 z-50">
-                    <div className="px-3 py-1 text-[10px] font-semibold uppercase tracking-[2px] text-[#6c6c89] border-b border-[#d1d1db]">
-                      Select Time Range
+                  <div className="absolute right-0 mt-1.5 w-56 rounded-[6px] bg-[#402011] border border-[#6b2e12] shadow-2xl py-1.5 z-50">
+                    <div className="px-3 py-1 text-[10px] font-salmond uppercase tracking-[2px] text-[#faae33]/60 border-b border-[#6b2e12]">
+                      SELECT TIME RANGE
                     </div>
                     {PERIOD_OPTIONS.map((opt) => (
                       <button
@@ -215,35 +213,35 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
                           setPeriod(opt.key);
                           setPeriodDropdownOpen(false);
                         }}
-                        className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
+                        className={`w-full text-left px-3 py-2 text-xs font-salmond uppercase tracking-wider flex items-center justify-between transition-colors ${
                           period === opt.key
-                            ? "bg-[#5423e7]/10 text-[#5423e7] font-semibold"
-                            : "text-[#121217] hover:bg-[#f7f7f8]"
+                            ? "bg-[#faae33] text-[#281006] font-bold"
+                            : "text-[#faae33] hover:bg-[#6b2e12]"
                         }`}
                       >
                         <span>{opt.label}</span>
                         {period === opt.key && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#5423e7]" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#281006]" />
                         )}
                       </button>
                     ))}
 
                     {/* Custom range input fields if Custom is selected */}
                     {period === "custom" && (
-                      <div className="p-3 border-t border-[#d1d1db] space-y-2">
-                        <label className="text-[11px] text-[#6c6c89] block">From:</label>
+                      <div className="p-3 border-t border-[#6b2e12] space-y-2">
+                        <label className="text-[11px] text-[#faae33]/70 block font-salmond uppercase">From:</label>
                         <input
                           type="date"
                           value={customStart}
                           onChange={(e) => setCustomStart(e.target.value)}
-                          className="w-full text-xs bg-[#f7f7f8] border border-[#d1d1db] rounded px-2 py-1 text-[#121217]"
+                          className="tiger-input w-full text-xs py-1"
                         />
-                        <label className="text-[11px] text-[#6c6c89] block">To:</label>
+                        <label className="text-[11px] text-[#faae33]/70 block font-salmond uppercase">To:</label>
                         <input
                           type="date"
                           value={customEnd}
                           onChange={(e) => setCustomEnd(e.target.value)}
-                          className="w-full text-xs bg-[#f7f7f8] border border-[#d1d1db] rounded px-2 py-1 text-[#121217]"
+                          className="tiger-input w-full text-xs py-1"
                         />
                       </div>
                     )}
@@ -252,83 +250,70 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
               )}
             </div>
 
-            {/* Quick Upload Action Button (#121217 8px radius) */}
+            {/* Quick Upload Action Button */}
             {role !== "member" && (
               <Link
                 href="/uploads"
-                className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#121217] hover:bg-[#272730] text-white text-xs font-semibold shadow-sm transition-all"
+                className="btn-primary-filled hidden sm:flex items-center gap-1.5 text-xs font-salmond"
               >
-                <PlusCircle className="w-3.5 h-3.5" />
-                <span>Upload CSV</span>
+                <UploadCloud className="w-3.5 h-3.5" />
+                <span>UPLOAD CSV</span>
               </Link>
             )}
           </div>
         </header>
 
-        {/* Mobile Slide-Over Menu */}
-        {mobileMenuOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden flex">
-            <div
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            />
-            <div className="relative w-64 bg-white border-r border-[#d1d1db] p-4 flex flex-col justify-between z-10">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-[#d1d1db]">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-[#5423e7] text-white flex items-center justify-center font-bold text-xs">
-                      P
-                    </div>
-                    <span className="font-bold text-[#121217]">ProfitLens</span>
-                  </div>
-                  <button
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-[#6c6c89] hover:text-[#121217]"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-                <nav className="space-y-1">
-                  {navItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = pathname.startsWith(item.href);
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium ${
-                          isActive
-                            ? "bg-[#5423e7] text-white font-semibold"
-                            : "text-[#6c6c89] hover:text-[#121217]"
-                        }`}
-                      >
-                        <Icon className="w-4 h-4" />
-                        <span>{item.label}</span>
-                      </Link>
-                    );
-                  })}
-                </nav>
-              </div>
+        {/* Dotted divider below header */}
+        <div className="dotted-divider opacity-50" />
 
-              <div className="pt-4 border-t border-[#d1d1db]">
-                <button
-                  onClick={logout}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#f7f7f8] border border-[#d1d1db] text-xs font-semibold text-[#d50b3e]"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Sign Out</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Page Content Body */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1200px] w-full mx-auto">
+        {/* Main Content Area */}
+        <main className="flex-1 p-4 sm:p-6 max-w-[1440px] w-full mx-auto">
           {children}
         </main>
       </div>
+
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div
+            className="fixed inset-0 bg-[#281006]/80 backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div className="fixed inset-y-0 left-0 w-64 bg-[#281006] border-r border-[#6b2e12] flex flex-col justify-between p-4 z-50">
+            <div>
+              <div className="flex items-center justify-between pb-4 border-b border-[#6b2e12]">
+                <span className="font-salmond text-xl font-bold text-[#faae33]">CLIENT360</span>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-[#faae33] p-1 rounded-full hover:bg-[#402011]"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <nav className="mt-4 space-y-2">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2 rounded-full text-sm font-salmond uppercase tracking-wider text-[#faae33] hover:bg-[#402011]"
+                  >
+                    <item.icon className="w-4 h-4 text-[#faae33]" />
+                    <span>{item.label}</span>
+                  </Link>
+                ))}
+              </nav>
+            </div>
+            <button
+              onClick={logout}
+              className="btn-ghost-outline w-full flex items-center justify-center gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>SIGN OUT</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

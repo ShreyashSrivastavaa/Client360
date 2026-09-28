@@ -3,6 +3,23 @@ import { getAuthenticatedUser } from "@/lib/auth";
 import { parseCsvText, validateCsvRows, ColumnMapping } from "@/lib/csv/parser";
 import { recalculateClientSummaries } from "@/lib/calculations/engine";
 import { prisma } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
+import { z } from "zod";
+
+const confirmUploadSchema = z.object({
+  fileName: z.string().min(1).max(255).default("upload.csv"),
+  uploadType: z.enum(["combined", "sales", "cost"]).default("combined"),
+  columnMapping: z.object({
+    clientName: z.string().min(1),
+    transactionDate: z.string().min(1),
+    amount: z.string().min(1),
+    type: z.string().optional(),
+    category: z.string().optional(),
+    description: z.string().optional(),
+    defaultType: z.enum(["revenue", "cost"]).optional(),
+  }),
+  rawCsvText: z.string().min(1, "rawCsvText cannot be empty"),
+});
 
 export async function POST(req: NextRequest) {
   const auth = await getAuthenticatedUser();
@@ -17,27 +34,39 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  try {
-    const { fileName, uploadType, columnMapping, rawCsvText } = await req.json();
+  // Rate limit confirmation imports
+  const rl = rateLimit(auth.user.id, { keyPrefix: "confirm_upload", limit: 5, windowMs: 60 * 1000 });
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: "Too many import requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": "60" } }
+    );
+  }
 
-    if (!rawCsvText || !columnMapping) {
+  try {
+    const body = await req.json();
+    const parsed = confirmUploadSchema.safeParse(body);
+
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Missing required rawCsvText or columnMapping" },
+        { error: parsed.error.issues[0]?.message || "Invalid upload parameters" },
         { status: 400 }
       );
     }
+
+    const { fileName, uploadType, columnMapping, rawCsvText } = parsed.data;
 
     const { rows } = parseCsvText(rawCsvText);
     const validationResult = validateCsvRows(
       rows,
       columnMapping as ColumnMapping,
-      uploadType || "combined"
+      uploadType
     );
 
     if (validationResult.validRows.length === 0) {
       return NextResponse.json(
         {
-          error: "No valid rows could be imported. Please review the column mapping and errors.",
+          error: "No valid rows could be imported. Please review column mappings and errors.",
           errors: validationResult.errors,
         },
         { status: 400 }
@@ -83,9 +112,9 @@ export async function POST(req: NextRequest) {
         organizationId: orgId,
         uploadedByUserId: auth.user.id,
         fileName: fileName || "upload.csv",
-        uploadType: uploadType || "combined",
+        uploadType: uploadType,
         columnMapping: JSON.stringify(columnMapping),
-        status: validationResult.errors.length > 0 ? "completed" : "completed",
+        status: validationResult.errors.length > 0 ? "partial" : "completed",
         totalRows: validationResult.totalRows,
         validRows: validationResult.validRows.length,
         failedRows: validationResult.errors.length,
@@ -108,7 +137,7 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    // Insert transactions in chunks
+    // Insert transactions in chunks of 200
     const chunkSize = 200;
     for (let i = 0; i < transactionsData.length; i += chunkSize) {
       const chunk = transactionsData.slice(i, i + chunkSize);
@@ -126,12 +155,12 @@ export async function POST(req: NextRequest) {
         totalRows: validationResult.totalRows,
         validRows: validationResult.validRows.length,
         failedRows: validationResult.errors.length,
-        errorSample: validationResult.errors.slice(0, 10),
+        errorSample: validationResult.errors.slice(0, 20),
       },
       message: `Successfully imported ${validationResult.validRows.length} transactions across ${newClientNames.size} new and existing clients.`,
     });
   } catch (error: any) {
     console.error("Confirm upload error:", error);
-    return NextResponse.json({ error: error.message || "Failed to process import" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to process import" }, { status: 500 });
   }
 }

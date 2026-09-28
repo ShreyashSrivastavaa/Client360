@@ -32,152 +32,128 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
     );
   }
 
-  const maxTopProfit = Math.max(1, ...(topClients.map((c) => c.profit) || [1]));
-  const maxBottomAbsProfit = Math.max(1, ...(bottomClients.map((c) => Math.abs(c.profit)) || [1]));
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Top 5 Most Profitable Clients */}
-      <div className="p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm flex flex-col justify-between">
-        <div className="flex items-center justify-between pb-3 border-b border-[#d1d1db]">
+      <div className="p-6 sm:p-8 rounded-[6px] bg-[#402011] border border-[#6b2e12] flex flex-col justify-between">
+        <div className="flex items-center justify-between pb-3 border-b border-[#6b2e12]">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-[#1e874c]/10 text-[#1e874c]">
+            <div className="p-2 rounded-full bg-[#281006] text-[#faae33] border border-[#6b2e12]">
               <Trophy className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-display font-bold text-[#121217]">Top 5 Most Profitable Accounts</h3>
-              <p className="text-xs text-[#6c6c89]">Highest gross profit generation in period</p>
+              <h3 className="text-base font-salmond font-bold text-[#faae33] tracking-wider uppercase">
+                TOP 5 PROFITABLE ACCOUNTS
+              </h3>
+              <p className="text-xs text-[#faae33]/70 font-graphikx">Highest gross profit contributors</p>
             </div>
           </div>
           <Link
             href="/clients?sort=profit_desc"
-            className="text-xs text-[#5423e7] hover:text-[#4518cc] flex items-center gap-1 font-semibold"
+            className="text-xs font-salmond uppercase tracking-wider text-[#faae33] hover:underline flex items-center gap-1"
           >
-            <span>View All</span>
+            <span>VIEW ALL</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="space-y-3 mt-4">
+        <div className="divide-y divide-[#6b2e12] my-2">
           {topClients.length === 0 ? (
-            <div className="py-8 text-center text-xs text-[#6c6c89]">
-              No clients found for this period.
+            <div className="py-8 text-center text-xs font-salmond uppercase text-[#faae33]/60">
+              No profitable accounts in this period
             </div>
           ) : (
-            topClients.map((client, idx) => {
-              const widthPct = Math.max(8, Math.min(100, (client.profit / maxTopProfit) * 100));
-              return (
-                <Link
-                  key={client.id}
-                  href={`/clients/${client.id}`}
-                  className="group block p-3 rounded-2xl hover:bg-[#f7f7f8] border border-transparent hover:border-[#d1d1db] transition-all"
-                >
-                  <div className="flex items-center justify-between text-xs mb-1.5">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-[11px] font-bold text-[#6c6c89] w-4">
-                        #{idx + 1}
-                      </span>
-                      <span className="font-bold text-[#121217] group-hover:text-[#5423e7] truncate">
-                        {client.name}
-                      </span>
-                      <ClassificationBadge classification={client.classification} showDot={false} />
-                    </div>
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-[#6c6c89] tabular-nums text-[11px] font-medium">
-                        {formatPercent(client.marginPercent)}
-                      </span>
-                      <span className="font-bold text-[#1e874c] tabular-nums">
-                        {formatCurrency(client.profit)}
-                      </span>
-                    </div>
+            topClients.map((c, i) => (
+              <div key={c.id} className="py-3 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="w-5 text-center text-xs font-salmond font-bold text-[#faae33]/60">
+                    #{i + 1}
+                  </span>
+                  <div className="min-w-0">
+                    <Link
+                      href={`/clients/${c.id}`}
+                      className="text-xs font-bold text-[#faae33] hover:underline truncate block"
+                    >
+                      {c.name}
+                    </Link>
+                    <span className="text-[11px] text-[#faae33]/60 font-graphikx">
+                      {formatCurrency(c.revenue)} rev • {formatPercent(c.marginPercent)}
+                    </span>
                   </div>
+                </div>
 
-                  {/* Horizontal Bar */}
-                  <div className="w-full h-2 bg-[#f7f7f8] border border-[#d1d1db] rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#1e874c] rounded-full transition-all duration-500"
-                      style={{ width: `${widthPct}%` }}
-                    />
+                <div className="text-right shrink-0">
+                  <div className="text-sm font-salmond font-bold text-[#faae33] tabular-nums">
+                    +{formatCurrency(c.profit)}
                   </div>
-                </Link>
-              );
-            })
+                  <ClassificationBadge classification={c.classification} showDot={false} />
+                </div>
+              </div>
+            ))
           )}
         </div>
       </div>
 
-      {/* Bottom 5 Least Profitable Clients */}
-      <div className="p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm flex flex-col justify-between">
-        <div className="flex items-center justify-between pb-3 border-b border-[#d1d1db]">
+      {/* Bottom 5 Clients (Loss Makers / Drains) */}
+      <div className="p-6 sm:p-8 rounded-[6px] bg-[#402011] border border-[#6b2e12] flex flex-col justify-between">
+        <div className="flex items-center justify-between pb-3 border-b border-[#6b2e12]">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-[#d50b3e]/10 text-[#d50b3e]">
+            <div className="p-2 rounded-full bg-[#281006] text-[#d1255c] border border-[#6b2e12]">
               <AlertOctagon className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-display font-bold text-[#121217]">Bottom 5 Least Profitable Accounts</h3>
-              <p className="text-xs text-[#6c6c89]">Lowest margin and loss-making accounts</p>
+              <h3 className="text-base font-salmond font-bold text-[#faae33] tracking-wider uppercase">
+                BOTTOM 5 ACCOUNTS / DRAINS
+              </h3>
+              <p className="text-xs text-[#faae33]/70 font-graphikx">Lowest margin or loss-making clients</p>
             </div>
           </div>
           <Link
-            href="/clients?status=loss_making"
-            className="text-xs text-[#d50b3e] hover:text-[#b00832] flex items-center gap-1 font-semibold"
+            href="/clients?sort=profit_asc"
+            className="text-xs font-salmond uppercase tracking-wider text-[#faae33] hover:underline flex items-center gap-1"
           >
-            <span>Review Losses</span>
+            <span>VIEW ALL</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="space-y-3 mt-4">
+        <div className="divide-y divide-[#6b2e12] my-2">
           {bottomClients.length === 0 ? (
-            <div className="py-8 text-center text-xs text-[#6c6c89]">
-              No clients found for this period.
+            <div className="py-8 text-center text-xs font-salmond uppercase text-[#faae33]/60">
+              No bottom or loss accounts in this period
             </div>
           ) : (
-            bottomClients.map((client, idx) => {
-              const isLoss = client.profit < 0;
-              const widthPct = Math.max(8, Math.min(100, (Math.abs(client.profit) / maxBottomAbsProfit) * 100));
-              return (
-                <Link
-                  key={client.id}
-                  href={`/clients/${client.id}`}
-                  className="group block p-3 rounded-2xl hover:bg-[#f7f7f8] border border-transparent hover:border-[#d1d1db] transition-all"
-                >
-                  <div className="flex items-center justify-between text-xs mb-1.5">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-[11px] font-bold text-[#6c6c89] w-4">
-                        #{idx + 1}
-                      </span>
-                      <span className="font-bold text-[#121217] group-hover:text-[#d50b3e] truncate">
-                        {client.name}
-                      </span>
-                      <ClassificationBadge classification={client.classification} showDot={false} />
-                    </div>
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-[#6c6c89] tabular-nums text-[11px] font-medium">
-                        {formatPercent(client.marginPercent)}
-                      </span>
-                      <span
-                        className={`font-bold tabular-nums ${
-                          isLoss ? "text-[#d50b3e]" : "text-[#996500]"
-                        }`}
-                      >
-                        {formatCurrency(client.profit)}
-                      </span>
-                    </div>
+            bottomClients.map((c, i) => (
+              <div key={c.id} className="py-3 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="w-5 text-center text-xs font-salmond font-bold text-[#d1255c]/80">
+                    #{i + 1}
+                  </span>
+                  <div className="min-w-0">
+                    <Link
+                      href={`/clients/${c.id}`}
+                      className="text-xs font-bold text-[#faae33] hover:underline truncate block"
+                    >
+                      {c.name}
+                    </Link>
+                    <span className="text-[11px] text-[#faae33]/60 font-graphikx">
+                      {formatCurrency(c.revenue)} rev • {formatPercent(c.marginPercent)}
+                    </span>
                   </div>
+                </div>
 
-                  {/* Horizontal Bar */}
-                  <div className="w-full h-2 bg-[#f7f7f8] border border-[#d1d1db] rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        isLoss ? "bg-[#d50b3e]" : "bg-[#ffc233]"
-                      }`}
-                      style={{ width: `${widthPct}%` }}
-                    />
+                <div className="text-right shrink-0">
+                  <div
+                    className={`text-sm font-salmond font-bold tabular-nums ${
+                      c.profit < 0 ? "text-[#d1255c]" : "text-[#faae33]"
+                    }`}
+                  >
+                    {c.profit < 0 ? `-${formatCurrency(Math.abs(c.profit))}` : formatCurrency(c.profit)}
                   </div>
-                </Link>
-              );
-            })
+                  <ClassificationBadge classification={c.classification} showDot={false} />
+                </div>
+              </div>
+            ))
           )}
         </div>
       </div>

@@ -11,12 +11,12 @@ import { usePeriod } from "@/lib/period-context";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api-client";
 import { useToast } from "@/lib/toast-context";
-import { Sparkles, UploadCloud, RefreshCw, AlertCircle } from "lucide-react";
+import { Sparkles, UploadCloud, AlertCircle } from "lucide-react";
 import Link from "next/link";
 
 export default function DashboardPage() {
   const { period, customStart, customEnd } = usePeriod();
-  const { user, organization, isLoading: authLoading } = useAuth();
+  const { organization } = useAuth();
   const { success, error } = useToast();
 
   const [summary, setSummary] = useState<DashboardSummaryData | null>(null);

@@ -50,30 +50,30 @@ export function getClassificationConfig(classification: string | null | undefine
     case "profitable":
       return {
         label: "Profitable",
-        badgeClass: "bg-[#1e874c]/10 text-[#1e874c] border-[#1e874c]/25",
-        dotClass: "bg-[#1e874c]",
-        color: "#1e874c",
+        badgeClass: "bg-[#faae33] text-[#281006] border-[#faae33] font-bold",
+        dotClass: "bg-[#281006]",
+        color: "#faae33",
       };
     case "low_margin":
       return {
         label: "Low-Margin",
-        badgeClass: "bg-[#ffc233]/20 text-[#996500] border-[#ffc233]/40",
-        dotClass: "bg-[#ffc233]",
-        color: "#ffc233",
+        badgeClass: "bg-[#9f531b]/30 text-[#faae33] border-[#9f531b]",
+        dotClass: "bg-[#9f531b]",
+        color: "#9f531b",
       };
     case "loss_making":
       return {
         label: "Loss-Making",
-        badgeClass: "bg-[#d50b3e]/10 text-[#d50b3e] border-[#d50b3e]/25",
-        dotClass: "bg-[#d50b3e]",
-        color: "#d50b3e",
+        badgeClass: "bg-[#d1255c] text-white border-[#d1255c] font-bold",
+        dotClass: "bg-white",
+        color: "#d1255c",
       };
     default:
       return {
         label: "No Revenue",
-        badgeClass: "bg-[#6c6c89]/10 text-[#6c6c89] border-[#6c6c89]/25",
-        dotClass: "bg-[#6c6c89]",
-        color: "#6c6c89",
+        badgeClass: "bg-[#402011] text-[#faae33]/70 border-[#6b2e12]",
+        dotClass: "bg-[#6b2e12]",
+        color: "#6b2e12",
       };
   }
 }

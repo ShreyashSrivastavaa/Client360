@@ -7,7 +7,6 @@ import {
   ArrowRight,
   Sparkles,
   UploadCloud,
-  CheckCircle2,
   RefreshCw,
   AlertCircle,
 } from "lucide-react";

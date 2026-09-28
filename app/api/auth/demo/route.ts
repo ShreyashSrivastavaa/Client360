@@ -50,12 +50,16 @@ export async function POST() {
 
     const membership = user.memberships[0];
 
-    await setAuthCookie({
-      userId: user.id,
-      email: user.email,
-      organizationId: membership.organizationId,
-      role: membership.role as "owner" | "admin" | "member",
-    });
+    await setAuthCookie(
+      {
+        userId: user.id,
+        email: user.email,
+        organizationId: membership.organizationId,
+        role: membership.role as "owner" | "admin" | "member",
+        isDemo: true,
+      },
+      60 * 60 * 4 // 4 hour sandboxed session
+    );
 
     return NextResponse.json({
       data: {

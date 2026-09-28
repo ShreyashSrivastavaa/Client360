@@ -10,7 +10,7 @@ import {
   Minus,
   Percent,
 } from "lucide-react";
-import { formatCurrency, formatPercent } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import { CardSkeleton } from "@/components/ui/Skeleton";
 
 export interface DashboardSummaryData {
@@ -55,7 +55,7 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
   const renderDelta = (delta: number, inverse = false, isPercentPoints = false) => {
     if (delta === 0) {
       return (
-        <span className="inline-flex items-center text-xs text-[#6c6c89] font-medium">
+        <span className="inline-flex items-center text-xs text-[#faae33]/60 font-medium">
           <Minus className="w-3 h-3 mr-0.5" /> 0.0%
         </span>
       );
@@ -69,7 +69,7 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
     return (
       <span
         className={`inline-flex items-center text-xs font-bold ${
-          isGood ? "text-[#1e874c]" : "text-[#d50b3e]"
+          isGood ? "text-[#faae33]" : "text-[#d1255c]"
         }`}
       >
         {isPositive ? (
@@ -86,71 +86,71 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
 
   const cards = [
     {
-      title: "Total Revenue",
+      title: "TOTAL REVENUE",
       value: formatCurrency(data.totalRevenue, true),
       delta: renderDelta(data.revenueDelta),
       subtext: "vs prior period",
       icon: DollarSign,
-      color: "text-[#5423e7]",
-      bgColor: "bg-[#5423e7]/10",
-      borderColor: "border-[#d1d1db]",
+      color: "text-[#faae33]",
+      bgColor: "bg-[#281006]",
+      borderColor: "border-[#6b2e12]",
     },
     {
-      title: "Total Costs",
+      title: "TOTAL COSTS",
       value: formatCurrency(data.totalCost, true),
       delta: renderDelta(data.costDelta, true),
       subtext: "vs prior period",
       icon: TrendingDown,
-      color: "text-[#6c6c89]",
-      bgColor: "bg-[#6c6c89]/10",
-      borderColor: "border-[#d1d1db]",
+      color: "text-[#9f531b]",
+      bgColor: "bg-[#281006]",
+      borderColor: "border-[#6b2e12]",
     },
     {
-      title: "Gross Profit",
+      title: "GROSS PROFIT",
       value: formatCurrency(data.grossProfit, true),
       delta: renderDelta(data.profitDelta),
       subtext: "net operating margin",
       icon: TrendingUp,
-      color: data.grossProfit >= 0 ? "text-[#1e874c]" : "text-[#d50b3e]",
-      bgColor: data.grossProfit >= 0 ? "bg-[#1e874c]/10" : "bg-[#d50b3e]/10",
-      borderColor: "border-[#d1d1db]",
+      color: data.grossProfit >= 0 ? "text-[#faae33]" : "text-[#d1255c]",
+      bgColor: "bg-[#281006]",
+      borderColor: "border-[#6b2e12]",
     },
     {
-      title: "Overall Margin %",
+      title: "OVERALL MARGIN %",
       value: data.marginPercent !== null ? `${data.marginPercent.toFixed(1)}%` : "—",
       delta: renderDelta(data.marginDelta, false, true),
       subtext: "target ≥ 20.0%",
       icon: Percent,
       color:
         data.marginPercent !== null && data.marginPercent >= 20
-          ? "text-[#1e874c]"
+          ? "text-[#faae33]"
           : data.marginPercent !== null && data.marginPercent >= 5
-          ? "text-[#996500]"
-          : "text-[#d50b3e]",
-      bgColor: "bg-[#5423e7]/10",
-      borderColor: "border-[#d1d1db]",
+          ? "text-[#9f531b]"
+          : "text-[#d1255c]",
+      bgColor: "bg-[#281006]",
+      borderColor: "border-[#6b2e12]",
     },
     {
-      title: "Active Clients",
+      title: "ACTIVE CLIENTS",
       value: data.activeClientsCount.toString(),
       delta: (
-        <span className="text-xs text-[#6c6c89] font-medium">
+        <span className="text-xs text-[#faae33]/70 font-medium">
           {data.activeClientsDelta >= 0 ? `+${data.activeClientsDelta}` : data.activeClientsDelta} accounts
         </span>
       ),
       subtext: "billed in period",
       icon: Users,
-      color: "text-[#0075ad]",
-      bgColor: "bg-[#0075ad]/10",
-      borderColor: "border-[#d1d1db]",
+      color: "text-[#faae33]",
+      bgColor: "bg-[#281006]",
+      borderColor: "border-[#6b2e12]",
     },
     {
-      title: "Loss-Making Clients",
+      title: "LOSS-MAKING CLIENTS",
       value: data.lossMakingCount.toString(),
       delta: (
         <span
           className={`text-xs font-bold ${
-            data.lossMakingCount > 0 ? "text-[#d50b3e]" : "text-[#1e874c]"
+            data.lossMakingCount > 0 ? "text-[#d1255c]" : "text-[#faae33]"
           }`}
         >
           {data.lossMakingCount > 0
@@ -160,9 +160,9 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
       ),
       subtext: data.lossMakingCount > 0 ? "requires immediate action" : "healthy margin portfolio",
       icon: AlertTriangle,
-      color: data.lossMakingCount > 0 ? "text-[#d50b3e]" : "text-[#1e874c]",
-      bgColor: data.lossMakingCount > 0 ? "bg-[#d50b3e]/15" : "bg-[#1e874c]/10",
-      borderColor: data.lossMakingCount > 0 ? "border-[#d50b3e]/40" : "border-[#d1d1db]",
+      color: data.lossMakingCount > 0 ? "text-[#d1255c]" : "text-[#faae33]",
+      bgColor: data.lossMakingCount > 0 ? "bg-[#d1255c]/20" : "bg-[#281006]",
+      borderColor: data.lossMakingCount > 0 ? "border-[#d1255c]" : "border-[#6b2e12]",
       highlight: data.lossMakingCount > 0,
     },
   ];
@@ -174,24 +174,26 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
         return (
           <div
             key={i}
-            className={`p-5 rounded-[24px] bg-white border ${c.borderColor} shadow-sm flex flex-col justify-between transition-all hover:shadow-md ${
-              c.highlight ? "bg-[#d50b3e]/5" : ""
+            className={`p-4 rounded-[6px] bg-[#402011] border ${c.borderColor} flex flex-col justify-between transition-all ${
+              c.highlight ? "bg-[#281006]" : ""
             }`}
           >
             <div className="flex items-center justify-between gap-2 mb-2">
-              <span className="text-xs font-semibold text-[#6c6c89] truncate">{c.title}</span>
-              <div className={`p-1.5 rounded-lg ${c.bgColor} ${c.color} shrink-0`}>
+              <span className="text-xs font-salmond font-medium text-[#faae33]/80 tracking-wider truncate">
+                {c.title}
+              </span>
+              <div className={`p-1.5 rounded-full ${c.bgColor} ${c.color} shrink-0 border border-[#6b2e12]`}>
                 <Icon className="w-3.5 h-3.5" />
               </div>
             </div>
 
             <div className="space-y-1">
-              <div className="text-2xl font-display font-bold tracking-tight text-[#121217] tabular-nums">
+              <div className="text-3xl font-salmond font-bold tracking-tight text-[#faae33] tabular-nums">
                 {c.value}
               </div>
               <div className="flex items-center justify-between gap-1 pt-0.5">
                 <div>{c.delta}</div>
-                <span className="text-[10px] text-[#6c6c89] truncate">{c.subtext}</span>
+                <span className="text-[10px] text-[#faae33]/60 truncate font-graphikx">{c.subtext}</span>
               </div>
             </div>
           </div>

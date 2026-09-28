@@ -36,6 +36,78 @@ interface TrendChartsProps {
   isLoading: boolean;
 }
 
+interface TooltipPayloadItem {
+  payload?: any;
+  name?: string;
+  value?: number;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayloadItem[];
+}
+
+function CustomBarTooltip({ active, payload }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    if (!data) return null;
+    return (
+      <div className="bg-[#281006] p-3.5 rounded-[6px] border border-[#6b2e12] shadow-2xl text-xs space-y-1.5 min-w-[170px] text-[#faae33]">
+        <div className="font-salmond text-sm font-bold text-[#faae33] border-b border-[#6b2e12] pb-1">
+          {data.label}
+        </div>
+        <div className="flex justify-between items-center text-[#faae33]/80">
+          <span className="flex items-center gap-1.5 font-graphikx">
+            <span className="w-2 h-2 rounded-full bg-[#faae33]" /> Revenue:
+          </span>
+          <span className="font-bold tabular-nums">
+            {formatCurrency(data.revenue)}
+          </span>
+        </div>
+        <div className="flex justify-between items-center text-[#faae33]/80">
+          <span className="flex items-center gap-1.5 font-graphikx">
+            <span className="w-2 h-2 rounded-full bg-[#9f531b]" /> Cost:
+          </span>
+          <span className="font-bold tabular-nums">
+            {formatCurrency(data.cost)}
+          </span>
+        </div>
+        <div className="flex justify-between items-center pt-1 border-t border-[#6b2e12]">
+          <span className="flex items-center gap-1.5 font-bold font-graphikx">
+            <span className={`w-2 h-2 rounded-full ${data.profit >= 0 ? "bg-[#faae33]" : "bg-[#d1255c]"}`} /> Profit:
+          </span>
+          <span
+            className={`font-bold tabular-nums ${
+              data.profit >= 0 ? "text-[#faae33]" : "text-[#d1255c]"
+            }`}
+          >
+            {formatCurrency(data.profit)}
+          </span>
+        </div>
+        <div className="flex justify-between items-center text-[11px] text-[#faae33]/70 font-graphikx">
+          <span>Margin %:</span>
+          <span className="font-bold tabular-nums">
+            {formatPercent(data.margin)}
+          </span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
+function CustomPieTooltip({ active, payload }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const data = payload[0];
+    return (
+      <div className="bg-[#281006] px-3 py-1.5 rounded-[6px] border border-[#6b2e12] text-xs font-bold text-[#faae33]">
+        {data.name}: {data.value} clients
+      </div>
+    );
+  }
+  return null;
+}
+
 export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProps) {
   const [mounted, setMounted] = useState(false);
 
@@ -56,125 +128,76 @@ export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProp
     );
   }
 
-  // Distribution Donut Data using exact style reference tokens
+  // Distribution Donut Data using Hungry Tiger tokens
   const pieData = [
     {
       name: "Profitable (≥20%)",
       value: distribution?.profitable || 0,
-      color: "#1e874c", // Emerald
+      color: "#faae33", // Tiger Gold
     },
     {
       name: "Low-Margin (5-20%)",
       value: distribution?.lowMargin || 0,
-      color: "#ffc233", // Lemon Zest
+      color: "#9f531b", // Saffron Glow
     },
     {
       name: "Loss-Making (<5%)",
       value: distribution?.lossMaking || 0,
-      color: "#d50b3e", // Crimson
+      color: "#d1255c", // Chili Red
     },
   ].filter((d) => d.value > 0);
 
-  // Custom tooltips
-  const CustomBarTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-white p-3.5 rounded-2xl border border-[#d1d1db] shadow-xl text-xs space-y-1.5 min-w-[170px]">
-          <div className="font-bold text-[#121217] border-b border-[#d1d1db] pb-1">
-            {data.label}
-          </div>
-          <div className="flex justify-between items-center text-[#6c6c89]">
-            <span className="flex items-center gap-1.5 font-medium">
-              <span className="w-2 h-2 rounded-full bg-[#5423e7]" /> Revenue:
-            </span>
-            <span className="font-bold text-[#121217] tabular-nums">
-              {formatCurrency(data.revenue)}
-            </span>
-          </div>
-          <div className="flex justify-between items-center text-[#6c6c89]">
-            <span className="flex items-center gap-1.5 font-medium">
-              <span className="w-2 h-2 rounded-full bg-[#6c6c89]" /> Cost:
-            </span>
-            <span className="font-bold text-[#121217] tabular-nums">
-              {formatCurrency(data.cost)}
-            </span>
-          </div>
-          <div className="flex justify-between items-center text-[#6c6c89] pt-1 border-t border-[#d1d1db]">
-            <span className="flex items-center gap-1.5 font-bold text-[#1e874c]">
-              <span className="w-2 h-2 rounded-full bg-[#1e874c]" /> Profit:
-            </span>
-            <span
-              className={`font-bold tabular-nums ${
-                data.profit >= 0 ? "text-[#1e874c]" : "text-[#d50b3e]"
-              }`}
-            >
-              {formatCurrency(data.profit)}
-            </span>
-          </div>
-          <div className="flex justify-between items-center text-[#6c6c89] text-[11px]">
-            <span>Margin %:</span>
-            <span className="font-bold text-[#121217] tabular-nums">
-              {formatPercent(data.margin)}
-            </span>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
+  // Distribution Donut Data using Hungry Tiger tokens
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Chart 1: Revenue vs Cost vs Profit */}
-      <div className="lg:col-span-2 p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm flex flex-col justify-between">
+      <div className="lg:col-span-2 p-6 sm:p-8 rounded-[6px] bg-[#402011] border border-[#6b2e12] flex flex-col justify-between">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div>
-            <h3 className="text-base font-display font-bold text-[#121217] tracking-tight">
-              Revenue, Cost & Profit Trends
+            <h3 className="text-xl font-salmond font-bold text-[#faae33] tracking-wider uppercase">
+              REVENUE, COST & PROFIT TRENDS
             </h3>
-            <p className="text-xs text-[#6c6c89]">Monthly ledger breakdown across active clients</p>
+            <p className="text-xs text-[#faae33]/70 font-graphikx">Monthly ledger breakdown across active accounts</p>
           </div>
-          <div className="flex items-center gap-4 text-xs font-semibold">
-            <span className="flex items-center gap-1.5 text-[#121217]">
-              <span className="w-2.5 h-2.5 rounded-sm bg-[#5423e7]" /> Revenue
+          <div className="flex items-center gap-4 text-xs font-salmond tracking-wider uppercase text-[#faae33]">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#faae33]" /> REVENUE
             </span>
-            <span className="flex items-center gap-1.5 text-[#121217]">
-              <span className="w-2.5 h-2.5 rounded-sm bg-[#6c6c89]" /> Cost
-            </span>
-            <span className="flex items-center gap-1.5 text-[#121217]">
-              <span className="w-2.5 h-2.5 rounded-sm bg-[#1e874c]" /> Gross Profit
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#9f531b]" /> COST
             </span>
           </div>
         </div>
 
-        <div className="h-72 w-full">
+        <div className="h-[280px] w-full pt-2">
           {trends.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-[#6c6c89] text-xs">
-              No trend data available for this range.
+            <div className="h-full flex items-center justify-center text-xs font-salmond uppercase text-[#faae33]/60">
+              No trend data available for this range
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={trends} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e5eb" vertical={false} />
+              <BarChart data={trends} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#6b2e12" opacity={0.4} />
                 <XAxis
                   dataKey="label"
-                  stroke="#6c6c89"
+                  stroke="#faae33"
+                  opacity={0.7}
                   fontSize={11}
                   tickLine={false}
-                  axisLine={{ stroke: "#d1d1db" }}
+                  axisLine={{ stroke: "#6b2e12" }}
                 />
                 <YAxis
-                  stroke="#6c6c89"
+                  stroke="#faae33"
+                  opacity={0.7}
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
-                  tickFormatter={(val) => `$${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}`}
+                  tickFormatter={(val) => `$${(val / 1000).toFixed(0)}k`}
                 />
                 <Tooltip content={<CustomBarTooltip />} />
-                <Bar dataKey="revenue" name="Revenue" fill="#5423e7" radius={[4, 4, 0, 0]} maxBarSize={28} />
-                <Bar dataKey="cost" name="Cost" fill="#6c6c89" radius={[4, 4, 0, 0]} maxBarSize={28} />
-                <Bar dataKey="profit" name="Gross Profit" fill="#1e874c" radius={[4, 4, 0, 0]} maxBarSize={28} />
+                <Bar dataKey="revenue" name="Revenue" fill="#faae33" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="cost" name="Cost" fill="#9f531b" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -182,84 +205,63 @@ export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProp
       </div>
 
       {/* Chart 2: Client Distribution Donut */}
-      <div className="p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm flex flex-col justify-between">
+      <div className="p-6 sm:p-8 rounded-[6px] bg-[#402011] border border-[#6b2e12] flex flex-col justify-between">
         <div>
-          <h3 className="text-base font-display font-bold text-[#121217] tracking-tight">
-            Client Profitability Mix
+          <h3 className="text-xl font-salmond font-bold text-[#faae33] tracking-wider uppercase">
+            PORTFOLIO HEALTH
           </h3>
-          <p className="text-xs text-[#6c6c89]">Share of accounts by gross margin tier</p>
+          <p className="text-xs text-[#faae33]/70 font-graphikx">Margin classification of active clients</p>
         </div>
 
-        <div className="h-56 relative flex items-center justify-center my-2">
+        <div className="h-[200px] w-full flex items-center justify-center my-2">
           {pieData.length === 0 ? (
-            <div className="text-xs text-[#6c6c89]">No active accounts</div>
+            <div className="text-xs font-salmond uppercase text-[#faae33]/60">
+              No client distribution data
+            </div>
           ) : (
-            <>
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={62}
-                    outerRadius={84}
-                    paddingAngle={4}
-                    dataKey="value"
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} stroke="#ffffff" strokeWidth={2} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    formatter={(value: any, name: any) => [`${value} Accounts`, name]}
-                    contentStyle={{
-                      backgroundColor: "#ffffff",
-                      borderColor: "#d1d1db",
-                      borderRadius: "16px",
-                      fontSize: "12px",
-                      color: "#121217",
-                      boxShadow: "0 4px 20px rgba(18,18,23,0.08)",
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-
-              {/* Centered Total Counter */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-display font-bold text-[#121217] tabular-nums">
-                  {distribution?.total || 0}
-                </span>
-                <span className="text-[10px] text-[#6c6c89] font-bold tracking-[2px] uppercase">
-                  Accounts
-                </span>
-              </div>
-            </>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={80}
+                  paddingAngle={4}
+                  dataKey="value"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} stroke="#281006" strokeWidth={2} />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomPieTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
           )}
         </div>
 
-        {/* Custom Legend */}
-        <div className="space-y-2 pt-2 border-t border-[#d1d1db]">
+        <div className="space-y-2 pt-2 border-t border-[#6b2e12]">
           <div className="flex items-center justify-between text-xs">
-            <span className="flex items-center gap-2 text-[#121217] font-medium">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#1e874c]" /> Profitable (≥20%)
+            <span className="flex items-center gap-1.5 text-[#faae33]/90 font-graphikx">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#faae33]" /> Profitable (≥20%)
             </span>
-            <span className="font-bold text-[#1e874c] tabular-nums">
+            <span className="font-bold text-[#faae33] font-salmond text-sm">
               {distribution?.profitable || 0}
             </span>
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="flex items-center gap-2 text-[#121217] font-medium">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#ffc233]" /> Low-Margin (5-20%)
+            <span className="flex items-center gap-1.5 text-[#faae33]/90 font-graphikx">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#9f531b]" /> Low-Margin (5-20%)
             </span>
-            <span className="font-bold text-[#996500] tabular-nums">
+            <span className="font-bold text-[#faae33] font-salmond text-sm">
               {distribution?.lowMargin || 0}
             </span>
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="flex items-center gap-2 text-[#121217] font-medium">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#d50b3e]" /> Loss-Making (&lt;5%)
+            <span className="flex items-center gap-1.5 text-[#faae33]/90 font-graphikx">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#d1255c]" /> Loss-Making (&lt;5%)
             </span>
-            <span className="font-bold text-[#d50b3e] tabular-nums">
+            <span className="font-bold text-[#d1255c] font-salmond text-sm">
               {distribution?.lossMaking || 0}
             </span>
           </div>

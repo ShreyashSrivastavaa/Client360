@@ -1,8 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../lib/db";
 import bcrypt from "bcryptjs";
 import { seedSampleData } from "../lib/demo-data";
+import * as dotenv from "dotenv";
 
-const prisma = new PrismaClient();
+dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env" });
+
 
 async function main() {
   console.log("Seeding ProfitLens initial database...");

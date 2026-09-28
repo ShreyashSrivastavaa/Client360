@@ -7,6 +7,78 @@ export interface Thresholds {
   lowMarginThreshold: number;
 }
 
+export interface ClientMarginMetrics {
+  totalRevenue: number;
+  totalCost: number;
+  grossProfit: number;
+  marginPercent: number | null;
+  classification: Classification;
+}
+
+/**
+ * Pure, authoritative function for gross profit, margin percentage, and classification.
+ * Handles all edge cases:
+ * - Zero revenue + zero costs -> 0 profit, null margin, "no_revenue"
+ * - Zero revenue + positive costs -> negative profit, null margin, "loss_making"
+ * - Negative revenue (refunds) -> negative profit, negative margin, "loss_making"
+ * - Positive revenue with zero or positive costs -> standard formula with boundary checks
+ */
+export function calculateClientMetrics(
+  totalRevenue: number,
+  totalCost: number,
+  thresholds: Thresholds
+): ClientMarginMetrics {
+  const round2 = (val: number) => Math.round(val * 100) / 100;
+  const rev = round2(totalRevenue);
+  const cost = round2(totalCost);
+  const grossProfit = round2(rev - cost);
+
+  // Edge case 1: Zero revenue
+  if (rev === 0) {
+    if (cost > 0) {
+      return {
+        totalRevenue: 0,
+        totalCost: cost,
+        grossProfit,
+        marginPercent: null,
+        classification: "loss_making", // Only costs incurred, pure loss
+      };
+    }
+    return {
+      totalRevenue: 0,
+      totalCost: 0,
+      grossProfit: 0,
+      marginPercent: null,
+      classification: "no_revenue",
+    };
+  }
+
+  // Edge case 2: Negative revenue (e.g. net refunds or credit notes)
+  if (rev < 0) {
+    return {
+      totalRevenue: rev,
+      totalCost: cost,
+      grossProfit,
+      marginPercent: -100,
+      classification: "loss_making",
+    };
+  }
+
+  // Standard case: Positive revenue
+  const rawMargin = (grossProfit / rev) * 100;
+  const marginPercent = Math.round(rawMargin * 100) / 100;
+
+  const classification = determineClassification(marginPercent, rev, thresholds);
+
+  return {
+    totalRevenue: rev,
+    totalCost: cost,
+    grossProfit,
+    marginPercent,
+    classification,
+  };
+}
+
 /**
  * Pure function to classify a client or period based on margin percentage and revenue
  */
@@ -15,8 +87,14 @@ export function determineClassification(
   totalRevenue: number,
   thresholds: Thresholds
 ): Classification {
-  if (totalRevenue === 0 || marginPercent === null) {
+  if (totalRevenue === 0 && marginPercent === null) {
     return "no_revenue";
+  }
+  if (totalRevenue < 0 || (marginPercent !== null && marginPercent < thresholds.lowMarginThreshold)) {
+    return "loss_making";
+  }
+  if (marginPercent === null) {
+    return "loss_making";
   }
   if (marginPercent >= thresholds.profitableMarginThreshold) {
     return "profitable";
@@ -103,30 +181,18 @@ export async function recalculateClientSummaries(organizationId: string): Promis
     });
 
     const summaryRecords = Array.from(map.values()).map((item) => {
-      const grossProfit = item.totalRevenue - item.totalCost;
-      const marginPercent =
-        item.totalRevenue > 0
-          ? (grossProfit / item.totalRevenue) * 100
-          : item.totalRevenue < 0
-          ? -100
-          : null;
-
-      const classification = determineClassification(
-        marginPercent,
-        item.totalRevenue,
-        thresholds
-      );
+      const metrics = calculateClientMetrics(item.totalRevenue, item.totalCost, thresholds);
 
       return {
         organizationId,
         clientId: item.clientId,
         periodType: "month",
         periodStartDate: item.periodStartDate,
-        totalRevenue: Math.round(item.totalRevenue * 100) / 100,
-        totalCost: Math.round(item.totalCost * 100) / 100,
-        grossProfit: Math.round(grossProfit * 100) / 100,
-        marginPercent: marginPercent !== null ? Math.round(marginPercent * 100) / 100 : null,
-        classification,
+        totalRevenue: metrics.totalRevenue,
+        totalCost: metrics.totalCost,
+        grossProfit: metrics.grossProfit,
+        marginPercent: metrics.marginPercent,
+        classification: metrics.classification,
       };
     });
 
@@ -148,7 +214,7 @@ export interface DateRangeFilter {
 
 export function parseRange(rangeKey: string, customStart?: string, customEnd?: string): DateRangeFilter {
   const now = new Date();
-  
+
   if (rangeKey === "30d") {
     const end = now;
     const start = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);

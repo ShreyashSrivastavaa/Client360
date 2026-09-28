@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { email, role, fullName } = await req.json();
+    const { email, role } = await req.json();
 
     if (!email) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if user exists in the system
-    let existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email: targetEmail },
     });
 

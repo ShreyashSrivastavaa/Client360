@@ -1,83 +1,66 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
-  --color-royal-violet: #5423e7;
-  --color-electric-iris: #7047eb;
-  --color-lemon-zest: #ffc233;
-  --color-orchid: #cf75ff;
-  --color-lilac-mist: #e5b5fe;
-  --color-blush: #fcc7f3;
-  --color-cobalt: #0075ad;
-  --color-emerald: #1e874c;
-  --color-magenta: #db0bb9;
-  --color-crimson: #d50b3e;
-  --color-ember: #eb3a00;
-  --color-obsidian: #121217;
-  --color-paper: #ffffff;
-  --color-fog: #f7f7f8;
-  --color-slate: #6c6c89;
-  --color-ash: #d1d1db;
+  /* Hungry Tiger Colors */
+  --color-tiger-gold: #faae33;
+  --color-ember-rust: #823513;
+  --color-saffron-glow: #9f531b;
+  --color-dark-spice: #402011;
+  --color-charred-clove: #281006;
+  --color-cardamom-brown: #6b2e12;
+  --color-chili-red: #d1255c;
 
   /* Typography */
-  --font-display: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-salmond: var(--font-salmond), 'Bebas Neue', 'Antonio', sans-serif;
+  --font-graphikx: var(--font-graphikx), 'Inter', -apple-system, sans-serif;
 
   /* Spacing */
+  --spacing-4: 4px;
+  --spacing-6: 6px;
   --spacing-8: 8px;
+  --spacing-10: 10px;
+  --spacing-12: 12px;
+  --spacing-14: 14px;
   --spacing-16: 16px;
+  --spacing-17: 17px;
+  --spacing-20: 20px;
   --spacing-24: 24px;
+  --spacing-28: 28px;
   --spacing-32: 32px;
-  --spacing-40: 40px;
-  --spacing-48: 48px;
-  --spacing-56: 56px;
-  --spacing-64: 64px;
-  --spacing-80: 80px;
-  --spacing-120: 120px;
-  --spacing-160: 160px;
+  --spacing-42: 42px;
 
-  /* Border Radius */
-  --radius-lg: 8px;
-  --radius-2xl: 20px;
-  --radius-3xl: 32px;
-  --radius-3xl-2: 40px;
-  --radius-full: 48px;
+  /* Border Radii */
+  --radius-cards: 6px;
+  --radius-badges: 9999px;
+  --radius-inputs: 9999px;
+  --radius-buttons: 9999px;
 }
 
 :root {
-  --color-royal-violet: #5423e7;
-  --color-electric-iris: #7047eb;
-  --color-lemon-zest: #ffc233;
-  --color-orchid: #cf75ff;
-  --color-lilac-mist: #e5b5fe;
-  --color-blush: #fcc7f3;
-  --color-cobalt: #0075ad;
-  --color-emerald: #1e874c;
-  --color-magenta: #db0bb9;
-  --color-crimson: #d50b3e;
-  --color-ember: #eb3a00;
-  --color-obsidian: #121217;
-  --color-paper: #ffffff;
-  --color-fog: #f7f7f8;
-  --color-slate: #6c6c89;
-  --color-ash: #d1d1db;
+  --color-tiger-gold: #faae33;
+  --color-ember-rust: #823513;
+  --color-saffron-glow: #9f531b;
+  --color-dark-spice: #402011;
+  --color-charred-clove: #281006;
+  --color-cardamom-brown: #6b2e12;
+  --color-chili-red: #d1255c;
 
-  --background: #f7f7f8;
-  --foreground: #121217;
+  --background: #823513;
+  --foreground: #faae33;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: var(--font-graphikx), ui-sans-serif, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Headings display font */
-h1, h2, h3, .font-display {
-  font-family: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  letter-spacing: -0.04em;
-  font-feature-settings: "ss04" on;
+/* Salmond Display Headings */
+h1, h2, h3, .font-display, .font-salmond {
+  font-family: var(--font-salmond), 'Bebas Neue', 'Antonio', sans-serif;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
 }
 
 /* Tabular figures for financial numbers */
@@ -85,67 +68,113 @@ h1, h2, h3, .font-display {
   font-variant-numeric: tabular-nums;
 }
 
-/* Eyebrow Label style */
-.eyebrow-label {
-  font-size: 14px;
+/* Dotted Divider */
+.dotted-divider {
+  border-bottom: 1px dotted #faae33;
+  width: 100%;
+}
+
+/* Hungry Tiger Ghost Outline Button (Nav, secondary) */
+.btn-ghost-outline {
+  font-family: var(--font-salmond), sans-serif;
+  font-size: 13px;
   font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #faae33;
+  background-color: transparent;
+  border: 1px solid #faae33;
+  border-radius: 9999px;
+  padding: 8px 17px;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  line-height: 1.29;
+  transition: all 0.15s ease-in-out;
+}
+.btn-ghost-outline:hover {
+  background-color: rgba(250, 174, 51, 0.12);
+  transform: translateY(-1px);
 }
 
-/* Signature 48px Card */
-.lemon-card {
-  background-color: #ffffff;
-  border-radius: 48px;
-  padding: 40px;
-  border: 1px solid #d1d1db;
-  box-shadow: 0 4px 24px rgba(18, 18, 23, 0.06);
+/* Hungry Tiger Filled Primary CTA */
+.btn-primary-filled, .btn-primary {
+  font-family: var(--font-salmond), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #281006 !important;
+  background-color: #faae33 !important;
+  border: 1px solid #faae33;
+  border-radius: 9999px;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  box-shadow: none !important;
+  transition: all 0.15s ease-in-out;
+}
+.btn-primary-filled:hover, .btn-primary:hover {
+  background-color: #ffc255 !important;
+  transform: translateY(-1px);
 }
 
-.lemon-card-compact {
-  background-color: #ffffff;
-  border-radius: 28px;
+/* Hungry Tiger Card: 6px radius, #402011 surface, no drop shadow */
+.tiger-card, .lemon-card, .lemon-card-compact {
+  background-color: #402011 !important;
+  border-radius: 6px !important;
   padding: 24px;
-  border: 1px solid #d1d1db;
-  box-shadow: 0 2px 16px rgba(18, 18, 23, 0.04);
+  border: 1px solid #6b2e12 !important;
+  box-shadow: none !important;
+  color: #faae33;
 }
 
-/* Signature Primary Action Button: #121217 fill with 8px radius */
-.btn-primary {
-  background-color: #121217;
+/* Deepest Card / Recessed surface */
+.tiger-deep-card {
+  background-color: #281006;
+  border-radius: 6px;
+  border: 1px solid #402011;
+  padding: 20px;
+}
+
+/* Pill Input Field */
+.tiger-input {
+  border-radius: 9999px;
+  border: 1px solid #6b2e12;
+  background-color: transparent;
+  color: #faae33;
+  padding: 12px 20px;
+  font-family: var(--font-graphikx), sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.tiger-input::placeholder {
+  color: rgba(250, 174, 51, 0.6);
+}
+.tiger-input:focus {
+  border-color: #faae33;
+}
+
+/* Pill Badge */
+.tiger-badge {
+  border-radius: 9999px;
+  font-family: var(--font-salmond), sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  padding: 4px 12px;
+}
+
+/* Alert / Heat Badge */
+.tiger-badge-heat {
+  background-color: #d1255c;
   color: #ffffff;
-  border-radius: 8px;
-  padding: 12px 20px;
-  font-size: 15px;
-  font-weight: 500;
-  box-shadow: 0 1px 2px rgba(18, 18, 23, 0.08);
-  transition: all 0.15s ease-in-out;
-}
-.btn-primary:hover {
-  background-color: #272730;
-  transform: translateY(-1px);
+  border-radius: 9999px;
+  font-family: var(--font-salmond), sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 4px 12px;
 }
 
-/* Inverted White Primary Action Button (for Violet hero/CTA) */
-.btn-primary-invert {
-  background-color: #ffffff;
-  color: #121217;
-  border-radius: 8px;
-  padding: 12px 20px;
-  font-size: 15px;
-  font-weight: 500;
-  box-shadow: 0 4px 16px rgba(18, 18, 23, 0.12);
-  transition: all 0.15s ease-in-out;
-}
-.btn-primary-invert:hover {
-  background-color: #f7f7f8;
-  transform: translateY(-1px);
-}
-
-/* Floating Tablet Mockup Elevation */
-.tablet-elevation {
-  box-shadow: 0 20px 60px rgba(18, 18, 23, 0.15);
+/* Botanical Watermark subtle pattern */
+.botanical-bg {
+  background-image: radial-gradient(rgba(250, 174, 51, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 /* Custom Scrollbar */
@@ -154,12 +183,12 @@ h1, h2, h3, .font-display {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #281006;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d1d1db;
+  background: #6b2e12;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #6c6c89;
+  background: #faae33;
 }
