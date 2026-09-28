@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
   if (token) {
     try {
       const secret = new TextEncoder().encode(
-        process.env.JWT_SECRET || "profitlens-local-dev-jwt-secret-key-360-min16"
+        process.env.JWT_SECRET || "profitlens-super-secure-production-ready-jwt-secret-key-360"
       );
       await jwtVerify(token, secret);
       isValidSession = true;
