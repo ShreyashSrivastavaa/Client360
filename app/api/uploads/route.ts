@@ -135,17 +135,19 @@ export async function POST(req: NextRequest) {
 
     const autoMapping = autoDetectColumnMapping(headers, uploadType);
     const sampleRows = rows.slice(0, 10);
+    const responsePayload = {
+      fileName,
+      uploadType,
+      totalRows: rows.length,
+      headers,
+      autoMapping,
+      sampleRows,
+      rawCsvText: csvText,
+    };
 
     return NextResponse.json({
-      data: {
-        fileName,
-        uploadType,
-        totalRows: rows.length,
-        headers,
-        autoMapping,
-        sampleRows,
-        rawCsvText: csvText,
-      },
+      data: responsePayload,
+      ...responsePayload,
     });
   } catch (error: any) {
     console.error("Upload parse error:", error);

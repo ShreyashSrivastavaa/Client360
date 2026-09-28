@@ -103,21 +103,21 @@ export default function UploadsPage() {
     formData.append("uploadType", uploadType);
 
     try {
-      const res = await fetch("/api/uploads", {
+      const res = await apiFetch<any>("/api/uploads", {
         method: "POST",
         body: formData,
       });
 
-      if (!res.ok) {
-        const errJson = await res.json().catch(() => ({ error: "Failed to parse CSV" }));
-        throw new Error(errJson.error || "Failed to parse CSV file");
+      const data: ParsedUploadResponse = res?.data || res;
+
+      if (!data || !Array.isArray(data.headers)) {
+        throw new Error("Invalid CSV upload response: No columns identified.");
       }
 
-      const data: ParsedUploadResponse = await res.json();
       setParsedData(data);
       setColumnMapping(data.autoMapping || {});
       setStep("mapping");
-      success(`Parsed ${data.totalRows} rows from ${data.fileName}`);
+      success(`Parsed ${data.totalRows ?? 0} rows from ${data.fileName || file.name}`);
     } catch (err: any) {
       error(err.message || "Failed to process CSV file");
     } finally {
@@ -352,7 +352,7 @@ export default function UploadsPage() {
                       className="input-rows-default w-full text-xs"
                     >
                       <option value="">-- Select Column --</option>
-                      {parsedData?.headers.map((h) => (
+                      {parsedData?.headers?.map((h) => (
                         <option key={h} value={h}>
                           {h}
                         </option>
@@ -373,7 +373,7 @@ export default function UploadsPage() {
                       className="input-rows-default w-full text-xs"
                     >
                       <option value="">-- Select Column --</option>
-                      {parsedData?.headers.map((h) => (
+                      {parsedData?.headers?.map((h) => (
                         <option key={h} value={h}>
                           {h}
                         </option>
@@ -394,7 +394,7 @@ export default function UploadsPage() {
                       className="input-rows-default w-full text-xs"
                     >
                       <option value="">-- Select Column --</option>
-                      {parsedData?.headers.map((h) => (
+                      {parsedData?.headers?.map((h) => (
                         <option key={h} value={h}>
                           {h}
                         </option>
@@ -415,7 +415,7 @@ export default function UploadsPage() {
                         className="input-rows-default w-full text-xs"
                       >
                         <option value="">-- None (Default: Revenue) --</option>
-                        {parsedData?.headers.map((h) => (
+                        {parsedData?.headers?.map((h) => (
                           <option key={h} value={h}>
                             {h}
                           </option>
@@ -436,7 +436,7 @@ export default function UploadsPage() {
                       className="input-rows-default w-full text-xs"
                     >
                       <option value="">-- None (Auto-Assign) --</option>
-                      {parsedData?.headers.map((h) => (
+                      {parsedData?.headers?.map((h) => (
                         <option key={h} value={h}>
                           {h}
                         </option>
@@ -456,7 +456,7 @@ export default function UploadsPage() {
                       className="input-rows-default w-full text-xs"
                     >
                       <option value="">-- None (Optional) --</option>
-                      {parsedData?.headers.map((h) => (
+                      {parsedData?.headers?.map((h) => (
                         <option key={h} value={h}>
                           {h}
                         </option>
@@ -472,7 +472,7 @@ export default function UploadsPage() {
                     <table className="w-full text-left text-[11px]">
                       <thead className="bg-[#f7f7f7] border-b border-[#eaeaea] text-[#838383] font-normal">
                         <tr>
-                          {parsedData?.headers.map((h) => (
+                          {parsedData?.headers?.map((h) => (
                             <th key={h} className="p-2.5 whitespace-nowrap">
                               {h}
                             </th>
@@ -480,9 +480,9 @@ export default function UploadsPage() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-[#e1e1e1] bg-white">
-                        {parsedData?.sampleRows.slice(0, 5).map((row, i) => (
+                        {parsedData?.sampleRows?.slice(0, 5).map((row, i) => (
                           <tr key={i} className="hover:bg-[#f7f7f7]">
-                            {parsedData?.headers.map((h) => (
+                            {parsedData?.headers?.map((h) => (
                               <td key={h} className="p-2.5 text-[#1a1a1a] whitespace-nowrap">
                                 {row[h] || "—"}
                               </td>
