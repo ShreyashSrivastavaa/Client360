@@ -17,36 +17,26 @@ export function ClassificationBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border",
-        config.badgeClass,
+        "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[4px] text-xs font-normal border border-[#eaeaea] bg-white text-[#1a1a1a]",
         className
       )}
     >
       {showDot && (
         <span
-          className={cn("w-1.5 h-1.5 rounded-full shrink-0", config.dotClass)}
+          className={cn("w-[6px] h-[6px] rounded-full shrink-0", config.dotClass)}
         />
       )}
-      {config.label}
+      <span>{config.label}</span>
     </span>
   );
 }
 
 export function RoleBadge({ role }: { role: string | null | undefined }) {
   const normalized = (role || "member").toLowerCase();
-  let badgeColor = "bg-zinc-800 text-zinc-300 border-zinc-700";
-  if (normalized === "owner") {
-    badgeColor = "bg-indigo-500/15 text-indigo-400 border-indigo-500/30";
-  } else if (normalized === "admin") {
-    badgeColor = "bg-cyan-500/15 text-cyan-400 border-cyan-500/30";
-  }
 
   return (
     <span
-      className={cn(
-        "inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold uppercase tracking-wider border",
-        badgeColor
-      )}
+      className="inline-flex items-center px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold uppercase tracking-[0.21px] border border-[#eaeaea] bg-[#f7f7f7] text-[#6f6f6f]"
     >
       {normalized}
     </span>

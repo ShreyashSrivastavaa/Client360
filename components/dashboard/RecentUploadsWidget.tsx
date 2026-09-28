@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { UploadCloud, CheckCircle2, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export interface UploadSummaryItem {
   id: string;
@@ -25,43 +25,36 @@ export function RecentUploadsWidget({ uploads, isLoading }: RecentUploadsWidgetP
   }
 
   return (
-    <div className="p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm">
-      <div className="flex items-center justify-between pb-3 border-b border-[#d1d1db]">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-[#f7f7f8] text-[#121217]">
-            <UploadCloud className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-sm font-display font-bold text-[#121217]">Recent Data Imports</h3>
-            <p className="text-xs text-[#6c6c89]">Past CSV uploads processed by the calculation engine</p>
-          </div>
+    <div className="p-6 rounded-[8px] bg-white border border-[#eaeaea]">
+      <div className="flex items-center justify-between pb-3 border-b border-[#eaeaea]">
+        <div>
+          <h3 className="text-sm font-bold text-[#1a1a1a]">Recent Data Imports</h3>
+          <p className="text-xs text-[#838383]">Past CSV uploads processed by the calculation engine</p>
         </div>
         <Link
           href="/uploads"
-          className="text-xs text-[#5423e7] hover:text-[#4518cc] flex items-center gap-1 font-semibold"
+          className="btn-rows-ghost text-xs font-normal"
         >
-          <span>View All Uploads</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+          <span>View all uploads</span>
+          <span>→</span>
         </Link>
       </div>
 
-      <div className="divide-y divide-[#d1d1db] mt-2">
+      <div className="divide-y divide-[#eaeaea] mt-1">
         {uploads.length === 0 ? (
-          <div className="py-6 text-center text-xs text-[#6c6c89]">
+          <div className="py-6 text-center text-xs text-[#838383]">
             No files uploaded yet. Upload a CSV to ingest new client data.
           </div>
         ) : (
           uploads.slice(0, 3).map((item) => (
-            <div key={item.id} className="py-3.5 flex items-center justify-between gap-4 text-xs">
+            <div key={item.id} className="py-3 flex items-center justify-between gap-4 text-xs">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2 rounded-lg bg-[#f7f7f8] text-[#5423e7]">
-                  <UploadCloud className="w-4 h-4" />
-                </div>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] shrink-0" />
                 <div className="min-w-0">
-                  <div className="font-bold text-[#121217] truncate max-w-[200px] sm:max-w-xs">
+                  <div className="font-bold text-[#1a1a1a] truncate max-w-[200px] sm:max-w-xs">
                     {item.fileName}
                   </div>
-                  <div className="text-[11px] text-[#6c6c89]">
+                  <div className="text-[11px] text-[#838383]">
                     {item.uploadedBy?.fullName || "User"} •{" "}
                     {new Date(item.createdAt).toLocaleDateString("en-US", {
                       month: "short",
@@ -74,20 +67,20 @@ export function RecentUploadsWidget({ uploads, isLoading }: RecentUploadsWidgetP
 
               <div className="flex items-center gap-4 shrink-0">
                 <div className="text-right hidden sm:block">
-                  <span className="font-bold text-[#121217] tabular-nums">
+                  <span className="font-normal text-[#1a1a1a] tabular-nums">
                     {item.validRows} rows
                   </span>
                   {item.failedRows > 0 && (
-                    <span className="text-[#d50b3e] ml-1.5 tabular-nums font-semibold">
-                      ({item.failedRows} failed)
+                    <span className="text-[#e11d48] ml-1.5 tabular-nums">
+                      ({item.failedRows} invalid)
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#1e874c]/10 text-[#1e874c] border border-[#1e874c]/20">
-                  <CheckCircle2 className="w-3 h-3" />
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[4px] text-[10px] font-bold uppercase tracking-[0.21px] bg-white border border-[#eaeaea] text-[#1a1a1a]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#34d399]" />
                   <span>Completed</span>
-                </div>
+                </span>
               </div>
             </div>
           ))
