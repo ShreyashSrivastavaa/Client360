@@ -54,7 +54,7 @@ export default function SignupPage() {
       });
 
       await refreshAuth();
-      success(`Organization "${companyName}" created!`, "Workspace Ready");
+      success(`Organization "${companyName}" created!`);
       setStep(2);
     } catch (err: any) {
       setAuthError(err.message || "Failed to create account");
@@ -83,30 +83,24 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f7f8] text-[#121217] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-body">
-      {/* Decorative subtle brand background circle */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#5423e7]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#ffc233]/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="sm:mx-auto sm:w-full sm:max-w-lg relative z-10">
+    <div className="min-h-screen bg-[#ffffff] text-[#1a1a1a] flex flex-col justify-center py-12 sm:px-6 lg:px-8 selection:bg-[#fff6d4] selection:text-[#1a1a1a]">
+      <div className="sm:mx-auto sm:w-full sm:max-w-lg">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center justify-center gap-2.5 mb-6 group">
-          <div className="w-9 h-9 rounded-2xl bg-[#ffc233] flex items-center justify-center shadow-sm text-lg group-hover:scale-105 transition-transform">
-            🍋
-          </div>
-          <span className="font-display text-2xl font-normal tracking-tight text-[#121217]">
-            profitlens
+        <Link href="/" className="flex items-center justify-center gap-2 mb-6">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#ffb84d]" />
+          <span className="text-xl font-bold tracking-tight text-[#1a1a1a]">
+            Client360
           </span>
         </Link>
 
-        <h2 className="text-center font-display text-2xl sm:text-3xl font-normal tracking-tight text-[#121217]">
+        <h2 className="text-center text-rows-heading">
           {step === 1 ? "Create your company workspace" : "How would you like to start?"}
         </h2>
-        <p className="mt-1.5 text-center text-xs text-[#6c6c89]">
+        <p className="mt-2 text-center text-xs text-[#6f6f6f]">
           {step === 1 ? (
             <>
               Already have an account?{" "}
-              <Link href="/login" className="font-medium text-[#5423e7] hover:underline">
+              <Link href="/login" className="text-[#1a1a1a] font-bold hover:underline">
                 Sign in
               </Link>
             </>
@@ -116,11 +110,11 @@ export default function SignupPage() {
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-lg relative z-10 px-4 sm:px-0">
-        <div className="bg-white p-6 sm:p-10 rounded-[32px] sm:rounded-[40px] border border-[#d1d1db] shadow-[0_4px_24px_rgba(18,18,23,0.06)] space-y-6">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-lg px-4 sm:px-0">
+        <div className="bg-white p-6 sm:p-8 rounded-[8px] border border-[#eaeaea] space-y-6">
           {authError && (
-            <div className="p-3.5 rounded-xl border border-[#d50b3e]/20 bg-[#d50b3e]/5 text-xs text-[#d50b3e] flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-[#d50b3e] shrink-0" />
+            <div className="p-3 rounded-[4px] border border-[#e11d48] bg-white text-xs text-[#e11d48] flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{authError}</span>
             </div>
           )}
@@ -129,7 +123,7 @@ export default function SignupPage() {
             <form onSubmit={handleStep1Submit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#121217] mb-1.5">
+                  <label className="text-rows-caption block mb-1.5">
                     Your Full Name
                   </label>
                   <input
@@ -137,12 +131,12 @@ export default function SignupPage() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
-                    className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
+                    className="input-rows-default w-full text-xs"
                     placeholder="Jane Doe"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#121217] mb-1.5">
+                  <label className="text-rows-caption block mb-1.5">
                     Work Email
                   </label>
                   <input
@@ -150,14 +144,14 @@ export default function SignupPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
+                    className="input-rows-default w-full text-xs"
                     placeholder="jane@company.com"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#121217] mb-1.5">
+                <label className="text-rows-caption block mb-1.5">
                   Password
                 </label>
                 <input
@@ -166,15 +160,15 @@ export default function SignupPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
+                  className="input-rows-default w-full text-xs"
                   placeholder="•••••••• (min 6 characters)"
                 />
               </div>
 
-              <div className="pt-2 border-t border-[#d1d1db]">
+              <div className="pt-2 border-t border-[#eaeaea]">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-[#121217] mb-1.5">
+                    <label className="text-rows-caption block mb-1.5">
                       Company Name
                     </label>
                     <input
@@ -182,18 +176,18 @@ export default function SignupPage() {
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
                       required
-                      className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
+                      className="input-rows-default w-full text-xs"
                       placeholder="Acme Global Inc"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#121217] mb-1.5">
+                    <label className="text-rows-caption block mb-1.5">
                       Industry
                     </label>
                     <select
                       value={industry}
                       onChange={(e) => setIndustry(e.target.value)}
-                      className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7]"
+                      className="input-rows-default w-full text-xs"
                     >
                       <option value="B2B SaaS & Professional Services">
                         B2B SaaS & Services
@@ -208,31 +202,31 @@ export default function SignupPage() {
               </div>
 
               {/* Thresholds setup */}
-              <div className="p-4 rounded-2xl bg-[#f7f7f8] border border-[#d1d1db] space-y-2.5">
-                <span className="text-[11px] font-semibold text-[#121217] block">
+              <div className="p-3.5 rounded-[4px] bg-[#f7f7f7] border border-[#eaeaea] space-y-2">
+                <span className="text-[10px] font-bold uppercase tracking-[0.21px] text-[#1a1a1a] block">
                   Default Gross Margin Classification Rules:
                 </span>
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div>
-                    <span className="text-[10px] text-[#1e874c] font-bold block">
+                    <span className="text-[10px] text-[#16a34a] font-bold block">
                       Profitable (≥ %)
                     </span>
                     <input
                       type="number"
                       value={profitableThreshold}
                       onChange={(e) => setProfitableThreshold(e.target.value)}
-                      className="w-full bg-white border border-[#d1d1db] rounded-lg p-2 text-[#121217] text-xs mt-1"
+                      className="input-rows-default w-full text-xs mt-1"
                     />
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#121217] font-bold block">
+                    <span className="text-[10px] text-[#6f6f6f] font-bold block">
                       Low-Margin Floor (≥ %)
                     </span>
                     <input
                       type="number"
                       value={lowMarginThreshold}
                       onChange={(e) => setLowMarginThreshold(e.target.value)}
-                      className="w-full bg-white border border-[#d1d1db] rounded-lg p-2 text-[#121217] text-xs mt-1"
+                      className="input-rows-default w-full text-xs mt-1"
                     />
                   </div>
                 </div>
@@ -241,7 +235,7 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 px-4 rounded-lg bg-[#121217] hover:bg-black text-white text-xs font-medium transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="btn-rows-primary w-full text-xs py-2 justify-center"
               >
                 {loading ? (
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -255,48 +249,47 @@ export default function SignupPage() {
             </form>
           ) : (
             /* Step 2 Onboarding */
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div
                 onClick={handleChooseSampleData}
-                className="p-5 rounded-2xl border border-[#5423e7] bg-[#5423e7]/5 hover:bg-[#5423e7]/10 cursor-pointer transition-all space-y-2.5 group"
+                className="p-4 rounded-[4px] border border-[#1a1a1a] bg-white hover:bg-[#f7f7f7] cursor-pointer transition-colors space-y-2"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#121217] font-bold text-sm">
-                    <Sparkles className="w-4 h-4 text-[#5423e7]" />
+                  <div className="flex items-center gap-2 text-[#1a1a1a] font-bold text-xs">
+                    <span className="w-2 h-2 rounded-full bg-[#ffb84d]" />
                     <span>Explore with Sample Data (Recommended)</span>
                   </div>
-                  <span className="text-[10px] bg-[#ffc233] text-[#121217] px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-[10px] uppercase font-bold tracking-[0.21px] text-[#838383]">
                     Instant Setup
                   </span>
                 </div>
-                <p className="text-xs text-[#6c6c89] leading-relaxed">
+                <p className="text-xs text-[#6f6f6f] leading-relaxed">
                   Populate your dashboard with 18 realistic B2B accounts across 12 months. Test all
-                  charts, margin insights, and filters immediately. Can be cleared at any time in
-                  Settings.
+                  charts, margin insights, and filters immediately.
                 </p>
-                <div className="pt-1 flex items-center gap-1.5 text-xs font-semibold text-[#5423e7] group-hover:underline">
+                <div className="pt-1 flex items-center gap-1.5 text-xs font-bold text-[#1a1a1a]">
                   <span>Populate & Open Dashboard</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>→</span>
                 </div>
               </div>
 
               <div
                 onClick={handleChooseUploadNow}
-                className="p-5 rounded-2xl border border-[#d1d1db] bg-[#f7f7f8] hover:bg-white cursor-pointer transition-all space-y-2.5 group"
+                className="p-4 rounded-[4px] border border-[#eaeaea] bg-white hover:border-[#1a1a1a] cursor-pointer transition-colors space-y-2"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#121217] font-bold text-sm">
-                    <UploadCloud className="w-4 h-4 text-[#6c6c89]" />
+                  <div className="flex items-center gap-2 text-[#1a1a1a] font-bold text-xs">
+                    <UploadCloud className="w-3.5 h-3.5 text-[#838383]" />
                     <span>Upload Your Own CSV Files</span>
                   </div>
                 </div>
-                <p className="text-xs text-[#6c6c89] leading-relaxed">
+                <p className="text-xs text-[#6f6f6f] leading-relaxed">
                   Skip demo data and jump straight to the upload wizard to ingest your company&apos;s
                   actual revenue and expense files.
                 </p>
-                <div className="pt-1 flex items-center gap-1.5 text-xs font-semibold text-[#121217] group-hover:underline">
+                <div className="pt-1 flex items-center gap-1.5 text-xs font-normal text-[#6f6f6f]">
                   <span>Go to Upload Wizard</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>→</span>
                 </div>
               </div>
             </div>

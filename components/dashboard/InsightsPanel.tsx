@@ -1,13 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import {
-  Sparkles,
-  AlertTriangle,
-  AlertCircle,
-  CheckCircle2,
-  Info,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { InsightItem } from "@/lib/insights/engine";
 import { CardSkeleton } from "@/components/ui/Skeleton";
 
@@ -21,76 +14,61 @@ export function InsightsPanel({ insights, isLoading }: InsightsPanelProps) {
     return <CardSkeleton />;
   }
 
-  const getIcon = (type: string) => {
+  const getDotColor = (type: string) => {
     switch (type) {
       case "danger":
-        return <AlertCircle className="w-4 h-4 text-[#d1255c] shrink-0 mt-0.5" />;
+        return "#e11d48"; // Soft red
       case "warning":
-        return <AlertTriangle className="w-4 h-4 text-[#faae33] shrink-0 mt-0.5" />;
+        return "#fbbf24"; // Amber
       case "success":
-        return <CheckCircle2 className="w-4 h-4 text-[#faae33] shrink-0 mt-0.5" />;
+        return "#34d399"; // Mint
       default:
-        return <Info className="w-4 h-4 text-[#faae33]/80 shrink-0 mt-0.5" />;
-    }
-  };
-
-  const getCardStyle = (type: string) => {
-    switch (type) {
-      case "danger":
-        return "bg-[#281006] border-[#d1255c]";
-      case "warning":
-        return "bg-[#281006] border-[#faae33]";
-      case "success":
-        return "bg-[#281006] border-[#9f531b]";
-      default:
-        return "bg-[#281006] border-[#6b2e12]";
+        return "#38bdf8"; // Sky Blue
     }
   };
 
   return (
-    <div className="p-6 sm:p-8 rounded-[6px] bg-[#402011] border border-[#6b2e12]">
-      <div className="flex items-center justify-between pb-3 border-b border-[#6b2e12]">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-full bg-[#281006] text-[#faae33] border border-[#6b2e12]">
-            <Sparkles className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-base font-salmond font-bold text-[#faae33] tracking-wider uppercase">
-              DIAGNOSTIC INSIGHTS & ALERTS
-            </h3>
-            <p className="text-xs text-[#faae33]/70 font-graphikx">Automated margin rules calculated over current portfolio data</p>
-          </div>
+    <div className="p-6 rounded-[8px] bg-white border border-[#eaeaea]">
+      <div className="flex items-center justify-between pb-3 border-b border-[#eaeaea]">
+        <div>
+          <h3 className="text-sm font-bold text-[#1a1a1a]">
+            Diagnostic Insights & Rule Engine
+          </h3>
+          <p className="text-xs text-[#838383]">Automated margin rules calculated over current portfolio data</p>
         </div>
-        <span className="text-xs font-salmond uppercase tracking-wider text-[#faae33]/60">
-          {insights.length} {insights.length === 1 ? "RULE" : "RULES"} TRIGGERED
+        <span className="text-xs text-[#838383] tabular-nums">
+          {insights.length} {insights.length === 1 ? "rule" : "rules"} active
         </span>
       </div>
 
-      <div className="space-y-3 mt-4">
+      <div className="space-y-2 mt-4">
         {insights.length === 0 ? (
-          <div className="py-8 text-center text-xs font-salmond uppercase text-[#faae33]/60">
+          <div className="py-8 text-center text-xs text-[#838383]">
             No active alerts detected. All clients meet configured margin criteria.
           </div>
         ) : (
           insights.map((insight) => (
             <div
               key={insight.id}
-              className={`p-4 rounded-[6px] border ${getCardStyle(insight.type)} flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all`}
+              className="p-3.5 rounded-[4px] border border-[#eaeaea] bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3"
             >
               <div className="flex items-start gap-3 min-w-0">
-                {getIcon(insight.type)}
+                <span
+                  className="w-[6px] h-[6px] rounded-full shrink-0 mt-2"
+                  style={{ backgroundColor: getDotColor(insight.type) }}
+                />
                 <div className="space-y-0.5 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-xs font-bold text-[#faae33] uppercase font-salmond tracking-wider">
+                    <h4 className="text-sm font-bold text-[#1a1a1a]">
                       {insight.title}
                     </h4>
                     {insight.metric && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-salmond bg-[#281006] border border-[#6b2e12] text-[#faae33]">
+                      <span className="px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold uppercase tracking-[0.21px] bg-[#f7f7f7] border border-[#eaeaea] text-[#6f6f6f] tabular-nums">
                         {insight.metric}
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-[#faae33]/80 leading-relaxed font-graphikx">
+                  <p className="text-xs text-[#6f6f6f] leading-relaxed">
                     {insight.description}
                   </p>
                 </div>
@@ -99,10 +77,10 @@ export function InsightsPanel({ insights, isLoading }: InsightsPanelProps) {
               {insight.actionUrl && (
                 <Link
                   href={insight.actionUrl}
-                  className="btn-ghost-outline self-start sm:self-center shrink-0 flex items-center gap-1.5 text-xs font-salmond tracking-wider py-1 px-3"
+                  className="btn-rows-ghost text-xs shrink-0 self-start sm:self-center"
                 >
-                  <span>{insight.actionText?.toUpperCase() || "VIEW DRILLDOWN"}</span>
-                  <ArrowRight className="w-3 h-3" />
+                  <span>{insight.actionText || "Inspect"}</span>
+                  <span>→</span>
                 </Link>
               )}
             </div>
