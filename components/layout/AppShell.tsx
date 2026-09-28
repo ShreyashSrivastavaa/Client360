@@ -16,6 +16,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import { usePeriod, PERIOD_OPTIONS } from "@/lib/period-context";
 import { RoleBadge } from "@/components/ui/Badge";
+import { CurrencySelector } from "@/components/ui/CurrencySelector";
 import { useToast } from "@/lib/toast-context";
 import { apiFetch } from "@/lib/api-client";
 
@@ -59,13 +60,13 @@ export function AppShell({ children, pageTitle, pageDescription, eyebrow }: AppS
   return (
     <div className="min-h-screen flex flex-col bg-[#ffffff] text-[#272727] antialiased selection:bg-[#d6e5ff] selection:text-[#7451f2]">
       {/* Top Bar — Zams minimal header ~64px */}
-      <header className="h-16 border-b border-[#e0e0e0] bg-[#ffffff] sticky top-0 z-40 px-4 sm:px-8">
-        <div className="max-w-[1200px] h-full mx-auto flex items-center justify-between gap-4">
+      <header className="h-16 border-b border-[#e0e0e0] bg-[#ffffff] sticky top-0 z-40 px-6 sm:px-10">
+        <div className="max-w-[1200px] h-full mx-auto flex items-center justify-between gap-8">
           {/* Left: Brand + Nav */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-8 sm:gap-10">
             <Link
               href="/dashboard"
-              className="flex items-center gap-2.5 text-base font-bold text-[#272727] hover:opacity-90 transition-opacity"
+              className="flex items-center gap-2.5 text-base font-bold text-[#272727] hover:opacity-90 transition-opacity shrink-0"
             >
               {/* Zams starburst mark */}
               <div className="w-5 h-5 rounded-[4px] bg-[#7451f2] flex items-center justify-center text-white">
@@ -78,8 +79,8 @@ export function AppShell({ children, pageTitle, pageDescription, eyebrow }: AppS
 
             <span className="text-[#e0e0e0] hidden md:inline">|</span>
 
-            {/* Inline Nav Links */}
-            <nav className="hidden md:flex items-center gap-6">
+            {/* Inline Nav Links with expanded spacing */}
+            <nav className="hidden md:flex items-center gap-6 sm:gap-8">
               {navItems.map((item) => {
                 const isActive =
                   item.href === "/dashboard"
@@ -90,7 +91,7 @@ export function AppShell({ children, pageTitle, pageDescription, eyebrow }: AppS
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`text-xs uppercase tracking-[0.24px] font-medium transition-colors py-1 border-b-2 ${
+                    className={`text-xs uppercase tracking-[0.24px] font-medium transition-colors py-1.5 px-1 border-b-2 ${
                       isActive
                         ? "text-[#7451f2] border-[#7451f2]"
                         : "text-[#272727] border-transparent hover:text-[#7451f2]"
@@ -103,8 +104,11 @@ export function AppShell({ children, pageTitle, pageDescription, eyebrow }: AppS
             </nav>
           </div>
 
-          {/* Right: Actions */}
-          <div className="flex items-center gap-3">
+          {/* Right: Actions with expanded spacing */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            {/* Global Currency Selector (Default: INR) */}
+            <CurrencySelector />
+
             {/* Period Selector */}
             <div className="relative">
               <button

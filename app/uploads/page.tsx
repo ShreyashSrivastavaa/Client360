@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
+import { useCurrency } from "@/lib/currency-context";
 import { apiFetch } from "@/lib/api-client";
 import { TableSkeleton } from "@/components/ui/Skeleton";
 import {
@@ -46,6 +47,7 @@ interface ParsedUploadResponse {
 export default function UploadsPage() {
   const { organization, role } = useAuth();
   const { success, error } = useToast();
+  const { symbol } = useCurrency();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -381,7 +383,7 @@ export default function UploadsPage() {
 
                   <div>
                     <label className="text-xs font-bold text-[#1a1a1a] flex items-center gap-1 mb-1.5">
-                      <span>Amount ($)</span>
+                      <span>Amount ({symbol})</span>
                       <span className="text-[#e11d48]">*</span>
                     </label>
                     <select

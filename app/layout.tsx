@@ -4,6 +4,7 @@ import "./globals.css";
 import { ToastProvider } from "@/lib/toast-context";
 import { AuthProvider } from "@/lib/auth-context";
 import { PeriodProvider } from "@/lib/period-context";
+import { CurrencyProvider } from "@/lib/currency-context";
 
 const lustria = Lustria({
   weight: ["400"],
@@ -64,11 +65,13 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#ffffff] text-[#272727] font-sans selection:bg-[#d6e5ff] selection:text-[#7451f2]">
         <AuthProvider>
-          <PeriodProvider>
-            <ToastProvider>
-              {children}
-            </ToastProvider>
-          </PeriodProvider>
+          <CurrencyProvider>
+            <PeriodProvider>
+              <ToastProvider>
+                {children}
+              </ToastProvider>
+            </PeriodProvider>
+          </CurrencyProvider>
         </AuthProvider>
       </body>
     </html>

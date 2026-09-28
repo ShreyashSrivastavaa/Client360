@@ -9,6 +9,7 @@ import { InsightsPanel } from "@/components/dashboard/InsightsPanel";
 import { RecentUploadsWidget, UploadSummaryItem } from "@/components/dashboard/RecentUploadsWidget";
 import { usePeriod } from "@/lib/period-context";
 import { useAuth } from "@/lib/auth-context";
+import { useCurrency } from "@/lib/currency-context";
 import { apiFetch } from "@/lib/api-client";
 import { useToast } from "@/lib/toast-context";
 import { Sparkles, Plus, AlertCircle } from "lucide-react";
@@ -17,6 +18,7 @@ import Link from "next/link";
 export default function DashboardPage() {
   const { period, customStart, customEnd } = usePeriod();
   const { organization } = useAuth();
+  const { currency } = useCurrency();
   const { success, error } = useToast();
 
   const [summary, setSummary] = useState<DashboardSummaryData | null>(null);
@@ -36,7 +38,7 @@ export default function DashboardPage() {
 
     const query = `range=${period}${
       customStart ? `&start=${customStart}` : ""
-    }${customEnd ? `&end=${customEnd}` : ""}`;
+    }${customEnd ? `&end=${customEnd}` : ""}&currency=${currency}`;
 
     try {
       const [summaryRes, trendsRes, topBottomRes, insightsRes, uploadsRes] =
@@ -62,7 +64,7 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, [organization, period, customStart, customEnd]);
+  }, [organization, period, customStart, customEnd, currency]);
 
   useEffect(() => {
     fetchDashboardData();

@@ -18,6 +18,8 @@ import {
 import { apiFetch } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
+import { useCurrency } from "@/lib/currency-context";
+import { CurrencySelector } from "@/components/ui/CurrencySelector";
 import {
   ClayMascot,
   MascotLineup,
@@ -29,6 +31,7 @@ export default function LandingPage() {
   const router = useRouter();
   const { refreshAuth } = useAuth();
   const { success, error } = useToast();
+  const { formatAmount } = useCurrency();
   const [demoLoading, setDemoLoading] = useState(false);
   const [activePersona, setActivePersona] = useState<MascotId>("evan");
 
@@ -52,10 +55,10 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#ffffff] text-[#272727] selection:bg-[#d6e5ff] selection:text-[#7451f2]">
       {/* Top Navigation Bar — Sticky header ~64px */}
-      <header className="h-16 border-b border-[#e0e0e0] bg-[#ffffff] sticky top-0 z-40 px-4 sm:px-8">
-        <div className="max-w-[1200px] h-full mx-auto flex items-center justify-between gap-4">
+      <header className="h-16 border-b border-[#e0e0e0] bg-[#ffffff] sticky top-0 z-40 px-6 sm:px-10">
+        <div className="max-w-[1200px] h-full mx-auto flex items-center justify-between gap-8">
           {/* Left: Brand mark */}
-          <Link href="/" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5 shrink-0">
             <div className="w-5 h-5 rounded-[4px] bg-[#7451f2] flex items-center justify-center text-white">
               <Sparkles className="w-3.5 h-3.5" />
             </div>
@@ -64,8 +67,8 @@ export default function LandingPage() {
             </span>
           </Link>
 
-          {/* Center: Ghost nav links */}
-          <nav className="hidden md:flex items-center gap-6">
+          {/* Center: Ghost nav links with expanded spacing */}
+          <nav className="hidden md:flex items-center gap-8 lg:gap-10">
             <a href="#workers" className="btn-ghost">
               AI Workers
             </a>
@@ -80,8 +83,10 @@ export default function LandingPage() {
             </Link>
           </nav>
 
-          {/* Right: Ghost Log In + Filled Violet CTA */}
-          <div className="flex items-center gap-4">
+          {/* Right: Currency Selector + Ghost Log In + Filled Violet CTA with expanded spacing */}
+          <div className="flex items-center gap-4 sm:gap-6 shrink-0">
+            <CurrencySelector />
+
             <Link
               href="/login"
               className="btn-ghost text-xs"
@@ -91,7 +96,7 @@ export default function LandingPage() {
             <button
               onClick={() => handleDemoLaunch()}
               disabled={demoLoading}
-              className="btn-primary text-xs"
+              className="btn-primary text-xs px-5 py-2.5"
             >
               {demoLoading ? "Starting Demo..." : "Get Early Access"}
             </button>
@@ -172,18 +177,18 @@ export default function LandingPage() {
                     <span className="text-[#858585]">Just now</span>
                   </div>
                   <p className="text-xs text-[#272727] leading-relaxed">
-                    "I audited Zenith Dynamics for Thursday's QBR. Billed $412k, incurred $348k in costs. Gross margin dropped to 15.5% — $18.4k below your 20% target."
+                    &quot;I audited Zenith Dynamics for Thursday&apos;s QBR. Billed {formatAmount(4120000, true)}, incurred {formatAmount(3480000, true)} in costs. Gross margin dropped to 15.5% — {formatAmount(184000, true)} below your 20% target.&quot;
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="p-2.5 rounded-[4px] border border-[#e0e0e0] bg-[#ffffff]">
                     <span className="font-mono text-[10px] uppercase text-[#858585] block">Audited Revenue</span>
-                    <span className="font-semibold text-sm text-[#272727]">$3,842,500</span>
+                    <span className="font-semibold text-sm text-[#272727]">{formatAmount(3842500, true)}</span>
                   </div>
                   <div className="p-2.5 rounded-[4px] border border-[#e0e0e0] bg-[#ffffff]">
                     <span className="font-mono text-[10px] uppercase text-[#858585] block">Margin Drain</span>
-                    <span className="font-semibold text-sm text-[#e11d48]">-$58,400</span>
+                    <span className="font-semibold text-sm text-[#e11d48]">-{formatAmount(58400, true)}</span>
                   </div>
                 </div>
 

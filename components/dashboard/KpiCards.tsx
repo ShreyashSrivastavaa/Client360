@@ -1,5 +1,6 @@
 import React from "react";
 import { formatCurrency } from "@/lib/utils";
+import { useCurrency } from "@/lib/currency-context";
 import { CardSkeleton } from "@/components/ui/Skeleton";
 
 export interface DashboardSummaryData {
@@ -31,6 +32,8 @@ interface KpiCardsProps {
 }
 
 export function KpiCards({ data, isLoading }: KpiCardsProps) {
+  const { formatAmount } = useCurrency();
+
   if (isLoading || !data) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
@@ -71,21 +74,21 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
   const cards = [
     {
       title: "TOTAL REVENUE",
-      value: formatCurrency(data.totalRevenue, true),
+      value: formatAmount(data.totalRevenue, true),
       delta: renderDelta(data.revenueDelta),
       subtext: "vs prior",
       dot: "#7451f2", // Iris Violet
     },
     {
       title: "TOTAL COSTS",
-      value: formatCurrency(data.totalCost, true),
+      value: formatAmount(data.totalCost, true),
       delta: renderDelta(data.costDelta, true),
       subtext: "vs prior",
       dot: "#5952a1", // Deep Iris
     },
     {
       title: "GROSS PROFIT",
-      value: formatCurrency(data.grossProfit, true),
+      value: formatAmount(data.grossProfit, true),
       delta: renderDelta(data.profitDelta),
       subtext: "operating margin",
       dot: data.grossProfit >= 0 ? "#7451f2" : "#e11d48",
@@ -123,7 +126,7 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
           }`}
         >
           {data.lossMakingCount > 0
-            ? `-${formatCurrency(data.lossMakingAmount, true)}`
+            ? `-${formatAmount(data.lossMakingAmount, true)}`
             : "0 drain"}
         </span>
       ),

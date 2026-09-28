@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { formatCurrency, formatPercent } from "@/lib/utils";
+import { useCurrency } from "@/lib/currency-context";
 import { ClassificationBadge } from "@/components/ui/Badge";
 import { CardSkeleton } from "@/components/ui/Skeleton";
 
@@ -23,6 +24,8 @@ interface TopBottomClientsProps {
 }
 
 export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBottomClientsProps) {
+  const { formatAmount } = useCurrency();
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -78,9 +81,9 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
                       {client.name}
                     </Link>
                     <div className="flex items-center gap-2 text-xs text-[#858585] mt-0.5">
-                      <span>Rev: {formatCurrency(client.revenue, true)}</span>
+                      <span>Rev: {formatAmount(client.revenue, true)}</span>
                       <span>•</span>
-                      <span>Cost: {formatCurrency(client.cost, true)}</span>
+                      <span>Cost: {formatAmount(client.cost, true)}</span>
                     </div>
                   </div>
                 </div>
@@ -88,7 +91,7 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
                 <div className="flex items-center gap-4 text-right shrink-0">
                   <div>
                     <div className="text-sm font-semibold text-[#16a34a] tabular-nums font-mono">
-                      +{formatCurrency(client.profit, true)}
+                      +{formatAmount(client.profit, true)}
                     </div>
                     <div className="text-[11px] text-[#858585] tabular-nums font-mono">
                       {formatPercent(client.marginPercent)} margin
@@ -159,9 +162,9 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
                       {client.name}
                     </Link>
                     <div className="flex items-center gap-2 text-xs text-[#858585] mt-0.5">
-                      <span>Rev: {formatCurrency(client.revenue, true)}</span>
+                      <span>Rev: {formatAmount(client.revenue, true)}</span>
                       <span>•</span>
-                      <span>Cost: {formatCurrency(client.cost, true)}</span>
+                      <span>Cost: {formatAmount(client.cost, true)}</span>
                     </div>
                   </div>
                 </div>
@@ -174,7 +177,7 @@ export function TopBottomClients({ topClients, bottomClients, isLoading }: TopBo
                       }`}
                     >
                       {client.profit >= 0 ? "+" : ""}
-                      {formatCurrency(client.profit, true)}
+                      {formatAmount(client.profit, true)}
                     </div>
                     <div
                       className={`text-[11px] tabular-nums font-mono ${

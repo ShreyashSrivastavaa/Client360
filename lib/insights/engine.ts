@@ -1,4 +1,4 @@
-import { formatCurrency, formatPercent } from "../utils";
+import { formatCurrency, formatPercent, CurrencyCode } from "../utils";
 
 export interface InsightItem {
   id: string;
@@ -27,7 +27,8 @@ export interface ClientInsightData {
 export function generateInsights(
   clients: ClientInsightData[],
   totalRevenue: number,
-  totalProfit: number
+  totalProfit: number,
+  currencyCode?: CurrencyCode
 ): InsightItem[] {
   const insights: InsightItem[] = [];
 
@@ -53,9 +54,11 @@ export function generateInsights(
       type: "danger",
       title: `${lossMakers.length} ${lossMakers.length === 1 ? "Client is" : "Clients are"} Loss-Making`,
       description: `${lossMakers.length} active ${lossMakers.length === 1 ? "account is" : "accounts are"} eroding profits by ${formatCurrency(
-        totalLossAmount
-      )}. Worst performing account is ${worstClient.name} (${formatCurrency(worstClient.profit)} gross profit).`,
-      metric: `-${formatCurrency(totalLossAmount)}`,
+        totalLossAmount,
+        false,
+        currencyCode
+      )}. Worst performing account is ${worstClient.name} (${formatCurrency(worstClient.profit, false, currencyCode)} gross profit).`,
+      metric: `-${formatCurrency(totalLossAmount, false, currencyCode)}`,
       actionText: "Review loss makers",
       actionUrl: "/clients?status=loss_making",
     });
@@ -73,7 +76,9 @@ export function generateInsights(
       type: "warning",
       title: `Low Margin on High-Volume Client: ${topLow.name}`,
       description: `${topLow.name} drives ${formatCurrency(
-        topLow.revenue
+        topLow.revenue,
+        false,
+        currencyCode
       )} in revenue (${formatPercent((topLow.revenue / totalRevenue) * 100)} of company total), but yields only ${formatPercent(
         topLow.marginPercent
       )} gross margin. Consider a 5-10% rate revision or reducing high-cost service tier.`,
@@ -140,8 +145,10 @@ export function generateInsights(
       type: "success",
       title: `Highest Margin Performer: ${star.name}`,
       description: `${star.name} delivers ${formatPercent(star.marginPercent)} gross margin on ${formatCurrency(
-        star.revenue
-      )} revenue (${formatCurrency(star.profit)} profit). Strong archetype to replicate for sales targeting.`,
+        star.revenue,
+        false,
+        currencyCode
+      )} revenue (${formatCurrency(star.profit, false, currencyCode)} profit). Strong archetype to replicate for sales targeting.`,
       metric: formatPercent(star.marginPercent),
       actionText: "View profile",
       actionUrl: `/clients/${star.id}`,

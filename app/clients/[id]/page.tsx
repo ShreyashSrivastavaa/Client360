@@ -9,6 +9,7 @@ import { CardSkeleton } from "@/components/ui/Skeleton";
 import { usePeriod } from "@/lib/period-context";
 import { apiFetch } from "@/lib/api-client";
 import { formatCurrency, formatPercent } from "@/lib/utils";
+import { useCurrency } from "@/lib/currency-context";
 import {
   ArrowLeft,
   ChevronLeft,
@@ -75,6 +76,7 @@ export default function ClientDetailPage() {
   const params = useParams();
   const clientId = params?.id as string;
   const { period, customStart, customEnd } = usePeriod();
+  const { formatAmount } = useCurrency();
 
   const [detail, setDetail] = useState<ClientDetailData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -204,7 +206,7 @@ export default function ClientDetailPage() {
           <div className="p-4 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0]">
             <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] mb-1">Total Revenue</div>
             <div className="text-2xl font-bold text-[#272727] tabular-nums">
-              {formatCurrency(metrics.totalRevenue)}
+              {formatAmount(metrics.totalRevenue)}
             </div>
             <span className="text-[10px] text-[#858585]">Billed in period</span>
           </div>
@@ -212,7 +214,7 @@ export default function ClientDetailPage() {
           <div className="p-4 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0]">
             <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] mb-1">Total Costs</div>
             <div className="text-2xl font-bold text-[#272727] tabular-nums">
-              {formatCurrency(metrics.totalCost)}
+              {formatAmount(metrics.totalCost)}
             </div>
             <span className="text-[10px] text-[#858585]">Attributed costs</span>
           </div>
@@ -224,7 +226,7 @@ export default function ClientDetailPage() {
                 isLoss ? "text-[#e11d48]" : "text-[#16a34a]"
               }`}
             >
-              {formatCurrency(metrics.grossProfit)}
+              {formatAmount(metrics.grossProfit)}
             </div>
             <span className="text-[10px] text-[#858585]">
               {isLoss ? "Operating loss" : "Net profit"}
@@ -290,10 +292,10 @@ export default function ClientDetailPage() {
                       stroke="#858585"
                       fontSize={11}
                       tickLine={false}
-                      tickFormatter={(val) => `$${(val / 1000).toFixed(0)}k`}
+                      tickFormatter={(val) => formatAmount(val, true)}
                     />
                     <Tooltip
-                      formatter={(val: any) => [formatCurrency(val), ""]}
+                      formatter={(val: any) => [formatAmount(val), ""]}
                       contentStyle={{
                         backgroundColor: "#ffffff",
                         borderColor: "#e0e0e0",
@@ -345,7 +347,7 @@ export default function ClientDetailPage() {
                       ))}
                     </Pie>
                     <Tooltip
-                      formatter={(val: any) => [formatCurrency(val), "Amount"]}
+                      formatter={(val: any) => [formatAmount(val), "Amount"]}
                       contentStyle={{
                         backgroundColor: "#ffffff",
                         borderColor: "#eaeaea",
@@ -371,7 +373,7 @@ export default function ClientDetailPage() {
                     <span className="truncate">{cat.category}</span>
                   </span>
                   <div className="flex items-center gap-2 tabular-nums">
-                    <span className="font-normal text-[#1a1a1a]">{formatCurrency(cat.amount)}</span>
+                    <span className="font-normal text-[#1a1a1a]">{formatAmount(cat.amount)}</span>
                     <span className="text-[#838383] text-[11px] w-10 text-right">
                       {cat.percentage}%
                     </span>
@@ -466,7 +468,7 @@ export default function ClientDetailPage() {
                         <td className="py-3 px-4 text-right tabular-nums font-bold">
                           <span className={isRev ? "text-[#16a34a]" : "text-[#1a1a1a]"}>
                             {isRev ? "+" : "-"}
-                            {formatCurrency(tx.amount)}
+                            {formatAmount(tx.amount)}
                           </span>
                         </td>
                         <td className="py-3 px-4 text-right text-[#838383] font-mono text-[10px]">

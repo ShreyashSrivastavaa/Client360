@@ -5,19 +5,85 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number | null | undefined, compact = false): string {
-  if (amount === null || amount === undefined || isNaN(amount)) return "$0.00";
-  
-  if (compact && Math.abs(amount) >= 1_000_000) {
-    return `$${(amount / 1_000_000).toFixed(1)}M`;
+export type CurrencyCode = "INR" | "USD" | "EUR" | "GBP" | "AED" | "SGD" | "CAD" | "AUD" | "JPY";
+
+export interface CurrencyConfig {
+  code: CurrencyCode;
+  symbol: string;
+  label: string;
+  locale: string;
+}
+
+export const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
+  INR: { code: "INR", symbol: "₹", label: "INR (₹) - Indian Rupee", locale: "en-IN" },
+  USD: { code: "USD", symbol: "$", label: "USD ($) - US Dollar", locale: "en-US" },
+  EUR: { code: "EUR", symbol: "€", label: "EUR (€) - Euro", locale: "de-DE" },
+  GBP: { code: "GBP", symbol: "£", label: "GBP (£) - British Pound", locale: "en-GB" },
+  AED: { code: "AED", symbol: "د.إ", label: "AED (د.إ) - UAE Dirham", locale: "en-AE" },
+  SGD: { code: "SGD", symbol: "S$", label: "SGD (S$) - Singapore Dollar", locale: "en-SG" },
+  CAD: { code: "CAD", symbol: "C$", label: "CAD (C$) - Canadian Dollar", locale: "en-CA" },
+  AUD: { code: "AUD", symbol: "A$", label: "AUD (A$) - Australian Dollar", locale: "en-AU" },
+  JPY: { code: "JPY", symbol: "¥", label: "JPY (¥) - Japanese Yen", locale: "ja-JP" },
+};
+
+// Global active currency (Default: INR)
+let activeGlobalCurrency: CurrencyCode = "INR";
+
+export function setGlobalCurrency(code: CurrencyCode) {
+  if (CURRENCIES[code]) {
+    activeGlobalCurrency = code;
   }
-  if (compact && Math.abs(amount) >= 10_000) {
-    return `$${(amount / 1_000).toFixed(1)}k`;
+}
+
+export function getGlobalCurrency(): CurrencyCode {
+  return activeGlobalCurrency;
+}
+
+export function getCurrencySymbol(code?: CurrencyCode): string {
+  const curr = CURRENCIES[code || activeGlobalCurrency] || CURRENCIES.INR;
+  return curr.symbol;
+}
+
+export function formatCurrency(
+  amount: number | null | undefined,
+  compact = false,
+  currencyCode?: CurrencyCode
+): string {
+  const curr = CURRENCIES[currencyCode || activeGlobalCurrency] || CURRENCIES.INR;
+
+  if (amount === null || amount === undefined || isNaN(amount)) {
+    return `${curr.symbol}0.00`;
   }
 
-  return new Intl.NumberFormat("en-US", {
+  const absAmount = Math.abs(amount);
+  const sign = amount < 0 ? "-" : "";
+
+  if (compact) {
+    if (curr.code === "INR") {
+      if (absAmount >= 10_000_000) {
+        return `${sign}${curr.symbol}${(absAmount / 10_000_000).toFixed(1)}Cr`;
+      }
+      if (absAmount >= 100_000) {
+        return `${sign}${curr.symbol}${(absAmount / 100_000).toFixed(1)}L`;
+      }
+      if (absAmount >= 1_000) {
+        return `${sign}${curr.symbol}${(absAmount / 1_000).toFixed(1)}k`;
+      }
+      return `${sign}${curr.symbol}${absAmount.toFixed(0)}`;
+    } else {
+      if (absAmount >= 1_000_000) {
+        return `${sign}${curr.symbol}${(absAmount / 1_000_000).toFixed(1)}M`;
+      }
+      if (absAmount >= 1_000) {
+        return `${sign}${curr.symbol}${(absAmount / 1_000).toFixed(1)}k`;
+      }
+      return `${sign}${curr.symbol}${absAmount.toFixed(0)}`;
+    }
+  }
+
+  return new Intl.NumberFormat(curr.locale, {
     style: "currency",
-    currency: "USD",
+    currency: curr.code,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount);

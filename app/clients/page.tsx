@@ -9,6 +9,7 @@ import { usePeriod } from "@/lib/period-context";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api-client";
 import { formatCurrency, formatPercent } from "@/lib/utils";
+import { useCurrency } from "@/lib/currency-context";
 import {
   Search,
   ArrowUpDown,
@@ -34,6 +35,7 @@ interface ClientRow {
 export default function ClientsPage() {
   const { period, customStart, customEnd } = usePeriod();
   const { organization } = useAuth();
+  const { formatAmount } = useCurrency();
 
   const [clients, setClients] = useState<ClientRow[]>([]);
   const [total, setTotal] = useState(0);
@@ -308,20 +310,20 @@ export default function ClientsPage() {
 
                         <td className="py-3 px-4 text-right tabular-nums text-[#1a1a1a] font-normal">
                           <Link href={`/clients/${client.id}`} className="block">
-                            {formatCurrency(client.totalRevenue)}
+                            {formatAmount(client.totalRevenue)}
                           </Link>
                         </td>
 
                         <td className="py-3 px-4 text-right tabular-nums text-[#6f6f6f]">
                           <Link href={`/clients/${client.id}`} className="block">
-                            {formatCurrency(client.totalCost)}
+                            {formatAmount(client.totalCost)}
                           </Link>
                         </td>
 
                         <td className="py-3 px-4 text-right tabular-nums font-bold">
                           <Link href={`/clients/${client.id}`} className="block">
                             <span className={isLoss ? "text-[#e11d48]" : "text-[#16a34a]"}>
-                              {formatCurrency(client.grossProfit)}
+                              {formatAmount(client.grossProfit)}
                             </span>
                           </Link>
                         </td>

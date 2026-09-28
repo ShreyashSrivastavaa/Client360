@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
   const rangeKey = searchParams.get("range") || "12m";
   const customStart = searchParams.get("start") || undefined;
   const customEnd = searchParams.get("end") || undefined;
+  const currencyCode = (searchParams.get("currency") || req.headers.get("x-currency") || "INR") as any;
 
   const range = parseRange(rangeKey, customStart, customEnd);
   const orgId = auth.organization.id;
@@ -116,7 +117,7 @@ export async function GET(req: NextRequest) {
     }
   });
 
-  const insights = generateInsights(Array.from(clientMap.values()), totalRevenue, totalProfit);
+  const insights = generateInsights(Array.from(clientMap.values()), totalRevenue, totalProfit, currencyCode);
 
   return NextResponse.json({ data: insights });
 }

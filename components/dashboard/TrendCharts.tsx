@@ -14,6 +14,7 @@ import {
   Cell,
 } from "recharts";
 import { formatCurrency, formatPercent } from "@/lib/utils";
+import { useCurrency } from "@/lib/currency-context";
 import { ChartSkeleton } from "@/components/ui/Skeleton";
 
 export interface MonthlyTrendData {
@@ -48,6 +49,7 @@ interface CustomTooltipProps {
 }
 
 function CustomBarTooltip({ active, payload }: CustomTooltipProps) {
+  const { formatAmount } = useCurrency();
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     if (!data) return null;
@@ -61,7 +63,7 @@ function CustomBarTooltip({ active, payload }: CustomTooltipProps) {
             <span className="w-1.5 h-1.5 rounded-full bg-[#7451f2]" /> Revenue:
           </span>
           <span className="font-medium text-[#272727] tabular-nums font-mono">
-            {formatCurrency(data.revenue)}
+            {formatAmount(data.revenue)}
           </span>
         </div>
         <div className="flex justify-between items-center text-[#5d5d5d]">
@@ -69,7 +71,7 @@ function CustomBarTooltip({ active, payload }: CustomTooltipProps) {
             <span className="w-1.5 h-1.5 rounded-full bg-[#d6e5ff]" /> Cost:
           </span>
           <span className="font-medium text-[#272727] tabular-nums font-mono">
-            {formatCurrency(data.cost)}
+            {formatAmount(data.cost)}
           </span>
         </div>
         <div className="flex justify-between items-center pt-1 border-t border-[#e0e0e0]">
@@ -81,7 +83,7 @@ function CustomBarTooltip({ active, payload }: CustomTooltipProps) {
               data.profit >= 0 ? "text-[#16a34a]" : "text-[#e11d48]"
             }`}
           >
-            {formatCurrency(data.profit)}
+            {formatAmount(data.profit)}
           </span>
         </div>
         <div className="flex justify-between items-center text-[11px] text-[#858585]">
@@ -111,6 +113,7 @@ function CustomPieTooltip({ active, payload }: CustomTooltipProps) {
 
 export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProps) {
   const [mounted, setMounted] = useState(false);
+  const { formatAmount } = useCurrency();
 
   useEffect(() => {
     setMounted(true);
@@ -193,7 +196,7 @@ export function TrendCharts({ trends, distribution, isLoading }: TrendChartsProp
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
-                  tickFormatter={(val) => `$${(val / 1000).toFixed(0)}k`}
+                  tickFormatter={(val) => formatAmount(val, true)}
                 />
                 <Tooltip content={<CustomBarTooltip />} />
                 <Bar dataKey="revenue" name="Revenue" fill="#7451f2" radius={[2, 2, 0, 0]} maxBarSize={28} />
