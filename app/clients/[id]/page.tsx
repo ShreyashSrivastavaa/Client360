@@ -170,6 +170,7 @@ export default function ClientDetailPage() {
 
   return (
     <AppShell
+      eyebrow="CLIENT AUDIT"
       pageTitle={client.name}
       pageDescription={`Account ID: ${client.externalReference || client.id.slice(0, 8)}`}
     >
@@ -179,18 +180,18 @@ export default function ClientDetailPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/clients"
-              className="p-1.5 rounded-[4px] border border-[#eaeaea] text-[#838383] hover:text-[#1a1a1a] transition-colors"
+              className="p-1.5 rounded-[4px] border border-[#e0e0e0] text-[#858585] hover:text-[#272727] transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
             </Link>
             <div>
               <div className="flex items-center gap-2.5">
-                <h1 className="text-rows-heading">
+                <h1 className="font-serif text-3xl font-normal text-[#272727]">
                   {client.name}
                 </h1>
                 <ClassificationBadge classification={metrics.classification} />
               </div>
-              <p className="text-xs text-[#838383] font-mono mt-0.5">
+              <p className="text-xs text-[#858585] font-mono mt-0.5">
                 {client.externalReference ? `Ref: ${client.externalReference}` : "Internal Account"}{" "}
                 • Added {new Date(client.createdAt).toLocaleDateString()}
               </p>
@@ -200,50 +201,50 @@ export default function ClientDetailPage() {
 
         {/* 4 Key Stat Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="p-4 rounded-[8px] bg-white border border-[#eaeaea]">
-            <div className="text-rows-caption mb-1">Total Revenue</div>
-            <div className="text-xl font-bold text-[#1a1a1a] tabular-nums">
+          <div className="p-4 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0]">
+            <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] mb-1">Total Revenue</div>
+            <div className="text-2xl font-bold text-[#272727] tabular-nums">
               {formatCurrency(metrics.totalRevenue)}
             </div>
-            <span className="text-[10px] text-[#838383]">Billed in period</span>
+            <span className="text-[10px] text-[#858585]">Billed in period</span>
           </div>
 
-          <div className="p-4 rounded-[8px] bg-white border border-[#eaeaea]">
-            <div className="text-rows-caption mb-1">Total Costs</div>
-            <div className="text-xl font-bold text-[#1a1a1a] tabular-nums">
+          <div className="p-4 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0]">
+            <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] mb-1">Total Costs</div>
+            <div className="text-2xl font-bold text-[#272727] tabular-nums">
               {formatCurrency(metrics.totalCost)}
             </div>
-            <span className="text-[10px] text-[#838383]">Attributed costs</span>
+            <span className="text-[10px] text-[#858585]">Attributed costs</span>
           </div>
 
-          <div className="p-4 rounded-[8px] bg-white border border-[#eaeaea]">
-            <div className="text-rows-caption mb-1">Gross Profit</div>
+          <div className="p-4 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0]">
+            <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] mb-1">Gross Profit</div>
             <div
-              className={`text-xl font-bold tabular-nums ${
+              className={`text-2xl font-bold tabular-nums ${
                 isLoss ? "text-[#e11d48]" : "text-[#16a34a]"
               }`}
             >
               {formatCurrency(metrics.grossProfit)}
             </div>
-            <span className="text-[10px] text-[#838383]">
+            <span className="text-[10px] text-[#858585]">
               {isLoss ? "Operating loss" : "Net profit"}
             </span>
           </div>
 
-          <div className="p-4 rounded-[8px] bg-white border border-[#eaeaea]">
-            <div className="text-rows-caption mb-1">Margin %</div>
+          <div className="p-4 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0]">
+            <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] mb-1">Margin %</div>
             <div
-              className={`text-xl font-bold tabular-nums ${
+              className={`text-2xl font-bold tabular-nums ${
                 metrics.marginPercent !== null && metrics.marginPercent >= 20
                   ? "text-[#16a34a]"
                   : metrics.marginPercent !== null && metrics.marginPercent >= 5
-                  ? "text-[#d97706]"
+                  ? "text-[#f59e0b]"
                   : "text-[#e11d48]"
               }`}
             >
               {formatPercent(metrics.marginPercent)}
             </div>
-            <span className="text-[10px] text-[#838383]">
+            <span className="text-[10px] text-[#858585]">
               {metrics.marginPercent !== null && metrics.marginPercent >= 20
                 ? "Target met (≥20%)"
                 : "Below 20% target"}
@@ -254,36 +255,39 @@ export default function ClientDetailPage() {
         {/* Charts Row: Monthly Trend + Cost Breakdown */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Revenue vs Cost Monthly Chart */}
-          <div className="lg:col-span-2 p-6 rounded-[8px] bg-white border border-[#eaeaea] flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#eaeaea]">
+          <div className="lg:col-span-2 p-6 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0] flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#e0e0e0]">
               <div>
-                <h3 className="text-sm font-bold text-[#1a1a1a]">
+                <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] mb-0.5">
+                  MONTHLY TRAJECTORY
+                </div>
+                <h3 className="font-serif text-lg text-[#272727]">
                   Monthly Revenue vs. Cost
                 </h3>
-                <p className="text-xs text-[#838383]">Account performance history</p>
+                <p className="text-xs text-[#5d5d5d]">Account performance history</p>
               </div>
-              <div className="flex items-center gap-3 text-xs text-[#6f6f6f]">
+              <div className="flex items-center gap-3 text-xs text-[#5d5d5d]">
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-[1px] bg-[#1a1a1a]" /> Revenue
+                  <span className="w-2.5 h-2.5 rounded-[1px] bg-[#7451f2]" /> Revenue
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-[1px] bg-[#e1e1e1]" /> Cost
+                  <span className="w-2.5 h-2.5 rounded-[1px] bg-[#d6e5ff] border border-[#5952a1]" /> Cost
                 </span>
               </div>
             </div>
 
             <div className="h-64 w-full">
               {trends.length === 0 ? (
-                <div className="h-full flex items-center justify-center text-xs text-[#838383]">
+                <div className="h-full flex items-center justify-center text-xs text-[#858585]">
                   No monthly history recorded yet.
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={trends} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#eaeaea" vertical={false} />
-                    <XAxis dataKey="label" stroke="#838383" fontSize={11} tickLine={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" vertical={false} />
+                    <XAxis dataKey="label" stroke="#858585" fontSize={11} tickLine={false} />
                     <YAxis
-                      stroke="#838383"
+                      stroke="#858585"
                       fontSize={11}
                       tickLine={false}
                       tickFormatter={(val) => `$${(val / 1000).toFixed(0)}k`}
@@ -292,14 +296,14 @@ export default function ClientDetailPage() {
                       formatter={(val: any) => [formatCurrency(val), ""]}
                       contentStyle={{
                         backgroundColor: "#ffffff",
-                        borderColor: "#eaeaea",
+                        borderColor: "#e0e0e0",
                         borderRadius: "4px",
                         fontSize: "12px",
-                        color: "#1a1a1a",
+                        color: "#272727",
                       }}
                     />
-                    <Bar dataKey="revenue" fill="#1a1a1a" radius={[2, 2, 0, 0]} maxBarSize={28} />
-                    <Bar dataKey="cost" fill="#e1e1e1" radius={[2, 2, 0, 0]} maxBarSize={28} />
+                    <Bar dataKey="revenue" fill="#7451f2" radius={[2, 2, 0, 0]} maxBarSize={28} />
+                    <Bar dataKey="cost" fill="#d6e5ff" stroke="#5952a1" strokeWidth={1} radius={[2, 2, 0, 0]} maxBarSize={28} />
                   </BarChart>
                 </ResponsiveContainer>
               )}
@@ -307,10 +311,13 @@ export default function ClientDetailPage() {
           </div>
 
           {/* Cost Category Breakdown */}
-          <div className="p-6 rounded-[8px] bg-white border border-[#eaeaea] flex flex-col justify-between">
-            <div className="mb-3 pb-2 border-b border-[#eaeaea]">
-              <h3 className="text-sm font-bold text-[#1a1a1a]">Expense Categories</h3>
-              <p className="text-xs text-[#838383]">Cost distribution</p>
+          <div className="p-6 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0] flex flex-col justify-between">
+            <div className="mb-3 pb-2 border-b border-[#e0e0e0]">
+              <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] mb-0.5">
+                EXPENSE ALLOCATION
+              </div>
+              <h3 className="font-serif text-lg text-[#272727]">Expense Categories</h3>
+              <p className="text-xs text-[#5d5d5d]">Cost distribution across categories</p>
             </div>
 
             <div className="h-44 relative flex items-center justify-center">

@@ -44,7 +44,7 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
   const renderDelta = (delta: number, inverse = false, isPercentPoints = false) => {
     if (delta === 0) {
       return (
-        <span className="text-xs text-[#838383] font-normal tabular-nums">
+        <span className="text-xs text-[#858585] font-normal tabular-nums font-mono">
           0.0%
         </span>
       );
@@ -57,7 +57,7 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
 
     return (
       <span
-        className={`text-xs font-normal tabular-nums ${
+        className={`text-xs font-medium tabular-nums font-mono ${
           isGood ? "text-[#16a34a]" : "text-[#e11d48]"
         }`}
       >
@@ -74,21 +74,21 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
       value: formatCurrency(data.totalRevenue, true),
       delta: renderDelta(data.revenueDelta),
       subtext: "vs prior",
-      dot: "#34d399", // Mint
+      dot: "#7451f2", // Iris Violet
     },
     {
       title: "TOTAL COSTS",
       value: formatCurrency(data.totalCost, true),
       delta: renderDelta(data.costDelta, true),
       subtext: "vs prior",
-      dot: "#fbbf24", // Amber
+      dot: "#5952a1", // Deep Iris
     },
     {
       title: "GROSS PROFIT",
       value: formatCurrency(data.grossProfit, true),
       delta: renderDelta(data.profitDelta),
       subtext: "operating margin",
-      dot: data.grossProfit >= 0 ? "#34d399" : "#f472b6",
+      dot: data.grossProfit >= 0 ? "#7451f2" : "#e11d48",
     },
     {
       title: "OVERALL MARGIN",
@@ -97,29 +97,29 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
       subtext: "target ≥ 20%",
       dot:
         data.marginPercent !== null && data.marginPercent >= 20
-          ? "#34d399"
+          ? "#7451f2"
           : data.marginPercent !== null && data.marginPercent >= 5
-          ? "#fbbf24"
-          : "#f472b6",
+          ? "#f59e0b"
+          : "#e11d48",
     },
     {
       title: "ACTIVE CLIENTS",
       value: data.activeClientsCount.toString(),
       delta: (
-        <span className="text-xs text-[#6f6f6f] tabular-nums">
+        <span className="text-xs text-[#5d5d5d] font-mono tabular-nums">
           {data.activeClientsDelta >= 0 ? `+${data.activeClientsDelta}` : data.activeClientsDelta}
         </span>
       ),
       subtext: "billed accounts",
-      dot: "#38bdf8", // Sky blue
+      dot: "#0072c6", // Cobalt Info
     },
     {
       title: "LOSS-MAKING ACCOUNTS",
       value: data.lossMakingCount.toString(),
       delta: (
         <span
-          className={`text-xs tabular-nums ${
-            data.lossMakingCount > 0 ? "text-[#e11d48] font-bold" : "text-[#6f6f6f]"
+          className={`text-xs tabular-nums font-mono ${
+            data.lossMakingCount > 0 ? "text-[#e11d48] font-semibold" : "text-[#5d5d5d]"
           }`}
         >
           {data.lossMakingCount > 0
@@ -128,7 +128,7 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
         </span>
       ),
       subtext: data.lossMakingCount > 0 ? "drain accounts" : "healthy",
-      dot: data.lossMakingCount > 0 ? "#e11d48" : "#34d399",
+      dot: data.lossMakingCount > 0 ? "#e11d48" : "#7451f2",
     },
   ];
 
@@ -137,25 +137,25 @@ export function KpiCards({ data, isLoading }: KpiCardsProps) {
       {cards.map((c, i) => (
         <div
           key={i}
-          className="p-4 rounded-[8px] bg-white border border-[#eaeaea] flex flex-col justify-between"
+          className="p-4 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0] flex flex-col justify-between hover:border-[#858585] transition-colors"
         >
           <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-rows-caption truncate">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] truncate">
               {c.title}
             </span>
             <span
-              className="w-[6px] h-[6px] rounded-full shrink-0"
+              className="w-1.5 h-1.5 rounded-full shrink-0"
               style={{ backgroundColor: c.dot }}
             />
           </div>
 
           <div className="space-y-1">
-            <div className="text-xl font-bold tracking-tight text-[#1a1a1a] tabular-nums">
+            <div className="text-2xl font-bold tracking-tight text-[#272727] tabular-nums">
               {c.value}
             </div>
             <div className="flex items-center justify-between gap-1 pt-1 text-xs">
               <div>{c.delta}</div>
-              <span className="text-[#838383] text-[10px] truncate">{c.subtext}</span>
+              <span className="text-[#858585] text-[10px] truncate">{c.subtext}</span>
             </div>
           </div>
         </div>

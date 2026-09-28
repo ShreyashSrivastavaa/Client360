@@ -1,107 +1,178 @@
 @import "tailwindcss";
 
 @theme {
-  /* Rows Colors */
-  --color-ink: #1a1a1a;
-  --color-paper: #ffffff;
-  --color-mist: #f7f7f7;
-  --color-ash: #eaeaea;
-  --color-smoke: #e1e1e1;
-  --color-graphite: #838383;
-  --color-steel: #989898;
-  --color-slate: #6f6f6f;
-  --color-marigold: #ffb84d;
-  --color-buttercream: #ffe480;
-  --color-cream: #fff6d4;
+  /* Obviously / Zams Colors */
+  --color-iris-violet: #7451f2;
+  --color-deep-iris: #5952a1;
+  --color-cobalt-info: #0072c6;
+  --color-powder-blue: #d6e5ff;
+  --color-graphite-ink: #272727;
+  --color-slate: #5d5d5d;
+  --color-ash: #4f4f4f;
+  --color-mauve-dust: #a69ea7;
+  --color-fog: #858585;
+  --color-charcoal-hairline: #333333;
+  --color-mist: #e0e0e0;
+  --color-soft-snow: #f6f6f6;
+  --color-paper-white: #ffffff;
+  --color-pure-black: #000000;
 
-  /* Typography */
-  --font-output-sans: var(--font-output-sans), 'Output Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Typography Families */
+  --font-lustria: var(--font-lustria), 'Lustria', Georgia, serif;
+  --font-dm-sans: var(--font-dm-sans), 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-martian-mono: var(--font-martian-mono), 'Martian Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Typography — Scale */
-  --text-caption: 10px;
-  --leading-caption: 1;
-  --tracking-caption: 0.21px;
-  --text-heading-sm: 18px;
-  --leading-heading-sm: 1.45;
-  --tracking-heading-sm: -0.774px;
-  --text-heading: 24px;
-  --leading-heading: 1;
-  --tracking-heading: -1.032px;
+  /* Typography Scale */
+  --text-mono-sm: 11px;
+  --leading-mono-sm: 1.2;
+  --tracking-mono-sm: 0.22px;
+  --text-caption: 14px;
+  --leading-caption: 1.4;
+  --text-body: 16px;
+  --leading-body: 1.6;
+  --tracking-body: 0.32px;
+  --text-subheading: 20px;
+  --leading-subheading: 1.2;
+  --text-heading-sm: 32px;
+  --leading-heading-sm: 1.2;
+  --text-heading: 36px;
+  --leading-heading: 1.2;
+  --tracking-heading: -0.68px;
+  --text-heading-lg: 42px;
+  --leading-heading-lg: 1.1;
+  --tracking-heading-lg: -2.02px;
+  --text-display: 52px;
+  --leading-display: 1.1;
+  --tracking-display: -2.6px;
 
   /* Spacing */
-  --spacing-4: 4px;
   --spacing-8: 8px;
-  --spacing-12: 12px;
   --spacing-16: 16px;
-  --spacing-20: 20px;
   --spacing-24: 24px;
   --spacing-32: 32px;
-  --spacing-44: 44px;
-  --spacing-52: 52px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-104: 104px;
 
   /* Border Radius */
-  --radius-sm: 1px;
   --radius-md: 4px;
-  --radius-lg: 8px;
-  --radius-tags: 4px;
-  --radius-cards: 8px;
-  --radius-inputs: 4px;
+  --radius-full: 100px;
+  --radius-nav: 4px;
+  --radius-cards: 4px;
+  --radius-badges: 100px;
   --radius-buttons: 4px;
+
+  /* Shadows */
+  --shadow-sm: rgba(0, 0, 0, 0.2) 0px 2px 4px 0px;
 }
 
 :root {
-  --color-ink: #1a1a1a;
+  /* Colors */
+  --color-iris-violet: #7451f2;
+  --color-deep-iris: #5952a1;
+  --color-cobalt-info: #0072c6;
+  --color-powder-blue: #d6e5ff;
+  --color-graphite-ink: #272727;
+  --color-slate: #5d5d5d;
+  --color-ash: #4f4f4f;
+  --color-mauve-dust: #a69ea7;
+  --color-fog: #858585;
+  --color-charcoal-hairline: #333333;
+  --color-mist: #e0e0e0;
+  --color-soft-snow: #f6f6f6;
+  --color-paper-white: #ffffff;
+  --color-pure-black: #000000;
+
+  /* Backward compatibility aliases */
+  --color-ink: #272727;
   --color-paper: #ffffff;
-  --color-mist: #f7f7f7;
-  --color-ash: #eaeaea;
-  --color-smoke: #e1e1e1;
-  --color-graphite: #838383;
-  --color-steel: #989898;
-  --color-slate: #6f6f6f;
-  --color-marigold: #ffb84d;
-  --color-buttercream: #ffe480;
-  --color-cream: #fff6d4;
+  --color-smoke: #e0e0e0;
+  --color-graphite: #858585;
 
   --background: #ffffff;
-  --foreground: #1a1a1a;
+  --foreground: #272727;
 
-  --font-output-sans: 'Output Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --page-max-width: 1080px;
+  --font-lustria: 'Lustria', Georgia, serif;
+  --font-dm-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-martian-mono: 'Martian Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --page-max-width: 1200px;
+  --section-gap: 64px;
+
+  /* Elevation */
+  --shadow-primary-btn: rgba(0, 0, 0, 0.2) 0px 2px 4px 0px;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-output-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Page Heading: 24px/700, -0.043em tracking */
-.text-rows-heading {
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -1.032px;
-  color: #1a1a1a;
+/* Serif Display & Headline Typography */
+.font-display {
+  font-family: var(--font-lustria), Georgia, serif;
+  letter-spacing: -2.6px;
+  line-height: 1.1;
 }
 
-/* Hero Greeting / Section Subheading: 18px/400, -0.043em tracking */
-.text-rows-heading-sm {
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 1.45;
-  letter-spacing: -0.774px;
-  color: #1a1a1a;
+.font-heading-lg {
+  font-family: var(--font-lustria), Georgia, serif;
+  letter-spacing: -2.02px;
+  line-height: 1.1;
 }
 
-/* Micro-label / Column Header / Caption: 10px/700, +0.021em tracking, uppercase */
-.text-rows-caption {
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.21px;
+.font-heading {
+  font-family: var(--font-lustria), Georgia, serif;
+  letter-spacing: -0.68px;
+  line-height: 1.2;
+}
+
+.font-heading-sm {
+  font-family: var(--font-lustria), Georgia, serif;
+  line-height: 1.2;
+}
+
+/* Monospace Meta-label & Build-log Eyebrows */
+.font-mono-eyebrow {
+  font-family: var(--font-martian-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
   text-transform: uppercase;
-  color: #838383;
+  letter-spacing: 0.22px;
+  line-height: 1.2;
+  color: #858585;
+}
+
+/* Backward compatibility heading classes */
+.text-rows-heading {
+  font-family: var(--font-lustria), Georgia, serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.68px;
+  color: #272727;
+}
+
+.text-rows-heading-sm {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #272727;
+}
+
+.text-rows-caption {
+  font-family: var(--font-martian-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.22px;
+  text-transform: uppercase;
+  color: #858585;
 }
 
 /* Tabular figures for financial numbers */
@@ -110,110 +181,166 @@ body {
   font-feature-settings: "tnum" 1, "ss01" 1;
 }
 
-/* Filled Button (Primary Action): Ink #1a1a1a fill, Paper #ffffff text, 14px/700, 4px radius */
+/* Dotted Grid Background Pattern */
+.bg-dotted-grid {
+  background-image: radial-gradient(#e0e0e0 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
+}
+
+/* Primary CTA Button: Iris Violet #7451f2, #ffffff text, 4px radius, 0px 2px 4px rgba(0,0,0,0.2) shadow */
+.btn-primary,
 .btn-rows-primary {
-  background-color: #1a1a1a;
+  background-color: #7451f2;
   color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.24px;
   border-radius: 4px;
-  padding: 8px 16px;
+  padding: 10px 18px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px 0px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: opacity 0.15s ease-in-out;
+  transition: background-color 0.15s ease-in-out, transform 0.1s ease;
+  cursor: pointer;
 }
+.btn-primary:hover,
 .btn-rows-primary:hover {
-  opacity: 0.9;
+  background-color: #633fe0;
 }
+.btn-primary:active,
+.btn-rows-primary:active {
+  transform: translateY(1px);
+}
+.btn-primary:disabled,
 .btn-rows-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
-/* Outlined Button (Secondary Action): 1px Ink border, 4px radius, 14px/400 Ink text */
+/* Outlined Secondary Button: 1px Deep Iris or Slate border, 4px radius, #272727 text, no shadow */
+.btn-secondary,
 .btn-rows-outlined {
-  background-color: transparent;
-  color: #1a1a1a;
-  font-size: 14px;
-  font-weight: 400;
-  border: 1px solid #1a1a1a;
+  background-color: #ffffff;
+  color: #272727;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #5d5d5d;
   border-radius: 4px;
-  padding: 6px 12px;
+  padding: 9px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+  cursor: pointer;
+}
+.btn-secondary:hover,
+.btn-rows-outlined:hover {
+  background-color: #f6f6f6;
+  border-color: #272727;
+}
+
+/* Violet Outlined Button */
+.btn-outlined-violet {
+  background-color: #ffffff;
+  color: #7451f2;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #5952a1;
+  border-radius: 4px;
+  padding: 9px 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   transition: background-color 0.15s ease-in-out;
+  cursor: pointer;
 }
-.btn-rows-outlined:hover {
-  background-color: #f7f7f7;
+.btn-outlined-violet:hover {
+  background-color: #f6f6f6;
 }
 
-/* Ghost Link Action: 14px/400 Slate text, no border, no fill, shifts to Ink on hover */
+/* Ghost Nav Link: uppercase, DM Sans 12px 500, letter-spacing 0.24px, hover Iris Violet */
+.btn-ghost,
 .btn-rows-ghost {
-  color: #6f6f6f;
-  font-size: 14px;
-  font-weight: 400;
+  color: #272727;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.24px;
+  text-transform: uppercase;
   background: transparent;
   border: none;
   display: inline-flex;
   align-items: center;
   gap: 4px;
   transition: color 0.15s ease-in-out;
+  cursor: pointer;
 }
+.btn-ghost:hover,
 .btn-rows-ghost:hover {
-  color: #1a1a1a;
+  color: #7451f2;
 }
 
-/* Primary Input with Marigold Focus Halo: 1px Marigold #ffb84d border, 4px radius */
-.input-rows-marigold {
-  border: 1px solid #ffb84d;
+/* Status Pill Badge: 100px radius, 1px #e0e0e0 border, Martian Mono 11px uppercase */
+.badge-pill {
+  border: 1px solid #e0e0e0;
+  border-radius: 100px;
+  font-family: var(--font-martian-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22px;
+  padding: 2px 8px;
+  background-color: #ffffff;
+  color: #5d5d5d;
+}
+
+/* Zams Square-jawed Card: 4px radius, 1px #e0e0e0 hairline border, no shadow */
+.card-zams {
+  border: 1px solid #e0e0e0;
   border-radius: 4px;
   background-color: #ffffff;
-  padding: 16px 20px;
-  font-size: 18px;
-  font-weight: 400;
-  color: #1a1a1a;
-  outline: none;
-  transition: box-shadow 0.15s ease-in-out, border-color 0.15s ease-in-out;
-}
-.input-rows-marigold::placeholder {
-  color: #838383;
-}
-.input-rows-marigold:focus {
-  box-shadow: 0 0 0 3px #fff6d4;
-  border-color: #ffb84d;
 }
 
-/* Default standard input for forms: 1px Ash border, 4px radius */
+/* Standard Inputs: 1px #e0e0e0 border, 4px radius, focus Iris Violet */
+.input-default,
 .input-rows-default {
-  border: 1px solid #eaeaea;
+  border: 1px solid #e0e0e0;
   border-radius: 4px;
   background-color: #ffffff;
-  padding: 8px 12px;
+  padding: 9px 12px;
   font-size: 14px;
-  color: #1a1a1a;
+  font-family: var(--font-dm-sans), sans-serif;
+  color: #272727;
   outline: none;
-  transition: border-color 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+.input-default:focus,
 .input-rows-default:focus {
-  border-color: #1a1a1a;
+  border-color: #7451f2;
+  box-shadow: 0 0 0 2px #d6e5ff;
 }
+.input-default::placeholder,
 .input-rows-default::placeholder {
-  color: #838383;
+  color: #858585;
 }
 
-/* Hairline dividers and rules */
-.border-ash {
-  border-color: #eaeaea;
+/* Hairline borders */
+.border-mist {
+  border-color: #e0e0e0;
 }
-.border-smoke {
-  border-color: #e1e1e1;
+.border-slate-hairline {
+  border-color: #5d5d5d;
 }
 
-/* Custom Scrollbar for spreadsheet feel */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -222,9 +349,9 @@ body {
   background: #ffffff;
 }
 ::-webkit-scrollbar-thumb {
-  background: #eaeaea;
+  background: #e0e0e0;
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #838383;
+  background: #858585;
 }

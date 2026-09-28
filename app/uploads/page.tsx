@@ -176,46 +176,47 @@ export default function UploadsPage() {
 
   return (
     <AppShell
+      eyebrow="INGESTION ENGINE"
       pageTitle="CSV Ledger Ingest"
       pageDescription="Upload financial ledgers with automatic column detection and formula sanitization"
     >
       <div className="space-y-6">
         {/* Upload Action Card */}
         {role !== "member" ? (
-          <div className="p-6 rounded-[8px] bg-white border border-[#eaeaea]">
+          <div className="p-6 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0]">
             {step === "idle" ? (
               <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#eaeaea]">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#e0e0e0]">
                   <div>
-                    <h3 className="text-sm font-bold text-[#1a1a1a]">Import New Transactions</h3>
-                    <p className="text-xs text-[#838383]">Upload revenue or expense records from your accounting tool</p>
+                    <h3 className="font-serif text-xl text-[#272727] tracking-tight">Import New Transactions</h3>
+                    <p className="text-xs text-[#5d5d5d]">Upload revenue or expense records from your accounting tool</p>
                   </div>
 
                   {/* Sample CSV Download buttons */}
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs text-[#838383] hidden sm:inline">Templates:</span>
+                    <span className="text-xs font-mono text-[#858585] hidden sm:inline">Templates:</span>
                     <a
                       href="/api/uploads/template?type=combined"
                       download
-                      className="btn-rows-outlined text-xs py-1 px-2.5"
+                      className="btn-secondary text-xs py-1 px-2.5"
                     >
-                      <Download className="w-3 h-3 text-[#838383]" />
+                      <Download className="w-3 h-3 text-[#7451f2]" />
                       <span>Combined</span>
                     </a>
                     <a
                       href="/api/uploads/template?type=sales"
                       download
-                      className="btn-rows-outlined text-xs py-1 px-2.5"
+                      className="btn-secondary text-xs py-1 px-2.5"
                     >
-                      <Download className="w-3 h-3 text-[#838383]" />
+                      <Download className="w-3 h-3 text-[#7451f2]" />
                       <span>Sales</span>
                     </a>
                     <a
                       href="/api/uploads/template?type=cost"
                       download
-                      className="btn-rows-outlined text-xs py-1 px-2.5"
+                      className="btn-secondary text-xs py-1 px-2.5"
                     >
-                      <Download className="w-3 h-3 text-[#838383]" />
+                      <Download className="w-3 h-3 text-[#7451f2]" />
                       <span>Costs</span>
                     </a>
                   </div>
@@ -223,7 +224,7 @@ export default function UploadsPage() {
 
                 {/* Upload Type Radio Selection */}
                 <div>
-                  <label className="text-rows-caption block mb-2">
+                  <label className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] block mb-2">
                     Select File Structure
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -252,17 +253,17 @@ export default function UploadsPage() {
                           onClick={() => setUploadType(t.key as any)}
                           className={`p-3 rounded-[4px] text-left border transition-colors ${
                             isSelected
-                              ? "border-[#1a1a1a] bg-white"
-                              : "border-[#eaeaea] bg-white hover:border-[#838383]"
+                              ? "border-[#7451f2] bg-[#f6f6f6]"
+                              : "border-[#e0e0e0] bg-[#ffffff] hover:border-[#858585]"
                           }`}
                         >
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-[#1a1a1a]">{t.label}</span>
+                            <span className="text-xs font-semibold text-[#272727]">{t.label}</span>
                             {isSelected && (
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#1a1a1a]" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#7451f2]" />
                             )}
                           </div>
-                          <div className="text-[11px] text-[#838383] mt-1 leading-normal">
+                          <div className="text-[11px] text-[#5d5d5d] mt-1 leading-normal">
                             {t.desc}
                           </div>
                         </button>
@@ -271,7 +272,7 @@ export default function UploadsPage() {
                   </div>
                 </div>
 
-                {/* Drag and Drop Zone */}
+                {/* Drag and Drop Zone with Dotted background feel */}
                 <div
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => {
@@ -281,7 +282,7 @@ export default function UploadsPage() {
                     }
                   }}
                   onClick={() => fileInputRef.current?.click()}
-                  className="border border-dashed border-[#eaeaea] hover:border-[#ffb84d] bg-white rounded-[8px] p-8 sm:p-12 text-center cursor-pointer transition-colors group"
+                  className="border border-dashed border-[#e0e0e0] hover:border-[#7451f2] hover:bg-[#f6f6f6] bg-[#ffffff] rounded-[4px] p-8 sm:p-12 text-center cursor-pointer transition-colors group"
                 >
                   <input
                     ref={fileInputRef}
@@ -295,17 +296,17 @@ export default function UploadsPage() {
                     }}
                   />
 
-                  <div className="w-10 h-10 rounded-[4px] bg-[#f7f7f7] border border-[#eaeaea] text-[#1a1a1a] flex items-center justify-center mx-auto mb-3">
+                  <div className="w-10 h-10 rounded-[4px] bg-[#f6f6f6] border border-[#e0e0e0] text-[#7451f2] flex items-center justify-center mx-auto mb-3">
                     {isParsing ? (
-                      <RefreshCw className="w-4 h-4 animate-spin text-[#1a1a1a]" />
+                      <RefreshCw className="w-4 h-4 animate-spin text-[#7451f2]" />
                     ) : (
-                      <UploadCloud className="w-4 h-4 text-[#838383] group-hover:text-[#1a1a1a] transition-colors" />
+                      <UploadCloud className="w-4 h-4 text-[#7451f2] transition-colors" />
                     )}
                   </div>
-                  <h4 className="text-sm font-bold text-[#1a1a1a] mb-1">
+                  <h4 className="text-sm font-semibold text-[#272727] mb-1">
                     {isParsing ? "Analyzing CSV Headers..." : "Click or drag CSV file to upload"}
                   </h4>
-                  <p className="text-xs text-[#838383] max-w-sm mx-auto">
+                  <p className="text-xs text-[#5d5d5d] max-w-sm mx-auto">
                     Supported format: Comma-separated (.csv). Automatic header detection for Client,
                     Date, Amount, Category, and Type.
                   </p>
@@ -532,17 +533,17 @@ export default function UploadsPage() {
         )}
 
         {/* Uploads History Table */}
-        <div className="rounded-[8px] bg-white border border-[#eaeaea] overflow-hidden">
-          <div className="p-4 border-b border-[#eaeaea] flex items-center justify-between">
+        <div className="rounded-[4px] bg-[#ffffff] border border-[#e0e0e0] overflow-hidden">
+          <div className="p-4 border-b border-[#e0e0e0] flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-[#1a1a1a]">Import History</h3>
-              <p className="text-xs text-[#838383]">
+              <h3 className="font-serif text-xl text-[#272727] tracking-tight">Import History</h3>
+              <p className="text-xs text-[#5d5d5d]">
                 Past data uploads with processing statistics and instant rollback
               </p>
             </div>
             <button
               onClick={fetchUploads}
-              className="p-1.5 rounded-[4px] bg-white hover:bg-[#f7f7f7] border border-[#eaeaea] text-[#1a1a1a] transition-colors"
+              className="p-1.5 rounded-[4px] bg-[#ffffff] hover:bg-[#f6f6f6] border border-[#e0e0e0] text-[#272727] transition-colors"
               title="Refresh History"
             >
               <RefreshCw className="w-3.5 h-3.5" />
@@ -551,7 +552,7 @@ export default function UploadsPage() {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#f7f7f7] border-b border-[#eaeaea] text-rows-caption">
+              <thead className="bg-[#f6f6f6] border-b border-[#e0e0e0] font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585]">
                 <tr>
                   <th className="py-2.5 px-4">File Name</th>
                   <th className="py-2.5 px-4">Type</th>
@@ -564,7 +565,7 @@ export default function UploadsPage() {
                   <th className="py-2.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#e1e1e1]">
+              <tbody className="divide-y divide-[#e0e0e0]">
                 {loading ? (
                   <tr>
                     <td colSpan={9} className="p-4">
@@ -573,41 +574,41 @@ export default function UploadsPage() {
                   </tr>
                 ) : uploads.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="py-12 text-center text-xs text-[#838383]">
+                    <td colSpan={9} className="py-12 text-center text-xs text-[#858585]">
                       No files uploaded yet. Upload a CSV to get started.
                     </td>
                   </tr>
                 ) : (
                   uploads.map((item) => (
-                    <tr key={item.id} className="hover:bg-[#f7f7f7] transition-colors">
-                      <td className="py-3 px-4 font-bold text-[#1a1a1a] flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-[#838383] shrink-0" />
+                    <tr key={item.id} className="hover:bg-[#f6f6f6] transition-colors">
+                      <td className="py-3 px-4 font-semibold text-[#272727] flex items-center gap-2">
+                        <FileText className="w-4 h-4 text-[#7451f2] shrink-0" />
                         <span className="truncate max-w-[180px]">{item.fileName}</span>
                       </td>
-                      <td className="py-3 px-4 capitalize text-[#6f6f6f]">{item.uploadType}</td>
-                      <td className="py-3 px-4 text-[#6f6f6f]">
+                      <td className="py-3 px-4 capitalize text-[#5d5d5d]">{item.uploadType}</td>
+                      <td className="py-3 px-4 text-[#5d5d5d]">
                         {item.uploadedBy?.fullName || "User"}
                       </td>
-                      <td className="py-3 px-4 text-[#838383] tabular-nums">
+                      <td className="py-3 px-4 text-[#858585] tabular-nums font-mono">
                         {new Date(item.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="py-3 px-4 text-right tabular-nums text-[#1a1a1a]">
+                      <td className="py-3 px-4 text-right tabular-nums text-[#272727] font-mono">
                         {item.totalRows}
                       </td>
-                      <td className="py-3 px-4 text-right tabular-nums font-bold text-[#16a34a]">
+                      <td className="py-3 px-4 text-right tabular-nums font-semibold text-[#16a34a] font-mono">
                         {item.validRows}
                       </td>
-                      <td className="py-3 px-4 text-right tabular-nums">
+                      <td className="py-3 px-4 text-right tabular-nums font-mono">
                         {item.failedRows > 0 ? (
                           <span className="text-[#e11d48] font-bold">{item.failedRows}</span>
                         ) : (
-                          <span className="text-[#838383]">0</span>
+                          <span className="text-[#858585]">0</span>
                         )}
                       </td>
                       <td className="py-3 px-4 text-center">
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[4px] text-[10px] font-bold uppercase tracking-[0.21px] bg-white border border-[#eaeaea] text-[#1a1a1a]">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#34d399]" />
-                          <span>Completed</span>
+                        <span className="badge-pill inline-flex items-center gap-1.5 text-[10px]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#16a34a]" />
+                          <span>COMPLETED</span>
                         </span>
                       </td>
                       <td className="py-3 px-4 text-right">
@@ -615,7 +616,7 @@ export default function UploadsPage() {
                           {item.failedRows > 0 && (
                             <button
                               onClick={() => setViewErrorsItem(item)}
-                              className="btn-rows-outlined text-[11px] py-0.5 px-2 text-[#e11d48] border-[#e11d48]"
+                              className="btn-secondary text-[11px] py-0.5 px-2 text-[#e11d48] border-[#e11d48]"
                             >
                               Errors ({item.failedRows})
                             </button>
@@ -624,7 +625,7 @@ export default function UploadsPage() {
                             <button
                               onClick={() => setDeleteConfirmId(item.id)}
                               title="Delete Upload and Rollback"
-                              className="p-1 rounded text-[#838383] hover:text-[#e11d48] transition-colors"
+                              className="p-1 rounded text-[#858585] hover:text-[#e11d48] transition-colors"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>

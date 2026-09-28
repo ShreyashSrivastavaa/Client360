@@ -9,10 +9,12 @@ import {
   UploadCloud,
   RefreshCw,
   AlertCircle,
+  Database,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
 import { apiFetch } from "@/lib/api-client";
+import { ClayMascot } from "@/components/ui/ClaymationMascots";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -83,47 +85,52 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#ffffff] text-[#1a1a1a] flex flex-col justify-center py-12 sm:px-6 lg:px-8 selection:bg-[#fff6d4] selection:text-[#1a1a1a]">
-      <div className="sm:mx-auto sm:w-full sm:max-w-lg">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center justify-center gap-2 mb-6">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#ffb84d]" />
-          <span className="text-xl font-bold tracking-tight text-[#1a1a1a]">
+    <div className="min-h-screen bg-[#ffffff] text-[#272727] flex flex-col justify-center py-12 sm:px-6 lg:px-8 selection:bg-[#d6e5ff] selection:text-[#7451f2]">
+      <div className="sm:mx-auto sm:w-full sm:max-w-lg text-center">
+        {/* Brand Logo with starburst */}
+        <Link href="/" className="inline-flex items-center justify-center gap-2 mb-4">
+          <div className="w-6 h-6 rounded-[4px] bg-[#7451f2] flex items-center justify-center text-white">
+            <Sparkles className="w-4 h-4" />
+          </div>
+          <span className="text-xl font-bold tracking-tight text-[#272727]">
             Client360
           </span>
         </Link>
 
-        <h2 className="text-center text-rows-heading">
+        <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] mb-1">
+          {step === 1 ? "ORG PROVISIONING" : "PORTFOLIO ONBOARDING"}
+        </div>
+        <h2 className="font-serif text-3xl font-normal text-[#272727] tracking-tight">
           {step === 1 ? "Create your company workspace" : "How would you like to start?"}
         </h2>
-        <p className="mt-2 text-center text-xs text-[#6f6f6f]">
+        <p className="mt-2 text-xs text-[#5d5d5d]">
           {step === 1 ? (
             <>
               Already have an account?{" "}
-              <Link href="/login" className="text-[#1a1a1a] font-bold hover:underline">
+              <Link href="/login" className="text-[#7451f2] font-semibold hover:underline">
                 Sign in
               </Link>
             </>
           ) : (
-            "Step 2 of 2: Ingest your initial client financial data"
+            "Choose whether to test-drive with our benchmark dataset or connect your actual ledger."
           )}
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-lg px-4 sm:px-0">
-        <div className="bg-white p-6 sm:p-8 rounded-[8px] border border-[#eaeaea] space-y-6">
-          {authError && (
-            <div className="p-3 rounded-[4px] border border-[#e11d48] bg-white text-xs text-[#e11d48] flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{authError}</span>
-            </div>
-          )}
-
+        <div className="bg-[#ffffff] p-6 sm:p-8 rounded-[4px] border border-[#e0e0e0] space-y-6">
           {step === 1 ? (
             <form onSubmit={handleStep1Submit} className="space-y-4">
+              {authError && (
+                <div className="p-3 rounded-[4px] border border-[#e11d48] bg-[#ffffff] text-xs text-[#e11d48] flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{authError}</span>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-rows-caption block mb-1.5">
+                  <label className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] block mb-1.5">
                     Your Full Name
                   </label>
                   <input
@@ -131,102 +138,82 @@ export default function SignupPage() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
-                    className="input-rows-default w-full text-xs"
+                    className="input-default w-full text-xs"
                     placeholder="Jane Doe"
                   />
                 </div>
+
                 <div>
-                  <label className="text-rows-caption block mb-1.5">
-                    Work Email
+                  <label className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] block mb-1.5">
+                    Company Name
                   </label>
                   <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="text"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
                     required
-                    className="input-rows-default w-full text-xs"
-                    placeholder="jane@company.com"
+                    className="input-default w-full text-xs"
+                    placeholder="Acme Growth Inc."
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-rows-caption block mb-1.5">
-                  Password
+                <label className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] block mb-1.5">
+                  Work Email Address
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="input-default w-full text-xs"
+                  placeholder="jane@company.com"
+                />
+              </div>
+
+              <div>
+                <label className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] block mb-1.5">
+                  Password (min 8 characters)
                 </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={6}
-                  className="input-rows-default w-full text-xs"
-                  placeholder="•••••••• (min 6 characters)"
+                  minLength={8}
+                  className="input-default w-full text-xs"
+                  placeholder="••••••••"
                 />
               </div>
 
-              <div className="pt-2 border-t border-[#eaeaea]">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-rows-caption block mb-1.5">
-                      Company Name
-                    </label>
-                    <input
-                      type="text"
-                      value={companyName}
-                      onChange={(e) => setCompanyName(e.target.value)}
-                      required
-                      className="input-rows-default w-full text-xs"
-                      placeholder="Acme Global Inc"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-rows-caption block mb-1.5">
-                      Industry
-                    </label>
-                    <select
-                      value={industry}
-                      onChange={(e) => setIndustry(e.target.value)}
-                      className="input-rows-default w-full text-xs"
-                    >
-                      <option value="B2B SaaS & Professional Services">
-                        B2B SaaS & Services
-                      </option>
-                      <option value="Agency & Consulting">Agency & Consulting</option>
-                      <option value="Wholesale & Distribution">Wholesale & Distribution</option>
-                      <option value="Manufacturing & Industrial">Manufacturing & Industrial</option>
-                      <option value="Financial & Legal Services">Financial & Legal Services</option>
-                    </select>
-                  </div>
+              <div className="pt-2 border-t border-[#e0e0e0] space-y-3">
+                <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585]">
+                  Initial Margin Thresholds
                 </div>
-              </div>
-
-              {/* Thresholds setup */}
-              <div className="p-3.5 rounded-[4px] bg-[#f7f7f7] border border-[#eaeaea] space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-[0.21px] text-[#1a1a1a] block">
-                  Default Gross Margin Classification Rules:
-                </span>
-                <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <span className="text-[10px] text-[#16a34a] font-bold block">
-                      Profitable (≥ %)
-                    </span>
+                    <label className="text-xs text-[#5d5d5d] block mb-1">
+                      Profitable Threshold (≥ %)
+                    </label>
                     <input
                       type="number"
+                      step="0.1"
                       value={profitableThreshold}
                       onChange={(e) => setProfitableThreshold(e.target.value)}
-                      className="input-rows-default w-full text-xs mt-1"
+                      className="input-default w-full text-xs"
                     />
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#6f6f6f] font-bold block">
-                      Low-Margin Floor (≥ %)
-                    </span>
+                    <label className="text-xs text-[#5d5d5d] block mb-1">
+                      Low-Margin Floor (&lt; %)
+                    </label>
                     <input
                       type="number"
+                      step="0.1"
                       value={lowMarginThreshold}
                       onChange={(e) => setLowMarginThreshold(e.target.value)}
-                      className="input-rows-default w-full text-xs mt-1"
+                      className="input-default w-full text-xs"
                     />
                   </div>
                 </div>
@@ -235,62 +222,52 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-rows-primary w-full text-xs py-2 justify-center"
+                className="btn-primary w-full text-xs py-2.5 justify-center mt-2"
               >
                 {loading ? (
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                 ) : (
                   <>
-                    <span>Continue to Step 2</span>
+                    <span>Create Workspace</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </>
                 )}
               </button>
             </form>
           ) : (
-            /* Step 2 Onboarding */
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div
                 onClick={handleChooseSampleData}
-                className="p-4 rounded-[4px] border border-[#1a1a1a] bg-white hover:bg-[#f7f7f7] cursor-pointer transition-colors space-y-2"
+                className="p-5 rounded-[4px] border border-[#e0e0e0] bg-[#ffffff] hover:border-[#7451f2] hover:bg-[#f6f6f6] cursor-pointer transition-all space-y-2"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#1a1a1a] font-bold text-xs">
-                    <span className="w-2 h-2 rounded-full bg-[#ffb84d]" />
-                    <span>Explore with Sample Data (Recommended)</span>
-                  </div>
-                  <span className="text-[10px] uppercase font-bold tracking-[0.21px] text-[#838383]">
-                    Instant Setup
+                  <span className="font-semibold text-sm text-[#272727] flex items-center gap-2">
+                    <Database className="w-4 h-4 text-[#7451f2]" /> Load 12-Month Sample Dataset
+                  </span>
+                  <span className="badge-pill text-[10px]">
+                    RECOMMENDED
                   </span>
                 </div>
-                <p className="text-xs text-[#6f6f6f] leading-relaxed">
-                  Populate your dashboard with 18 realistic B2B accounts across 12 months. Test all
-                  charts, margin insights, and filters immediately.
+                <p className="text-xs text-[#5d5d5d] leading-relaxed">
+                  Populate 18 realistic B2B accounts with seasonal margins, cost attribution, and diagnostic alerts.
                 </p>
-                <div className="pt-1 flex items-center gap-1.5 text-xs font-bold text-[#1a1a1a]">
-                  <span>Populate & Open Dashboard</span>
-                  <span>→</span>
-                </div>
               </div>
 
               <div
                 onClick={handleChooseUploadNow}
-                className="p-4 rounded-[4px] border border-[#eaeaea] bg-white hover:border-[#1a1a1a] cursor-pointer transition-colors space-y-2"
+                className="p-5 rounded-[4px] border border-[#e0e0e0] bg-[#ffffff] hover:border-[#272727] hover:bg-[#f6f6f6] cursor-pointer transition-all space-y-2"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#1a1a1a] font-bold text-xs">
-                    <UploadCloud className="w-3.5 h-3.5 text-[#838383]" />
-                    <span>Upload Your Own CSV Files</span>
-                  </div>
+                  <span className="font-semibold text-sm text-[#272727] flex items-center gap-2">
+                    <UploadCloud className="w-4 h-4 text-[#5d5d5d]" /> Upload Live CSV Immediately
+                  </span>
+                  <span className="badge-pill text-[10px]">
+                    FRESH
+                  </span>
                 </div>
-                <p className="text-xs text-[#6f6f6f] leading-relaxed">
-                  Skip demo data and jump straight to the upload wizard to ingest your company&apos;s
-                  actual revenue and expense files.
+                <p className="text-xs text-[#5d5d5d] leading-relaxed">
+                  Start with a clean ledger and import your own QuickBooks, Xero, or custom spreadsheet CSV right away.
                 </p>
-                <div className="pt-1 flex items-center gap-1.5 text-xs font-normal text-[#6f6f6f]">
-                  <span>Go to Upload Wizard</span>
-                  <span>→</span>
-                </div>
               </div>
             </div>
           )}

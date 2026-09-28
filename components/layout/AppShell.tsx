@@ -11,7 +11,7 @@ import {
   Plus,
   LogOut,
   Database,
-  ArrowRight,
+  Sparkles,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { usePeriod, PERIOD_OPTIONS } from "@/lib/period-context";
@@ -23,9 +23,10 @@ interface AppShellProps {
   children: React.ReactNode;
   pageTitle?: string;
   pageDescription?: string;
+  eyebrow?: string;
 }
 
-export function AppShell({ children, pageTitle, pageDescription }: AppShellProps) {
+export function AppShell({ children, pageTitle, pageDescription, eyebrow }: AppShellProps) {
   const pathname = usePathname();
   const { user, organization, role, logout } = useAuth();
   const { period, setPeriod, periodLabel, customStart, setCustomStart, customEnd, setCustomEnd } = usePeriod();
@@ -56,24 +57,29 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#ffffff] text-[#1a1a1a] antialiased selection:bg-[#fff6d4] selection:text-[#1a1a1a]">
-      {/* Top Bar — Minimal app chrome */}
-      <header className="h-14 border-b border-[#eaeaea] bg-[#ffffff] sticky top-0 z-40 px-4 sm:px-6">
-        <div className="max-w-[1080px] h-full mx-auto flex items-center justify-between gap-4">
-          {/* Left: Workspace name + Nav */}
-          <div className="flex items-center gap-6">
+    <div className="min-h-screen flex flex-col bg-[#ffffff] text-[#272727] antialiased selection:bg-[#d6e5ff] selection:text-[#7451f2]">
+      {/* Top Bar — Zams minimal header ~64px */}
+      <header className="h-16 border-b border-[#e0e0e0] bg-[#ffffff] sticky top-0 z-40 px-4 sm:px-8">
+        <div className="max-w-[1200px] h-full mx-auto flex items-center justify-between gap-4">
+          {/* Left: Brand + Nav */}
+          <div className="flex items-center gap-8">
             <Link
               href="/dashboard"
-              className="flex items-center gap-2 text-sm font-bold text-[#1a1a1a] hover:opacity-80 transition-opacity"
+              className="flex items-center gap-2.5 text-base font-bold text-[#272727] hover:opacity-90 transition-opacity"
             >
-              <span className="w-2 h-2 rounded-full bg-[#ffb84d]" />
-              <span>{organization?.name || "Client360"}</span>
+              {/* Zams starburst mark */}
+              <div className="w-5 h-5 rounded-[4px] bg-[#7451f2] flex items-center justify-center text-white">
+                <Sparkles className="w-3.5 h-3.5" />
+              </div>
+              <span className="font-semibold tracking-tight text-[#272727]">
+                {organization?.name || "Client360"}
+              </span>
             </Link>
 
-            <span className="text-[#eaeaea] hidden md:inline">|</span>
+            <span className="text-[#e0e0e0] hidden md:inline">|</span>
 
-            {/* Inline Navigation Links */}
-            <nav className="hidden md:flex items-center gap-4 text-sm">
+            {/* Inline Nav Links */}
+            <nav className="hidden md:flex items-center gap-6">
               {navItems.map((item) => {
                 const isActive =
                   item.href === "/dashboard"
@@ -84,10 +90,10 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`transition-colors py-1 ${
+                    className={`text-xs uppercase tracking-[0.24px] font-medium transition-colors py-1 border-b-2 ${
                       isActive
-                        ? "text-[#1a1a1a] font-bold border-b-2 border-[#1a1a1a]"
-                        : "text-[#6f6f6f] hover:text-[#1a1a1a]"
+                        ? "text-[#7451f2] border-[#7451f2]"
+                        : "text-[#272727] border-transparent hover:text-[#7451f2]"
                     }`}
                   >
                     {item.label}
@@ -97,17 +103,17 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
             </nav>
           </div>
 
-          {/* Right Action Cluster */}
+          {/* Right: Actions */}
           <div className="flex items-center gap-3">
             {/* Period Selector */}
             <div className="relative">
               <button
                 onClick={() => setPeriodDropdownOpen(!periodDropdownOpen)}
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-[4px] border border-[#eaeaea] bg-white hover:border-[#1a1a1a] text-xs text-[#1a1a1a] transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-[4px] border border-[#e0e0e0] bg-[#ffffff] hover:border-[#272727] text-xs text-[#272727] transition-all"
               >
-                <Calendar className="w-3.5 h-3.5 text-[#6f6f6f] shrink-0" />
-                <span>{periodLabel}</span>
-                <ChevronDown className="w-3 h-3 text-[#838383]" />
+                <Calendar className="w-3.5 h-3.5 text-[#5d5d5d] shrink-0" />
+                <span className="font-medium">{periodLabel}</span>
+                <ChevronDown className="w-3 h-3 text-[#858585]" />
               </button>
 
               {periodDropdownOpen && (
@@ -116,9 +122,9 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
                     className="fixed inset-0 z-40"
                     onClick={() => setPeriodDropdownOpen(false)}
                   />
-                  <div className="absolute right-0 mt-1.5 w-52 rounded-[4px] bg-white border border-[#eaeaea] py-1 z-50">
-                    <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.21px] text-[#838383] border-b border-[#eaeaea]">
-                      Select Period
+                  <div className="absolute right-0 mt-1.5 w-56 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0] py-1 z-50 shadow-sm">
+                    <div className="px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.22px] text-[#858585] border-b border-[#e0e0e0]">
+                      Select Reporting Period
                     </div>
                     {PERIOD_OPTIONS.map((opt) => (
                       <button
@@ -129,37 +135,37 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
                         }}
                         className={`w-full text-left px-3 py-1.5 text-xs flex items-center justify-between transition-colors ${
                           period === opt.key
-                            ? "bg-[#f7f7f7] text-[#1a1a1a] font-bold"
-                            : "text-[#6f6f6f] hover:bg-[#f7f7f7] hover:text-[#1a1a1a]"
+                            ? "bg-[#f6f6f6] text-[#7451f2] font-semibold"
+                            : "text-[#5d5d5d] hover:bg-[#f6f6f6] hover:text-[#272727]"
                         }`}
                       >
                         <span>{opt.label}</span>
                         {period === opt.key && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#1a1a1a]" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#7451f2]" />
                         )}
                       </button>
                     ))}
 
-                    {/* Custom range input fields if Custom is selected */}
+                    {/* Custom range input fields */}
                     {period === "custom" && (
-                      <div className="p-2.5 border-t border-[#eaeaea] space-y-2">
-                        <label className="text-[10px] uppercase font-bold text-[#838383] block">
+                      <div className="p-3 border-t border-[#e0e0e0] space-y-2 bg-[#f6f6f6]">
+                        <label className="text-[11px] font-mono uppercase tracking-[0.22px] text-[#858585] block">
                           From:
                         </label>
                         <input
                           type="date"
                           value={customStart}
                           onChange={(e) => setCustomStart(e.target.value)}
-                          className="input-rows-default w-full text-xs py-1"
+                          className="input-default w-full text-xs py-1"
                         />
-                        <label className="text-[10px] uppercase font-bold text-[#838383] block">
+                        <label className="text-[11px] font-mono uppercase tracking-[0.22px] text-[#858585] block">
                           To:
                         </label>
                         <input
                           type="date"
                           value={customEnd}
                           onChange={(e) => setCustomEnd(e.target.value)}
-                          className="input-rows-default w-full text-xs py-1"
+                          className="input-default w-full text-xs py-1"
                         />
                       </div>
                     )}
@@ -168,22 +174,24 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
               )}
             </div>
 
-            {/* Re-seed Quick Ghost Link */}
+            {/* Quick Demo Data reload */}
             <button
               onClick={handleLoadDemoData}
               disabled={isSeeding}
-              title="Reload sample data"
-              className="hidden sm:inline-flex items-center gap-1.5 text-xs text-[#838383] hover:text-[#1a1a1a] transition-colors"
+              title="Reload sample 12-month CFO dataset"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs text-[#858585] hover:text-[#272727] transition-colors px-2 py-1"
             >
-              <Database className="w-3 h-3" />
-              <span>{isSeeding ? "Seeding..." : "Demo data"}</span>
+              <Database className="w-3.5 h-3.5 text-[#7451f2]" />
+              <span className="font-mono text-[11px] uppercase tracking-[0.22px]">
+                {isSeeding ? "Seeding..." : "Demo Data"}
+              </span>
             </button>
 
-            {/* Primary Action Button: Ink fill, Paper text, 4px radius */}
+            {/* Primary Action Button: Filled Iris Violet, 4px radius, 0px 2px 4px shadow */}
             {role !== "member" && (
               <Link
                 href="/uploads"
-                className="btn-rows-primary hidden sm:inline-flex text-xs py-1.5 px-3"
+                className="btn-primary hidden sm:inline-flex text-xs py-1.5 px-3"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Upload CSV</span>
@@ -191,12 +199,12 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
             )}
 
             {/* User status */}
-            <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-[#eaeaea]">
+            <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-[#e0e0e0]">
               <RoleBadge role={role} />
               <button
                 onClick={logout}
                 title="Sign out"
-                className="text-[#838383] hover:text-[#1a1a1a] p-1 transition-colors"
+                className="text-[#858585] hover:text-[#272727] p-1 transition-colors"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>
@@ -205,7 +213,7 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
             {/* Mobile menu trigger */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden text-[#1a1a1a] p-1.5 rounded-[4px] border border-[#eaeaea] hover:bg-[#f7f7f7]"
+              className="md:hidden text-[#272727] p-1.5 rounded-[4px] border border-[#e0e0e0] hover:bg-[#f6f6f6]"
             >
               <Menu className="w-4 h-4" />
             </button>
@@ -213,17 +221,22 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
         </div>
       </header>
 
-      {/* Main Content Area — Centered, max-width 1080px */}
-      <main className="flex-1 w-full max-w-[1080px] mx-auto px-4 sm:px-6 py-8">
-        {(pageTitle || pageDescription) && (
-          <div className="mb-8 pb-4 border-b border-[#eaeaea]">
+      {/* Main Content Area — Centered, max-width 1200px */}
+      <main className="flex-1 w-full max-w-[1200px] mx-auto px-4 sm:px-8 py-8">
+        {(pageTitle || pageDescription || eyebrow) && (
+          <div className="mb-8 pb-4 border-b border-[#e0e0e0]">
+            {eyebrow && (
+              <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585] mb-1">
+                {eyebrow}
+              </div>
+            )}
             {pageTitle && (
-              <h1 className="text-rows-heading">
+              <h1 className="font-serif text-3xl sm:text-4xl text-[#272727] tracking-tight font-normal">
                 {pageTitle}
               </h1>
             )}
             {pageDescription && (
-              <p className="text-sm text-[#6f6f6f] mt-1.5">
+              <p className="text-sm text-[#5d5d5d] mt-1.5 leading-relaxed">
                 {pageDescription}
               </p>
             )}
@@ -233,23 +246,25 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
       </main>
 
       {/* Minimal Footer */}
-      <footer className="border-t border-[#eaeaea] py-6 px-4">
-        <div className="max-w-[1080px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#838383]">
-          <div>
-            <span>Client360 — B2B Profitability Engine</span>
+      <footer className="border-t border-[#e0e0e0] py-6 px-4 bg-[#ffffff]">
+        <div className="max-w-[1200px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#858585]">
+          <div className="flex items-center gap-2">
+            <span className="font-medium text-[#272727]">Client360</span>
+            <span>—</span>
+            <span>B2B Client Profitability Platform</span>
           </div>
-          <div className="flex items-center gap-4 text-[#6f6f6f]">
-            <Link href="/privacy" className="hover:text-[#1a1a1a] transition-colors">
+          <div className="flex items-center gap-6 text-[#5d5d5d]">
+            <Link href="/privacy" className="hover:text-[#7451f2] transition-colors">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-[#1a1a1a] transition-colors">
+            <Link href="/terms" className="hover:text-[#7451f2] transition-colors">
               Terms
             </Link>
             <a
               href="https://github.com/ShreyashSrivastavaa/Client360"
               target="_blank"
-              rel="noreferrer"
-              className="hover:text-[#1a1a1a] transition-colors"
+              rel="noopener noreferrer"
+              className="hover:text-[#7451f2] transition-colors"
             >
               GitHub
             </a>
@@ -261,48 +276,72 @@ export function AppShell({ children, pageTitle, pageDescription }: AppShellProps
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div
-            className="fixed inset-0 bg-black/20"
+            className="fixed inset-0 bg-[#272727]/30"
             onClick={() => setMobileMenuOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-64 bg-white border-r border-[#eaeaea] flex flex-col justify-between p-4 z-50">
-            <div>
-              <div className="flex items-center justify-between pb-3 border-b border-[#eaeaea]">
+          <div className="fixed right-0 top-0 bottom-0 w-64 bg-[#ffffff] p-6 shadow-xl flex flex-col justify-between border-l border-[#e0e0e0]">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between pb-4 border-b border-[#e0e0e0]">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#ffb84d]" />
-                  <span className="font-bold text-sm text-[#1a1a1a]">Client360</span>
+                  <div className="w-5 h-5 rounded-[4px] bg-[#7451f2] flex items-center justify-center text-white">
+                    <Sparkles className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="font-bold text-[#272727]">Client360</span>
                 </div>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-[#838383] hover:text-[#1a1a1a] p-1"
+                  className="p-1 rounded-[4px] hover:bg-[#f6f6f6] text-[#858585]"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <nav className="mt-4 space-y-1">
+
+              <nav className="flex flex-col space-y-3">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between px-3 py-2 rounded-[4px] text-sm text-[#1a1a1a] hover:bg-[#f7f7f7]"
+                    className="text-xs uppercase tracking-[0.24px] font-medium text-[#272727] hover:text-[#7451f2] py-1"
                   >
-                    <span>{item.label}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#838383]" />
+                    {item.label}
                   </Link>
                 ))}
               </nav>
-            </div>
-            <div className="pt-4 border-t border-[#eaeaea] space-y-3">
-              <div className="flex items-center justify-between text-xs text-[#838383]">
-                <span>{user?.email}</span>
-                <RoleBadge role={role} />
+
+              <div className="pt-4 border-t border-[#e0e0e0] space-y-3">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleLoadDemoData();
+                  }}
+                  className="w-full btn-secondary text-xs py-2 justify-center"
+                >
+                  <Database className="w-3.5 h-3.5 text-[#7451f2]" />
+                  <span>Reload Demo Data</span>
+                </button>
+
+                {role !== "member" && (
+                  <Link
+                    href="/uploads"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full btn-primary text-xs py-2 justify-center"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Upload CSV</span>
+                  </Link>
+                )}
               </div>
+            </div>
+
+            <div className="pt-4 border-t border-[#e0e0e0] flex items-center justify-between">
+              <RoleBadge role={role} />
               <button
                 onClick={logout}
-                className="btn-rows-outlined w-full text-xs"
+                className="text-xs text-[#858585] hover:text-[#e11d48] flex items-center gap-1.5"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span>Sign Out</span>
+                <span>Sign out</span>
               </button>
             </div>
           </div>

@@ -143,33 +143,34 @@ export default function ClientsPage() {
 
   return (
     <AppShell
+      eyebrow="CLIENT DIRECTORY"
       pageTitle="Clients Portfolio"
       pageDescription="Full client profitability ledger with margin classifications and transaction drill-downs"
     >
       <div className="space-y-4">
         {/* Filter & Search Bar */}
-        <div className="p-4 rounded-[8px] bg-white border border-[#eaeaea] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        <div className="p-4 rounded-[4px] bg-[#ffffff] border border-[#e0e0e0] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Search box */}
           <div className="relative flex-1 max-w-sm">
-            <Search className="w-3.5 h-3.5 text-[#838383] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#858585] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search by client name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="input-rows-default w-full pl-8 pr-7 py-1.5 text-xs"
+              className="input-default w-full pl-8 pr-7 py-1.5 text-xs"
             />
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#838383] hover:text-[#1a1a1a]"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#858585] hover:text-[#272727]"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
 
-          {/* Classification Filter Tabs — 4px radius, 1px Ash border, no pills */}
+          {/* Classification Filter Tabs — 4px radius, hairline border */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
             {[
               { key: "all", label: "All Accounts" },
@@ -183,10 +184,10 @@ export default function ClientsPage() {
                   setStatusFilter(tab.key);
                   setPage(1);
                 }}
-                className={`px-2.5 py-1.5 rounded-[4px] text-xs transition-colors whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-[4px] text-xs transition-colors whitespace-nowrap ${
                   statusFilter === tab.key
-                    ? "border border-[#1a1a1a] bg-white text-[#1a1a1a] font-bold"
-                    : "border border-[#eaeaea] bg-white text-[#6f6f6f] hover:text-[#1a1a1a] hover:border-[#838383]"
+                    ? "border border-[#7451f2] bg-[#f6f6f6] text-[#7451f2] font-semibold"
+                    : "border border-[#e0e0e0] bg-[#ffffff] text-[#5d5d5d] hover:text-[#272727] hover:border-[#858585]"
                 }`}
               >
                 {tab.label}
@@ -195,55 +196,55 @@ export default function ClientsPage() {
           </div>
         </div>
 
-        {/* Clients Table Card — 8px radius, hairline dividers, tabular density */}
-        <div className="rounded-[8px] bg-white border border-[#eaeaea] overflow-hidden">
+        {/* Clients Table Card — 4px radius, hairline dividers, tabular density */}
+        <div className="rounded-[4px] bg-[#ffffff] border border-[#e0e0e0] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#f7f7f7] border-b border-[#eaeaea] text-rows-caption">
+              <thead className="bg-[#f6f6f6] border-b border-[#e0e0e0] font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585]">
                 <tr>
                   <th className="py-2.5 px-4">
                     <button
                       onClick={() => handleSortToggle("name")}
-                      className="flex items-center gap-1 hover:text-[#1a1a1a]"
+                      className="flex items-center gap-1 hover:text-[#272727]"
                     >
                       <span>Client Account</span>
-                      <ArrowUpDown className="w-3 h-3 text-[#838383]" />
+                      <ArrowUpDown className="w-3 h-3 text-[#858585]" />
                     </button>
                   </th>
                   <th className="py-2.5 px-4 text-right">
                     <button
                       onClick={() => handleSortToggle("revenue")}
-                      className="flex items-center gap-1 justify-end ml-auto hover:text-[#1a1a1a]"
+                      className="flex items-center gap-1 justify-end ml-auto hover:text-[#272727]"
                     >
                       <span>Revenue</span>
-                      <ArrowUpDown className="w-3 h-3 text-[#838383]" />
+                      <ArrowUpDown className="w-3 h-3 text-[#858585]" />
                     </button>
                   </th>
                   <th className="py-2.5 px-4 text-right">
                     <button
                       onClick={() => handleSortToggle("cost")}
-                      className="flex items-center gap-1 justify-end ml-auto hover:text-[#1a1a1a]"
+                      className="flex items-center gap-1 justify-end ml-auto hover:text-[#272727]"
                     >
                       <span>Total Cost</span>
-                      <ArrowUpDown className="w-3 h-3 text-[#838383]" />
+                      <ArrowUpDown className="w-3 h-3 text-[#858585]" />
                     </button>
                   </th>
                   <th className="py-2.5 px-4 text-right">
                     <button
                       onClick={() => handleSortToggle("profit")}
-                      className="flex items-center gap-1 justify-end ml-auto hover:text-[#1a1a1a]"
+                      className="flex items-center gap-1 justify-end ml-auto hover:text-[#272727]"
                     >
                       <span>Gross Profit</span>
-                      <ArrowUpDown className="w-3 h-3 text-[#838383]" />
+                      <ArrowUpDown className="w-3 h-3 text-[#858585]" />
                     </button>
                   </th>
                   <th className="py-2.5 px-4 text-right">
                     <button
                       onClick={() => handleSortToggle("margin")}
-                      className="flex items-center gap-1 justify-end ml-auto hover:text-[#1a1a1a]"
+                      className="flex items-center gap-1 justify-end ml-auto hover:text-[#272727]"
                     >
                       <span>Margin %</span>
-                      <ArrowUpDown className="w-3 h-3 text-[#838383]" />
+                      <ArrowUpDown className="w-3 h-3 text-[#858585]" />
                     </button>
                   </th>
                   <th className="py-2.5 px-4 text-center">Classification</th>
@@ -251,7 +252,7 @@ export default function ClientsPage() {
                   <th className="py-2.5 px-4 text-right">Last Activity</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#e1e1e1]">
+              <tbody className="divide-y divide-[#e0e0e0]">
                 {loading ? (
                   <tr>
                     <td colSpan={8} className="p-4">

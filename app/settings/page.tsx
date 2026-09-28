@@ -216,12 +216,13 @@ export default function SettingsPage() {
 
   return (
     <AppShell
+      eyebrow="WORKSPACE CONFIGURATION"
       pageTitle="Settings & Configuration"
       pageDescription="Configure company profile, margin classification rules, team access, and sample data"
     >
       <div className="flex flex-col md:flex-row gap-6 items-start">
         {/* Settings Navigation Sidebar */}
-        <div className="w-full md:w-60 bg-white p-1.5 rounded-[8px] border border-[#eaeaea] shrink-0 space-y-0.5">
+        <div className="w-full md:w-60 bg-[#ffffff] p-1.5 rounded-[4px] border border-[#e0e0e0] shrink-0 space-y-0.5">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.key;
@@ -231,11 +232,11 @@ export default function SettingsPage() {
                 onClick={() => setActiveTab(tab.key as any)}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-[4px] text-xs transition-colors text-left ${
                   isActive
-                    ? "bg-[#f7f7f7] text-[#1a1a1a] font-bold"
-                    : "text-[#6f6f6f] hover:text-[#1a1a1a] hover:bg-[#f7f7f7] font-normal"
+                    ? "bg-[#f6f6f6] text-[#7451f2] font-semibold"
+                    : "text-[#5d5d5d] hover:text-[#272727] hover:bg-[#f6f6f6] font-normal"
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? "text-[#1a1a1a]" : "text-[#838383]"}`} />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? "text-[#7451f2]" : "text-[#858585]"}`} />
                 <span>{tab.label}</span>
               </button>
             );
@@ -243,7 +244,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Tab Content Area */}
-        <div className="flex-1 w-full bg-white rounded-[8px] border border-[#eaeaea] p-6 sm:p-8">
+        <div className="flex-1 w-full bg-[#ffffff] rounded-[4px] border border-[#e0e0e0] p-6 sm:p-8">
           {/* TAB 1: Company Profile */}
           {activeTab === "profile" && (
             <form onSubmit={handleSaveProfile} className="space-y-6 max-w-xl">

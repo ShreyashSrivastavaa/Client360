@@ -85,6 +85,7 @@ export default function DashboardPage() {
 
   return (
     <AppShell
+      eyebrow="EXECUTIVE OVERVIEW"
       pageTitle="Portfolio Profitability"
       pageDescription="Account-level gross margins, cost attribution, and drain detection across active clients."
     >
@@ -98,7 +99,7 @@ export default function DashboardPage() {
             </div>
             <button
               onClick={fetchDashboardData}
-              className="btn-rows-outlined text-xs py-1 px-2.5"
+              className="btn-secondary text-xs py-1 px-2.5"
             >
               Retry
             </button>
@@ -107,13 +108,16 @@ export default function DashboardPage() {
 
         {/* Zero Data Empty State */}
         {hasZeroData ? (
-          <div className="p-12 rounded-[8px] border border-[#eaeaea] bg-white text-center max-w-xl mx-auto my-12 space-y-4">
-            <span className="w-3 h-3 rounded-full bg-[#ffb84d] inline-block" />
+          <div className="p-12 rounded-[4px] border border-[#e0e0e0] bg-white text-center max-w-xl mx-auto my-12 space-y-4">
+            <span className="w-3 h-3 rounded-full bg-[#7451f2] inline-block" />
             <div className="space-y-2">
-              <h2 className="text-rows-heading-sm">
+              <div className="font-mono text-[11px] uppercase tracking-[0.22px] text-[#858585]">
+                EMPTY LEDGER
+              </div>
+              <h2 className="font-serif text-2xl text-[#272727] font-normal">
                 Blank spreadsheet ready
               </h2>
-              <p className="text-sm text-[#6f6f6f] max-w-sm mx-auto leading-relaxed">
+              <p className="text-sm text-[#5d5d5d] max-w-sm mx-auto leading-relaxed">
                 You haven&apos;t imported any financial data yet. Explore your dashboard immediately
                 with our realistic 12-month sample dataset, or upload your own CSV.
               </p>
@@ -122,14 +126,14 @@ export default function DashboardPage() {
               <button
                 onClick={handleLoadDemo}
                 disabled={isSeeding}
-                className="btn-rows-primary w-full sm:w-auto text-xs"
+                className="btn-primary w-full sm:w-auto text-xs"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{isSeeding ? "Loading Demo..." : "Explore with sample data"}</span>
               </button>
               <Link
                 href="/uploads"
-                className="btn-rows-outlined w-full sm:w-auto text-xs"
+                className="btn-secondary w-full sm:w-auto text-xs"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Upload CSV ledger</span>

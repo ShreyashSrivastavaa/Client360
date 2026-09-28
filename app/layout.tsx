@@ -1,14 +1,29 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Lustria, DM_Sans, Martian_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/lib/toast-context";
 import { AuthProvider } from "@/lib/auth-context";
 import { PeriodProvider } from "@/lib/period-context";
 
-const inter = Inter({
-  variable: "--font-output-sans",
+const lustria = Lustria({
+  weight: ["400"],
   subsets: ["latin"],
+  variable: "--font-lustria",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
   weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
+
+const martianMono = Martian_Mono({
+  weight: ["400", "500"],
+  subsets: ["latin"],
+  variable: "--font-martian-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -45,9 +60,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full antialiased`}
+      className={`${lustria.variable} ${dmSans.variable} ${martianMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#ffffff] text-[#1a1a1a] font-sans selection:bg-[#fff6d4] selection:text-[#1a1a1a]">
+      <body className="min-h-full flex flex-col bg-[#ffffff] text-[#272727] font-sans selection:bg-[#d6e5ff] selection:text-[#7451f2]">
         <AuthProvider>
           <PeriodProvider>
             <ToastProvider>
@@ -59,3 +74,4 @@ export default function RootLayout({
     </html>
   );
 }
+
