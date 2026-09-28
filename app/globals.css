@@ -1,194 +1,230 @@
 @import "tailwindcss";
 
 @theme {
-  /* Hungry Tiger Colors */
-  --color-tiger-gold: #faae33;
-  --color-ember-rust: #823513;
-  --color-saffron-glow: #9f531b;
-  --color-dark-spice: #402011;
-  --color-charred-clove: #281006;
-  --color-cardamom-brown: #6b2e12;
-  --color-chili-red: #d1255c;
+  /* Rows Colors */
+  --color-ink: #1a1a1a;
+  --color-paper: #ffffff;
+  --color-mist: #f7f7f7;
+  --color-ash: #eaeaea;
+  --color-smoke: #e1e1e1;
+  --color-graphite: #838383;
+  --color-steel: #989898;
+  --color-slate: #6f6f6f;
+  --color-marigold: #ffb84d;
+  --color-buttercream: #ffe480;
+  --color-cream: #fff6d4;
 
   /* Typography */
-  --font-salmond: var(--font-salmond), 'Bebas Neue', 'Antonio', sans-serif;
-  --font-graphikx: var(--font-graphikx), 'Inter', -apple-system, sans-serif;
+  --font-output-sans: var(--font-output-sans), 'Output Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-caption: 10px;
+  --leading-caption: 1;
+  --tracking-caption: 0.21px;
+  --text-heading-sm: 18px;
+  --leading-heading-sm: 1.45;
+  --tracking-heading-sm: -0.774px;
+  --text-heading: 24px;
+  --leading-heading: 1;
+  --tracking-heading: -1.032px;
 
   /* Spacing */
   --spacing-4: 4px;
-  --spacing-6: 6px;
   --spacing-8: 8px;
-  --spacing-10: 10px;
   --spacing-12: 12px;
-  --spacing-14: 14px;
   --spacing-16: 16px;
-  --spacing-17: 17px;
   --spacing-20: 20px;
   --spacing-24: 24px;
-  --spacing-28: 28px;
   --spacing-32: 32px;
-  --spacing-42: 42px;
+  --spacing-44: 44px;
+  --spacing-52: 52px;
 
-  /* Border Radii */
-  --radius-cards: 6px;
-  --radius-badges: 9999px;
-  --radius-inputs: 9999px;
-  --radius-buttons: 9999px;
+  /* Border Radius */
+  --radius-sm: 1px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-tags: 4px;
+  --radius-cards: 8px;
+  --radius-inputs: 4px;
+  --radius-buttons: 4px;
 }
 
 :root {
-  --color-tiger-gold: #faae33;
-  --color-ember-rust: #823513;
-  --color-saffron-glow: #9f531b;
-  --color-dark-spice: #402011;
-  --color-charred-clove: #281006;
-  --color-cardamom-brown: #6b2e12;
-  --color-chili-red: #d1255c;
+  --color-ink: #1a1a1a;
+  --color-paper: #ffffff;
+  --color-mist: #f7f7f7;
+  --color-ash: #eaeaea;
+  --color-smoke: #e1e1e1;
+  --color-graphite: #838383;
+  --color-steel: #989898;
+  --color-slate: #6f6f6f;
+  --color-marigold: #ffb84d;
+  --color-buttercream: #ffe480;
+  --color-cream: #fff6d4;
 
-  --background: #823513;
-  --foreground: #faae33;
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+
+  --font-output-sans: 'Output Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --page-max-width: 1080px;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-graphikx), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: var(--font-output-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Salmond Display Headings */
-h1, h2, h3, .font-display, .font-salmond {
-  font-family: var(--font-salmond), 'Bebas Neue', 'Antonio', sans-serif;
-  letter-spacing: -0.01em;
+/* Page Heading: 24px/700, -0.043em tracking */
+.text-rows-heading {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -1.032px;
+  color: #1a1a1a;
+}
+
+/* Hero Greeting / Section Subheading: 18px/400, -0.043em tracking */
+.text-rows-heading-sm {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.774px;
+  color: #1a1a1a;
+}
+
+/* Micro-label / Column Header / Caption: 10px/700, +0.021em tracking, uppercase */
+.text-rows-caption {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.21px;
   text-transform: uppercase;
+  color: #838383;
 }
 
 /* Tabular figures for financial numbers */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "ss01" 1;
 }
 
-/* Dotted Divider */
-.dotted-divider {
-  border-bottom: 1px dotted #faae33;
-  width: 100%;
-}
-
-/* Hungry Tiger Ghost Outline Button (Nav, secondary) */
-.btn-ghost-outline {
-  font-family: var(--font-salmond), sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  color: #faae33;
-  background-color: transparent;
-  border: 1px solid #faae33;
-  border-radius: 9999px;
-  padding: 8px 17px;
-  text-transform: uppercase;
-  transition: all 0.15s ease-in-out;
-}
-.btn-ghost-outline:hover {
-  background-color: rgba(250, 174, 51, 0.12);
-  transform: translateY(-1px);
-}
-
-/* Hungry Tiger Filled Primary CTA */
-.btn-primary-filled, .btn-primary {
-  font-family: var(--font-salmond), sans-serif;
+/* Filled Button (Primary Action): Ink #1a1a1a fill, Paper #ffffff text, 14px/700, 4px radius */
+.btn-rows-primary {
+  background-color: #1a1a1a;
+  color: #ffffff;
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.02em;
-  color: #281006 !important;
-  background-color: #faae33 !important;
-  border: 1px solid #faae33;
-  border-radius: 9999px;
-  padding: 10px 20px;
-  text-transform: uppercase;
-  box-shadow: none !important;
-  transition: all 0.15s ease-in-out;
+  border-radius: 4px;
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.15s ease-in-out;
 }
-.btn-primary-filled:hover, .btn-primary:hover {
-  background-color: #ffc255 !important;
-  transform: translateY(-1px);
+.btn-rows-primary:hover {
+  opacity: 0.9;
 }
-
-/* Hungry Tiger Card: 6px radius, #402011 surface, no drop shadow */
-.tiger-card, .lemon-card, .lemon-card-compact {
-  background-color: #402011 !important;
-  border-radius: 6px !important;
-  padding: 24px;
-  border: 1px solid #6b2e12 !important;
-  box-shadow: none !important;
-  color: #faae33;
+.btn-rows-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-/* Deepest Card / Recessed surface */
-.tiger-deep-card {
-  background-color: #281006;
-  border-radius: 6px;
-  border: 1px solid #402011;
-  padding: 20px;
-}
-
-/* Pill Input Field */
-.tiger-input {
-  border-radius: 9999px;
-  border: 1px solid #6b2e12;
+/* Outlined Button (Secondary Action): 1px Ink border, 4px radius, 14px/400 Ink text */
+.btn-rows-outlined {
   background-color: transparent;
-  color: #faae33;
-  padding: 12px 20px;
-  font-family: var(--font-graphikx), sans-serif;
-  font-size: 13px;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 400;
+  border: 1px solid #1a1a1a;
+  border-radius: 4px;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background-color 0.15s ease-in-out;
+}
+.btn-rows-outlined:hover {
+  background-color: #f7f7f7;
+}
+
+/* Ghost Link Action: 14px/400 Slate text, no border, no fill, shifts to Ink on hover */
+.btn-rows-ghost {
+  color: #6f6f6f;
+  font-size: 14px;
+  font-weight: 400;
+  background: transparent;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s ease-in-out;
+}
+.btn-rows-ghost:hover {
+  color: #1a1a1a;
+}
+
+/* Primary Input with Marigold Focus Halo: 1px Marigold #ffb84d border, 4px radius */
+.input-rows-marigold {
+  border: 1px solid #ffb84d;
+  border-radius: 4px;
+  background-color: #ffffff;
+  padding: 16px 20px;
+  font-size: 18px;
+  font-weight: 400;
+  color: #1a1a1a;
   outline: none;
-  transition: border-color 0.15s ease;
+  transition: box-shadow 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
-.tiger-input::placeholder {
-  color: rgba(250, 174, 51, 0.6);
+.input-rows-marigold::placeholder {
+  color: #838383;
 }
-.tiger-input:focus {
-  border-color: #faae33;
-}
-
-/* Pill Badge */
-.tiger-badge {
-  border-radius: 9999px;
-  font-family: var(--font-salmond), sans-serif;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  padding: 4px 12px;
+.input-rows-marigold:focus {
+  box-shadow: 0 0 0 3px #fff6d4;
+  border-color: #ffb84d;
 }
 
-/* Alert / Heat Badge */
-.tiger-badge-heat {
-  background-color: #d1255c;
-  color: #ffffff;
-  border-radius: 9999px;
-  font-family: var(--font-salmond), sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  padding: 4px 12px;
+/* Default standard input for forms: 1px Ash border, 4px radius */
+.input-rows-default {
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+  background-color: #ffffff;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #1a1a1a;
+  outline: none;
+  transition: border-color 0.15s ease-in-out;
+}
+.input-rows-default:focus {
+  border-color: #1a1a1a;
+}
+.input-rows-default::placeholder {
+  color: #838383;
 }
 
-/* Botanical Watermark subtle pattern */
-.botanical-bg {
-  background-image: radial-gradient(rgba(250, 174, 51, 0.04) 1px, transparent 1px);
-  background-size: 24px 24px;
+/* Hairline dividers and rules */
+.border-ash {
+  border-color: #eaeaea;
+}
+.border-smoke {
+  border-color: #e1e1e1;
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar for spreadsheet feel */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #281006;
+  background: #ffffff;
 }
 ::-webkit-scrollbar-thumb {
-  background: #6b2e12;
-  border-radius: 9999px;
+  background: #eaeaea;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #faae33;
+  background: #838383;
 }
