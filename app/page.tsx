@@ -54,12 +54,12 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#ffffff] text-[#272727] selection:bg-[#d6e5ff] selection:text-[#7451f2]">
-      {/* Top Navigation Bar — Sticky header ~64px */}
-      <header className="h-16 border-b border-[#e0e0e0] bg-[#ffffff] sticky top-0 z-40 px-6 sm:px-10">
-        <div className="max-w-[1200px] h-full mx-auto flex items-center justify-between gap-8">
+      {/* Top Navigation Bar — Spacious Sticky Header 80px */}
+      <header className="h-20 border-b border-[#e0e0e0] bg-[#ffffff] sticky top-0 z-40 px-6 sm:px-10 flex items-center">
+        <div className="max-w-[1240px] w-full h-full mx-auto flex items-center justify-between gap-8 sm:gap-12">
           {/* Left: Brand mark */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-5 h-5 rounded-[4px] bg-[#7451f2] flex items-center justify-center text-white">
+            <div className="w-6 h-6 rounded-[4px] bg-[#7451f2] flex items-center justify-center text-white shadow-sm">
               <Sparkles className="w-3.5 h-3.5" />
             </div>
             <span className="font-semibold text-lg tracking-tight text-[#272727]">
@@ -68,35 +68,35 @@ export default function LandingPage() {
           </Link>
 
           {/* Center: Ghost nav links with expanded spacing */}
-          <nav className="hidden md:flex items-center gap-8 lg:gap-10">
-            <a href="#workers" className="btn-ghost">
+          <nav className="hidden md:flex items-center gap-8 lg:gap-12">
+            <a href="#workers" className="btn-ghost text-xs">
               AI Workers
             </a>
-            <a href="#integrations" className="btn-ghost">
+            <a href="#integrations" className="btn-ghost text-xs">
               Integrations
             </a>
-            <a href="#security" className="btn-ghost">
+            <a href="#security" className="btn-ghost text-xs">
               Security
             </a>
-            <Link href="/privacy" className="btn-ghost">
+            <Link href="/privacy" className="btn-ghost text-xs">
               Trust Center
             </Link>
           </nav>
 
           {/* Right: Currency Selector + Ghost Log In + Filled Violet CTA with expanded spacing */}
-          <div className="flex items-center gap-4 sm:gap-6 shrink-0">
+          <div className="flex items-center gap-5 sm:gap-7 shrink-0">
             <CurrencySelector />
 
             <Link
               href="/login"
-              className="btn-ghost text-xs"
+              className="btn-ghost text-xs font-semibold"
             >
               Log in
             </Link>
             <button
               onClick={() => handleDemoLaunch()}
               disabled={demoLoading}
-              className="btn-primary text-xs px-5 py-2.5"
+              className="btn-primary text-xs px-6 py-2.5 whitespace-nowrap"
             >
               {demoLoading ? "Starting Demo..." : "Get Early Access"}
             </button>

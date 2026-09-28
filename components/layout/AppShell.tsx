@@ -59,9 +59,9 @@ export function AppShell({ children, pageTitle, pageDescription, eyebrow }: AppS
 
   return (
     <div className="min-h-screen flex flex-col bg-[#ffffff] text-[#272727] antialiased selection:bg-[#d6e5ff] selection:text-[#7451f2]">
-      {/* Top Bar — Zams minimal header ~64px */}
-      <header className="h-16 border-b border-[#e0e0e0] bg-[#ffffff] sticky top-0 z-40 px-6 sm:px-10">
-        <div className="max-w-[1200px] h-full mx-auto flex items-center justify-between gap-8">
+      {/* Top Bar — Zams minimal header 80px */}
+      <header className="h-20 border-b border-[#e0e0e0] bg-[#ffffff] sticky top-0 z-40 px-6 sm:px-10 flex items-center">
+        <div className="max-w-[1240px] w-full h-full mx-auto flex items-center justify-between gap-8 sm:gap-12">
           {/* Left: Brand + Nav */}
           <div className="flex items-center gap-8 sm:gap-10">
             <Link
