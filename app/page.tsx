@@ -5,13 +5,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
-  AlertTriangle,
+  Search,
   Sparkles,
-  BarChart3,
-  FileSpreadsheet,
-  Percent,
   RefreshCw,
-  Zap,
+  TrendingUp,
+  AlertTriangle,
+  UploadCloud,
+  FileSpreadsheet,
+  Layers,
+  ChevronRight,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
@@ -22,8 +24,10 @@ export default function LandingPage() {
   const { refreshAuth } = useAuth();
   const { success, error } = useToast();
   const [demoLoading, setDemoLoading] = useState(false);
+  const [promptValue, setPromptValue] = useState("");
 
-  const handleDemoLaunch = async () => {
+  const handleDemoLaunch = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setDemoLoading(true);
     try {
       await apiFetch("/api/auth/demo", { method: "POST" });
@@ -37,219 +41,235 @@ export default function LandingPage() {
     }
   };
 
+  // 4-column Discovery Template Categories
+  const templateCategories = [
+    {
+      header: "ANALYSIS TEMPLATES",
+      items: [
+        { label: "Gross Margin Diagnostic", dot: "#34d399" }, // Mint
+        { label: "Loss-Making Client Audit", dot: "#f472b6" }, // Soft Pink
+        { label: "Pareto 80/20 Profit Distribution", dot: "#38bdf8" }, // Sky Blue
+        { label: "Account Tier Profitability", dot: "#fbbf24" }, // Amber
+      ],
+    },
+    {
+      header: "LEDGER IMPORTS",
+      items: [
+        { label: "QuickBooks Online Sales & Expense", dot: "#34d399" },
+        { label: "Xero Invoices & Bill Line Items", dot: "#38bdf8" },
+        { label: "Stripe Recurring Subscription CSV", dot: "#a78bfa" }, // Violet
+        { label: "Custom 3-Column CSV (Date, Client, Amount)", dot: "#fbbf24" },
+      ],
+    },
+    {
+      header: "EXECUTIVE REPORTS",
+      items: [
+        { label: "Quarterly Board Revenue & Cost Deck", dot: "#38bdf8" },
+        { label: "Account Manager Profit Scorecard", dot: "#fbbf24" },
+        { label: "Churn Risk & Low-Margin Early Warning", dot: "#f472b6" },
+        { label: "Contract Renewal Pricing Calculator", dot: "#a78bfa" },
+      ],
+    },
+    {
+      header: "FINANCIAL AUTOMATIONS",
+      items: [
+        { label: "Automated Formula Sanitization", dot: "#34d399" },
+        { label: "Multi-Tenant Cloud Sync (Turso)", dot: "#38bdf8" },
+        { label: "Monthly Margin Drift Tracker", dot: "#fbbf24" },
+        { label: "Direct Invoicing Cost Attribution", dot: "#a78bfa" },
+      ],
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#823513] text-[#faae33] selection:bg-[#faae33] selection:text-[#281006] botanical-bg">
-      {/* 1. Announcement Banner (#402011 Dark Spice with dotted divider) */}
-      <div className="w-full bg-[#281006] py-2.5 px-4 text-[#faae33] text-xs font-salmond tracking-[2px] uppercase flex items-center justify-between border-b border-[#6b2e12]">
-        <div className="mx-auto flex items-center gap-2">
-          <span className="font-bold text-[#faae33]">⚡ TURSO POWERED:</span>
-          <span className="opacity-90">AUTOMATIC GROSS MARGIN ENGINE & LOSS-MAKER DETECTION</span>
-        </div>
-        <button
-          onClick={handleDemoLaunch}
-          disabled={demoLoading}
-          className="btn-ghost-outline hidden md:inline-flex items-center gap-1.5 py-1 px-3 text-xs"
-        >
-          <span>TRY DEMO</span>
-          <ArrowRight className="w-3 h-3" />
-        </button>
-      </div>
-
-      {/* 2. Navigation Bar (Charred Clove #281006) */}
-      <header className="bg-[#281006] border-b border-[#6b2e12] h-18 sticky top-0 z-50 px-6 lg:px-12 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-[#faae33] text-[#281006] flex items-center justify-center font-salmond font-bold text-lg">
-            HT
+    <div className="min-h-screen flex flex-col bg-[#ffffff] text-[#1a1a1a] selection:bg-[#fff6d4] selection:text-[#1a1a1a]">
+      {/* Top Bar — Minimal app chrome */}
+      <header className="h-14 border-b border-[#eaeaea] bg-[#ffffff] sticky top-0 z-40 px-4 sm:px-8">
+        <div className="max-w-[1080px] h-full mx-auto flex items-center justify-between">
+          {/* Left: Brand Workspace */}
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#ffb84d]" />
+            <span className="text-sm font-bold text-[#1a1a1a] tracking-tight">Client360</span>
+            <span className="text-xs text-[#838383] hidden sm:inline ml-2 pl-2 border-l border-[#eaeaea]">
+              Spreadsheet-Speed Profitability
+            </span>
           </div>
-          <span className="font-salmond text-2xl font-bold tracking-tight text-[#faae33]">
-            CLIENT360
-          </span>
-        </div>
 
-        {/* Center Nav Links - Ghost Outline Buttons */}
-        <nav className="hidden md:flex items-center gap-2">
-          <a href="#features" className="btn-ghost-outline">
-            FEATURES
-          </a>
-          <a href="#how-it-works" className="btn-ghost-outline">
-            HOW IT WORKS
-          </a>
-          <a href="#insights" className="btn-ghost-outline">
-            INSIGHTS ENGINE
-          </a>
-        </nav>
-
-        {/* Right CTA Buttons */}
-        <div className="flex items-center gap-3">
-          <Link href="/login" className="btn-ghost-outline hidden sm:inline-flex">
-            SIGN IN
-          </Link>
-          <button
-            onClick={handleDemoLaunch}
-            disabled={demoLoading}
-            className="btn-primary-filled flex items-center gap-1.5"
-          >
-            {demoLoading ? (
-              <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#281006]" />
-            ) : (
-              <Sparkles className="w-3.5 h-3.5 text-[#281006]" />
-            )}
-            <span>LIVE CFO DEMO</span>
-          </button>
+          {/* Right: Actions */}
+          <div className="flex items-center gap-4">
+            <Link
+              href="/login"
+              className="text-sm text-[#989898] hover:text-[#1a1a1a] transition-colors"
+            >
+              Log in
+            </Link>
+            <Link
+              href="/signup"
+              className="btn-rows-outlined text-xs py-1.5 px-3"
+            >
+              Free sign up
+            </Link>
+          </div>
         </div>
       </header>
 
-      {/* Dotted divider */}
-      <div className="dotted-divider opacity-60" />
-
-      {/* 3. Hero Section (Maximalist Poster Headline, Ember Rust canvas) */}
-      <section className="py-20 lg:py-28 px-6 lg:px-12 relative overflow-hidden">
-        <div className="max-w-[1440px] mx-auto space-y-8">
-          {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#402011] border border-[#6b2e12] text-[#faae33] text-xs font-salmond tracking-[2px] uppercase">
-            <Zap className="w-3.5 h-3.5 text-[#faae33]" />
-            <span>FIRE-ROASTED B2B CLIENT PROFITABILITY</span>
-          </div>
-
-          {/* Absurdly oversized display type (Hungry Tiger signature) */}
-          <div className="space-y-2">
-            <h1 className="text-6xl sm:text-8xl lg:text-[130px] xl:text-[160px] font-salmond font-bold text-[#faae33] leading-[0.85] tracking-[-0.02em] uppercase">
-              STOP THE PROFIT DRAIN
+      {/* Main Canvas */}
+      <main className="flex-1 max-w-[1080px] w-full mx-auto px-4 sm:px-8 pt-20 pb-24 flex flex-col">
+        {/* Hero Stack */}
+        <div className="w-full max-w-[960px] mx-auto space-y-6">
+          {/* Hero Greeting: 24px/700, -0.043em tracking */}
+          <div>
+            <h1 className="text-rows-heading">
+              Hi, what client margins do you want to inspect?
             </h1>
-            <p className="text-xl sm:text-2xl font-salmond text-[#faae33]/80 tracking-wide max-w-3xl pt-4 uppercase">
-              Know exactly which clients make you money — and which quietly bleed margin. Clean CSV ingestion, instant P&L analytics, and actionable pricing insights.
+            <p className="text-sm text-[#6f6f6f] mt-2">
+              Tabular clarity on gross profit, cost attribution, and drain accounts across your portfolio.
             </p>
           </div>
 
-          {/* Action Row */}
-          <div className="flex flex-wrap items-center gap-4 pt-4">
-            <button
-              onClick={handleDemoLaunch}
-              disabled={demoLoading}
-              className="btn-primary-filled text-base px-8 py-3.5 flex items-center gap-2"
-            >
-              <span>EXPLORE LIVE CFO DEMO</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <Link href="/signup" className="btn-ghost-outline text-base px-6 py-3">
-              CREATE FREE WORKSPACE
-            </Link>
-          </div>
-
-          {/* Poster Feature Stats Grid: 3 Step Brown Depth */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12">
-            <div className="tiger-card">
-              <span className="text-xs font-salmond tracking-widest text-[#faae33]/70 uppercase block mb-1">
-                DISCOVERY 01
-              </span>
-              <div className="text-4xl font-salmond font-bold text-[#faae33] mb-2">
-                TOP 20% CLIENT CONCENTRATION
-              </div>
-              <p className="text-xs text-[#faae33]/70 leading-relaxed font-graphikx">
-                Uncover if 80% of your earnings come from just 3 clients while the rest run near break-even.
-              </p>
+          {/* Primary Input — The Single Marigold Accent per screen */}
+          <form onSubmit={handleDemoLaunch} className="relative">
+            <input
+              type="text"
+              value={promptValue}
+              onChange={(e) => setPromptValue(e.target.value)}
+              placeholder="Audit Acme Corp profitability, upload CSV ledger, or run Pareto..."
+              className="input-rows-marigold w-full pr-32"
+            />
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+              <button
+                type="submit"
+                disabled={demoLoading}
+                className="btn-rows-primary py-2 px-3 text-xs"
+              >
+                {demoLoading ? (
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3.5 h-3.5" />
+                )}
+                <span>Launch</span>
+              </button>
             </div>
+          </form>
 
-            <div className="tiger-card">
-              <span className="text-xs font-salmond tracking-widest text-[#faae33]/70 uppercase block mb-1">
-                PROTECTION 02
-              </span>
-              <div className="text-4xl font-salmond font-bold text-[#d1255c] mb-2">
-                HIDDEN LOSS-MAKING LEAKS
-              </div>
-              <p className="text-xs text-[#faae33]/70 leading-relaxed font-graphikx">
-                Flag unbilled hours, scope creep, and expensive customer support overhead destroying net margins.
-              </p>
-            </div>
-
-            <div className="tiger-card">
-              <span className="text-xs font-salmond tracking-widest text-[#faae33]/70 uppercase block mb-1">
-                AGILITY 03
-              </span>
-              <div className="text-4xl font-salmond font-bold text-[#faae33] mb-2">
-                CLOUD SYNC TO TURSO
-              </div>
-              <p className="text-xs text-[#faae33]/70 leading-relaxed font-graphikx">
-                Sub-millisecond query latency powered by serverless libSQL database and automated Prisma migrations.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Dotted divider */}
-      <div className="dotted-divider opacity-60" />
-
-      {/* 4. Features Section */}
-      <section id="features" className="py-20 px-6 lg:px-12 bg-[#281006]">
-        <div className="max-w-[1440px] mx-auto space-y-12">
-          <div className="space-y-2">
-            <span className="text-xs font-salmond tracking-[2px] uppercase text-[#faae33]/60">
-              CAPABILITIES
+          {/* Ghost link below input */}
+          <div className="flex items-center justify-between pt-1">
+            <span className="text-xs text-[#838383]">
+              Tip: Press enter to test with 18 pre-loaded enterprise accounts.
             </span>
-            <h2 className="text-5xl sm:text-7xl font-salmond font-bold text-[#faae33] uppercase leading-[0.9]">
-              ENGINEERED FOR MODERN CFOS
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: FileSpreadsheet,
-                title: "UNIVERSAL CSV INGESTION",
-                desc: "Auto-detect columns for client name, amount, date, and transaction classification.",
-              },
-              {
-                icon: Percent,
-                title: "GROSS MARGIN ENGINE",
-                desc: "Automatic monthly period rollups calculating gross profit, margins, and period-over-period variance.",
-              },
-              {
-                icon: AlertTriangle,
-                title: "LOSS IDENTIFICATION",
-                desc: "Real-time alerts for clients dropping under threshold margin so your team can intervene immediately.",
-              },
-              {
-                icon: BarChart3,
-                title: "CLIENT HEALTH RADAR",
-                desc: "Visual quadrant ranking top contributors against bottom drains with one-click drilldowns.",
-              },
-            ].map((f, i) => {
-              const Icon = f.icon;
-              return (
-                <div key={i} className="tiger-card p-6 flex flex-col justify-between">
-                  <div className="w-10 h-10 rounded-full bg-[#281006] border border-[#6b2e12] flex items-center justify-center mb-4 text-[#faae33]">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-salmond font-bold text-[#faae33] mb-2">{f.title}</h3>
-                    <p className="text-xs text-[#faae33]/70 font-graphikx leading-relaxed">{f.desc}</p>
-                  </div>
-                </div>
-              );
-            })}
+            <button
+              onClick={() => handleDemoLaunch()}
+              disabled={demoLoading}
+              className="btn-rows-ghost text-xs"
+            >
+              <span>Explore live demo environment</span>
+              <span>→</span>
+            </button>
           </div>
         </div>
-      </section>
 
-      {/* Dotted divider */}
-      <div className="dotted-divider opacity-60" />
+        {/* Discovery Template Grid — 4 columns, 24px gap, 8px row gap, NO card chrome */}
+        <div className="w-full max-w-[960px] mx-auto mt-20 pt-10 border-t border-[#eaeaea]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
+            {templateCategories.map((category) => (
+              <div key={category.header} className="space-y-3">
+                {/* Column Header: 10px/700 Graphite, positively tracked */}
+                <h3 className="text-rows-caption">
+                  {category.header}
+                </h3>
 
-      {/* 5. Footer */}
-      <footer className="py-12 px-6 lg:px-12 bg-[#281006] text-[#faae33]/60 text-xs">
-        <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <span className="font-salmond text-lg font-bold text-[#faae33]">CLIENT360</span>
-            <span>•</span>
-            <span className="font-graphikx">HUNGRY TIGER POSTER THEME</span>
+                {/* Template Items */}
+                <div className="space-y-1">
+                  {category.items.map((item) => (
+                    <button
+                      key={item.label}
+                      onClick={() => {
+                        setPromptValue(item.label);
+                        handleDemoLaunch();
+                      }}
+                      className="w-full text-left py-2.5 flex items-center gap-2 text-sm text-[#1a1a1a] hover:text-[#6f6f6f] transition-colors group cursor-pointer"
+                    >
+                      {/* 6px Solid Category Dot */}
+                      <span
+                        className="w-[6px] h-[6px] rounded-full shrink-0"
+                        style={{ backgroundColor: item.dot }}
+                      />
+                      <span className="truncate">{item.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="flex flex-wrap items-center gap-6 font-salmond uppercase tracking-wider text-[#faae33]">
-            <Link href="/privacy" className="hover:underline">PRIVACY</Link>
-            <Link href="/terms" className="hover:underline">TERMS</Link>
-            <Link href="/login" className="hover:underline">LOGIN</Link>
-            <Link href="/signup" className="hover:underline">REGISTER</Link>
-            <button onClick={handleDemoLaunch} className="hover:underline">DEMO</button>
+        </div>
+
+        {/* Value Proposition — Tabular density with hairline dividers */}
+        <div className="w-full max-w-[960px] mx-auto mt-24 pt-12 border-t border-[#eaeaea]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+            <div className="space-y-2">
+              <div className="text-rows-caption">01 / MARGIN DISCOVERY</div>
+              <h4 className="font-bold text-[#1a1a1a]">Stop subsidizing unprofitable accounts</h4>
+              <p className="text-[#6f6f6f] text-xs leading-relaxed">
+                Most B2B portfolios suffer from the top 20% of clients funding the bottom 20%. Client360 classifies every account into Profitable, Low-Margin, or Loss-Making tiers.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-rows-caption">02 / CSV LEDGER PARSER</div>
+              <h4 className="font-bold text-[#1a1a1a]">Zero-friction ingest with formula sanitization</h4>
+              <p className="text-[#6f6f6f] text-xs leading-relaxed">
+                Drag and drop QuickBooks, Xero, or Stripe exports. The parser auto-detects date formats, parenthesized negatives, and strips spreadsheet injection formulas before storage.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-rows-caption">03 / DRIFT & CONCENTRATION</div>
+              <h4 className="font-bold text-[#1a1a1a]">Continuous margin health warnings</h4>
+              <p className="text-[#6f6f6f] text-xs leading-relaxed">
+                Real-time rule engines detect revenue concentration risk, chronic loss streaks, and margin degradation before quarterly reviews.
+              </p>
+            </div>
           </div>
+        </div>
+
+        {/* Start from blank CTA */}
+        <div className="w-full max-w-[960px] mx-auto mt-20 pt-8 border-t border-[#eaeaea] flex items-center justify-between">
+          <span className="text-xs text-[#838383]">
+            No credit card required. Works offline with local SQLite or cloud Turso.
+          </span>
+          <button
+            onClick={() => handleDemoLaunch()}
+            className="btn-rows-ghost text-sm font-normal"
+          >
+            <span>Start from blank spreadsheet</span>
+            <span>→</span>
+          </button>
+        </div>
+      </main>
+
+      {/* Minimal Footer — Centered row at the bottom of the canvas */}
+      <footer className="border-t border-[#eaeaea] py-8 px-4 text-center">
+        <div className="flex items-center justify-center gap-6 text-sm text-[#6f6f6f]">
+          <Link href="/login" className="hover:text-[#1a1a1a] transition-colors">
+            Log in
+          </Link>
+          <Link href="/signup" className="hover:text-[#1a1a1a] transition-colors">
+            Sign up
+          </Link>
+          <Link href="/privacy" className="hover:text-[#1a1a1a] transition-colors">
+            Privacy
+          </Link>
+          <Link href="/terms" className="hover:text-[#1a1a1a] transition-colors">
+            Terms
+          </Link>
+          <a
+            href="https://github.com/ShreyashSrivastavaa/Client360"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-[#1a1a1a] transition-colors"
+          >
+            GitHub
+          </a>
         </div>
       </footer>
     </div>

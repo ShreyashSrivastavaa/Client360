@@ -30,7 +30,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
       await refreshAuth();
-      success("Welcome back to ProfitLens!");
+      success("Welcome back to Client360!");
       router.push("/dashboard");
     } catch (err: any) {
       setAuthError(err.message || "Invalid credentials");
@@ -55,81 +55,74 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f7f8] text-[#121217] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-body">
-      {/* Decorative subtle brand background circle */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#5423e7]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-[#ffc233]/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+    <div className="min-h-screen bg-[#ffffff] text-[#1a1a1a] flex flex-col justify-center py-12 sm:px-6 lg:px-8 selection:bg-[#fff6d4] selection:text-[#1a1a1a]">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center justify-center gap-2.5 mb-6 group">
-          <div className="w-9 h-9 rounded-2xl bg-[#ffc233] flex items-center justify-center shadow-sm text-lg group-hover:scale-105 transition-transform">
-            🍋
-          </div>
-          <span className="font-display text-2xl font-normal tracking-tight text-[#121217]">
-            profitlens
+        <Link href="/" className="flex items-center justify-center gap-2 mb-6">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#ffb84d]" />
+          <span className="text-xl font-bold tracking-tight text-[#1a1a1a]">
+            Client360
           </span>
         </Link>
 
-        <h2 className="text-center font-display text-2xl font-normal tracking-tight text-[#121217]">
-          Sign in to your organization
+        <h2 className="text-center text-rows-heading">
+          Sign in to your workspace
         </h2>
-        <p className="mt-1.5 text-center text-xs text-[#6c6c89]">
+        <p className="mt-2 text-center text-xs text-[#6f6f6f]">
           Or{" "}
-          <Link href="/signup" className="font-medium text-[#5423e7] hover:underline">
+          <Link href="/signup" className="text-[#1a1a1a] font-bold hover:underline">
             create a new company workspace
           </Link>
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
-        <div className="bg-white p-6 sm:p-10 rounded-[32px] sm:rounded-[40px] border border-[#d1d1db] shadow-[0_4px_24px_rgba(18,18,23,0.06)] space-y-6">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
+        <div className="bg-white p-6 sm:p-8 rounded-[8px] border border-[#eaeaea] space-y-6">
           {/* 1-Click CFO Demo Banner */}
-          <div className="p-4 rounded-2xl border border-[#ffc233] bg-[#ffc233]/15 space-y-2.5">
+          <div className="p-4 rounded-[4px] border border-[#eaeaea] bg-[#f7f7f7] space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-[#121217] flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-[#5423e7]" /> Instant Live Evaluation
+              <span className="font-bold text-[#1a1a1a] flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#1a1a1a]" /> Instant Live Evaluation
               </span>
-              <span className="text-[10px] uppercase font-bold text-[#121217] px-2 py-0.5 rounded-full bg-[#ffc233]">
+              <span className="text-[10px] uppercase font-bold tracking-[0.21px] text-[#6f6f6f]">
                 1-Click
               </span>
             </div>
-            <p className="text-[11px] text-[#6c6c89] leading-relaxed">
+            <p className="text-xs text-[#6f6f6f] leading-relaxed">
               Explore an executive financial dashboard as CFO Alex Vance with 18 accounts across 12 months.
             </p>
             <button
               type="button"
               onClick={handleDemoLogin}
               disabled={demoLoading}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-[#121217] hover:bg-black text-white text-xs font-medium shadow-sm transition-all disabled:opacity-50"
+              className="btn-rows-primary w-full text-xs"
             >
               {demoLoading ? (
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
               ) : (
-                <Sparkles className="w-3.5 h-3.5 text-[#ffc233]" />
+                <Sparkles className="w-3.5 h-3.5" />
               )}
-              <span>Try Live CFO Demo Account</span>
-              <ArrowRight className="w-3.5 h-3.5 ml-1" />
+              <span>Launch Live CFO Demo</span>
             </button>
           </div>
 
           <div className="relative flex items-center justify-center">
-            <div className="border-t border-[#d1d1db] w-full" />
-            <span className="bg-white px-3 text-[11px] uppercase tracking-wider text-[#6c6c89] shrink-0 font-medium">
+            <div className="border-t border-[#eaeaea] w-full" />
+            <span className="bg-white px-3 text-rows-caption shrink-0">
               Or sign in with email
             </span>
           </div>
 
           {authError && (
-            <div className="p-3.5 rounded-xl border border-[#d50b3e]/20 bg-[#d50b3e]/5 text-xs text-[#d50b3e] flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-[#d50b3e] shrink-0" />
+            <div className="p-3 rounded-[4px] border border-[#e11d48] bg-white text-xs text-[#e11d48] flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{authError}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-[#121217] mb-1.5">
+              <label className="text-rows-caption block mb-1.5">
                 Work Email Address
               </label>
               <input
@@ -137,13 +130,13 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7] transition-colors"
+                className="input-rows-default w-full text-xs"
                 placeholder="name@company.com"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#121217] mb-1.5">
+              <label className="text-rows-caption block mb-1.5">
                 Password
               </label>
               <input
@@ -151,7 +144,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full text-xs bg-white border border-[#d1d1db] rounded-lg p-2.5 text-[#121217] focus:outline-none focus:border-[#5423e7] focus:ring-1 focus:ring-[#5423e7] transition-colors"
+                className="input-rows-default w-full text-xs"
                 placeholder="••••••••"
               />
             </div>
@@ -159,7 +152,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 rounded-lg bg-[#121217] hover:bg-black text-white text-xs font-medium transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="btn-rows-outlined w-full text-xs py-2 justify-center"
             >
               {loading ? (
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />

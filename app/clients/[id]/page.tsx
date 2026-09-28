@@ -11,13 +11,6 @@ import { apiFetch } from "@/lib/api-client";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 import {
   ArrowLeft,
-  DollarSign,
-  TrendingDown,
-  TrendingUp,
-  Percent,
-  Receipt,
-  PieChart as PieIcon,
-  BarChart3,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -76,7 +69,7 @@ interface TransactionRow {
   sourceFile: string;
 }
 
-const CATEGORY_COLORS = ["#5423e7", "#ffc233", "#0075ad", "#1e874c", "#cf75ff", "#d50b3e", "#6c6c89"];
+const CATEGORY_COLORS = ["#34d399", "#38bdf8", "#fbbf24", "#f472b6", "#a78bfa", "#989898"];
 
 export default function ClientDetailPage() {
   const params = useParams();
@@ -156,13 +149,13 @@ export default function ClientDetailPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/clients"
-              className="p-2 rounded-lg bg-white border border-[#d1d1db] text-[#6c6c89] hover:text-[#121217]"
+              className="p-1.5 rounded-[4px] border border-[#eaeaea] text-[#838383] hover:text-[#1a1a1a]"
             >
               <ArrowLeft className="w-4 h-4" />
             </Link>
-            <div className="h-6 w-48 bg-[#d1d1db] animate-pulse rounded" />
+            <div className="h-6 w-48 bg-[#eaeaea] animate-pulse rounded-[4px]" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {Array.from({ length: 4 }).map((_, i) => (
               <CardSkeleton key={i} />
             ))}
@@ -178,7 +171,7 @@ export default function ClientDetailPage() {
   return (
     <AppShell
       pageTitle={client.name}
-      pageDescription={`Client Account ID: ${client.externalReference || client.id.slice(0, 8)}`}
+      pageDescription={`Account ID: ${client.externalReference || client.id.slice(0, 8)}`}
     >
       <div className="space-y-6">
         {/* Navigation Breadcrumb & Header */}
@@ -186,18 +179,18 @@ export default function ClientDetailPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/clients"
-              className="p-2 rounded-lg bg-white border border-[#d1d1db] hover:border-[#6c6c89] text-[#6c6c89] hover:text-[#121217] transition-colors shadow-sm"
+              className="p-1.5 rounded-[4px] border border-[#eaeaea] text-[#838383] hover:text-[#1a1a1a] transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
             </Link>
             <div>
               <div className="flex items-center gap-2.5">
-                <h1 className="text-xl sm:text-2xl font-display font-bold text-[#121217] tracking-tight">
+                <h1 className="text-rows-heading">
                   {client.name}
                 </h1>
                 <ClassificationBadge classification={metrics.classification} />
               </div>
-              <p className="text-xs text-[#6c6c89] font-mono mt-0.5">
+              <p className="text-xs text-[#838383] font-mono mt-0.5">
                 {client.externalReference ? `Ref: ${client.externalReference}` : "Internal Account"}{" "}
                 • Added {new Date(client.createdAt).toLocaleDateString()}
               </p>
@@ -206,66 +199,54 @@ export default function ClientDetailPage() {
         </div>
 
         {/* 4 Key Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-5 rounded-[24px] bg-white border border-[#d1d1db] shadow-sm">
-            <div className="flex items-center justify-between text-[#6c6c89] text-xs mb-1.5 font-semibold">
-              <span>Total Revenue</span>
-              <DollarSign className="w-4 h-4 text-[#5423e7]" />
-            </div>
-            <div className="text-2xl font-display font-bold text-[#121217] tabular-nums">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="p-4 rounded-[8px] bg-white border border-[#eaeaea]">
+            <div className="text-rows-caption mb-1">Total Revenue</div>
+            <div className="text-xl font-bold text-[#1a1a1a] tabular-nums">
               {formatCurrency(metrics.totalRevenue)}
             </div>
-            <span className="text-[10px] text-[#6c6c89]">Total billings in period</span>
+            <span className="text-[10px] text-[#838383]">Billed in period</span>
           </div>
 
-          <div className="p-5 rounded-[24px] bg-white border border-[#d1d1db] shadow-sm">
-            <div className="flex items-center justify-between text-[#6c6c89] text-xs mb-1.5 font-semibold">
-              <span>Total Costs</span>
-              <TrendingDown className="w-4 h-4 text-[#6c6c89]" />
-            </div>
-            <div className="text-2xl font-display font-bold text-[#121217] tabular-nums">
+          <div className="p-4 rounded-[8px] bg-white border border-[#eaeaea]">
+            <div className="text-rows-caption mb-1">Total Costs</div>
+            <div className="text-xl font-bold text-[#1a1a1a] tabular-nums">
               {formatCurrency(metrics.totalCost)}
             </div>
-            <span className="text-[10px] text-[#6c6c89]">Direct service & overhead</span>
+            <span className="text-[10px] text-[#838383]">Attributed costs</span>
           </div>
 
-          <div className="p-5 rounded-[24px] bg-white border border-[#d1d1db] shadow-sm">
-            <div className="flex items-center justify-between text-[#6c6c89] text-xs mb-1.5 font-semibold">
-              <span>Gross Profit</span>
-              <TrendingUp className={`w-4 h-4 ${isLoss ? "text-[#d50b3e]" : "text-[#1e874c]"}`} />
-            </div>
+          <div className="p-4 rounded-[8px] bg-white border border-[#eaeaea]">
+            <div className="text-rows-caption mb-1">Gross Profit</div>
             <div
-              className={`text-2xl font-display font-bold tabular-nums ${
-                isLoss ? "text-[#d50b3e]" : "text-[#1e874c]"
+              className={`text-xl font-bold tabular-nums ${
+                isLoss ? "text-[#e11d48]" : "text-[#16a34a]"
               }`}
             >
               {formatCurrency(metrics.grossProfit)}
             </div>
-            <span className="text-[10px] text-[#6c6c89]">
-              {isLoss ? "Negative operating return" : "Net profit generated"}
+            <span className="text-[10px] text-[#838383]">
+              {isLoss ? "Operating loss" : "Net profit"}
             </span>
           </div>
 
-          <div className="p-5 rounded-[24px] bg-white border border-[#d1d1db] shadow-sm">
-            <div className="flex items-center justify-between text-[#6c6c89] text-xs mb-1.5 font-semibold">
-              <span>Margin %</span>
-              <Percent className="w-4 h-4 text-[#5423e7]" />
-            </div>
+          <div className="p-4 rounded-[8px] bg-white border border-[#eaeaea]">
+            <div className="text-rows-caption mb-1">Margin %</div>
             <div
-              className={`text-2xl font-display font-bold tabular-nums ${
+              className={`text-xl font-bold tabular-nums ${
                 metrics.marginPercent !== null && metrics.marginPercent >= 20
-                  ? "text-[#1e874c]"
+                  ? "text-[#16a34a]"
                   : metrics.marginPercent !== null && metrics.marginPercent >= 5
-                  ? "text-[#996500]"
-                  : "text-[#d50b3e]"
+                  ? "text-[#d97706]"
+                  : "text-[#e11d48]"
               }`}
             >
               {formatPercent(metrics.marginPercent)}
             </div>
-            <span className="text-[10px] text-[#6c6c89]">
+            <span className="text-[10px] text-[#838383]">
               {metrics.marginPercent !== null && metrics.marginPercent >= 20
-                ? "Above healthy threshold"
-                : "Below 20% margin target"}
+                ? "Target met (≥20%)"
+                : "Below 20% target"}
             </span>
           </div>
         </div>
@@ -273,53 +254,52 @@ export default function ClientDetailPage() {
         {/* Charts Row: Monthly Trend + Cost Breakdown */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Revenue vs Cost Monthly Chart */}
-          <div className="lg:col-span-2 p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#d1d1db]">
-              <div className="flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-[#5423e7]" />
-                <h3 className="text-sm font-display font-bold text-[#121217]">
+          <div className="lg:col-span-2 p-6 rounded-[8px] bg-white border border-[#eaeaea] flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#eaeaea]">
+              <div>
+                <h3 className="text-sm font-bold text-[#1a1a1a]">
                   Monthly Revenue vs. Cost
                 </h3>
+                <p className="text-xs text-[#838383]">Account performance history</p>
               </div>
-              <div className="flex items-center gap-3 text-xs font-semibold">
-                <span className="flex items-center gap-1.5 text-[#121217]">
-                  <span className="w-2.5 h-2.5 rounded bg-[#5423e7]" /> Revenue
+              <div className="flex items-center gap-3 text-xs text-[#6f6f6f]">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-[1px] bg-[#1a1a1a]" /> Revenue
                 </span>
-                <span className="flex items-center gap-1.5 text-[#121217]">
-                  <span className="w-2.5 h-2.5 rounded bg-[#6c6c89]" /> Cost
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-[1px] bg-[#e1e1e1]" /> Cost
                 </span>
               </div>
             </div>
 
             <div className="h-64 w-full">
               {trends.length === 0 ? (
-                <div className="h-full flex items-center justify-center text-xs text-[#6c6c89]">
+                <div className="h-full flex items-center justify-center text-xs text-[#838383]">
                   No monthly history recorded yet.
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={trends} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e5eb" vertical={false} />
-                    <XAxis dataKey="label" stroke="#6c6c89" fontSize={11} tickLine={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#eaeaea" vertical={false} />
+                    <XAxis dataKey="label" stroke="#838383" fontSize={11} tickLine={false} />
                     <YAxis
-                      stroke="#6c6c89"
+                      stroke="#838383"
                       fontSize={11}
                       tickLine={false}
-                      tickFormatter={(val) => `$${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}`}
+                      tickFormatter={(val) => `$${(val / 1000).toFixed(0)}k`}
                     />
                     <Tooltip
                       formatter={(val: any) => [formatCurrency(val), ""]}
                       contentStyle={{
                         backgroundColor: "#ffffff",
-                        borderColor: "#d1d1db",
-                        borderRadius: "16px",
+                        borderColor: "#eaeaea",
+                        borderRadius: "4px",
                         fontSize: "12px",
-                        color: "#121217",
-                        boxShadow: "0 4px 20px rgba(18,18,23,0.08)",
+                        color: "#1a1a1a",
                       }}
                     />
-                    <Bar dataKey="revenue" fill="#5423e7" radius={[4, 4, 0, 0]} maxBarSize={28} />
-                    <Bar dataKey="cost" fill="#6c6c89" radius={[4, 4, 0, 0]} maxBarSize={28} />
+                    <Bar dataKey="revenue" fill="#1a1a1a" radius={[2, 2, 0, 0]} maxBarSize={28} />
+                    <Bar dataKey="cost" fill="#e1e1e1" radius={[2, 2, 0, 0]} maxBarSize={28} />
                   </BarChart>
                 </ResponsiveContainer>
               )}
@@ -327,15 +307,15 @@ export default function ClientDetailPage() {
           </div>
 
           {/* Cost Category Breakdown */}
-          <div className="p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm flex flex-col justify-between">
-            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#d1d1db]">
-              <PieIcon className="w-4 h-4 text-[#5423e7]" />
-              <h3 className="text-sm font-display font-bold text-[#121217]">Expense Breakdown</h3>
+          <div className="p-6 rounded-[8px] bg-white border border-[#eaeaea] flex flex-col justify-between">
+            <div className="mb-3 pb-2 border-b border-[#eaeaea]">
+              <h3 className="text-sm font-bold text-[#1a1a1a]">Expense Categories</h3>
+              <p className="text-xs text-[#838383]">Cost distribution</p>
             </div>
 
             <div className="h-44 relative flex items-center justify-center">
               {costBreakdown.length === 0 ? (
-                <div className="text-xs text-[#6c6c89]">No cost categories recorded</div>
+                <div className="text-xs text-[#838383]">No cost categories recorded</div>
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -345,7 +325,7 @@ export default function ClientDetailPage() {
                       cy="50%"
                       innerRadius={45}
                       outerRadius={65}
-                      paddingAngle={4}
+                      paddingAngle={3}
                       dataKey="amount"
                     >
                       {costBreakdown.map((entry, index) => (
@@ -361,11 +341,10 @@ export default function ClientDetailPage() {
                       formatter={(val: any) => [formatCurrency(val), "Amount"]}
                       contentStyle={{
                         backgroundColor: "#ffffff",
-                        borderColor: "#d1d1db",
-                        borderRadius: "16px",
+                        borderColor: "#eaeaea",
+                        borderRadius: "4px",
                         fontSize: "12px",
-                        color: "#121217",
-                        boxShadow: "0 4px 20px rgba(18,18,23,0.08)",
+                        color: "#1a1a1a",
                       }}
                     />
                   </PieChart>
@@ -374,19 +353,19 @@ export default function ClientDetailPage() {
             </div>
 
             {/* Category List */}
-            <div className="space-y-2 pt-2 border-t border-[#d1d1db] max-h-40 overflow-y-auto pr-1">
+            <div className="space-y-1.5 pt-2 border-t border-[#eaeaea] max-h-40 overflow-y-auto">
               {costBreakdown.map((cat, idx) => (
                 <div key={cat.category} className="flex items-center justify-between text-xs">
-                  <span className="flex items-center gap-2 text-[#121217] font-medium truncate max-w-[140px]">
+                  <span className="flex items-center gap-1.5 text-[#1a1a1a] truncate max-w-[140px]">
                     <span
-                      className="w-2.5 h-2.5 rounded-full shrink-0"
+                      className="w-[6px] h-[6px] rounded-full shrink-0"
                       style={{ backgroundColor: CATEGORY_COLORS[idx % CATEGORY_COLORS.length] }}
                     />
                     <span className="truncate">{cat.category}</span>
                   </span>
                   <div className="flex items-center gap-2 tabular-nums">
-                    <span className="font-bold text-[#121217]">{formatCurrency(cat.amount)}</span>
-                    <span className="text-[#6c6c89] text-[11px] w-10 text-right">
+                    <span className="font-normal text-[#1a1a1a]">{formatCurrency(cat.amount)}</span>
+                    <span className="text-[#838383] text-[11px] w-10 text-right">
                       {cat.percentage}%
                     </span>
                   </div>
@@ -397,26 +376,23 @@ export default function ClientDetailPage() {
         </div>
 
         {/* Transaction Level Table */}
-        <div className="p-6 sm:p-8 rounded-[32px] bg-white border border-[#d1d1db] shadow-sm overflow-hidden">
-          <div className="pb-4 border-b border-[#d1d1db] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Receipt className="w-4 h-4 text-[#5423e7]" />
-              <div>
-                <h3 className="text-sm font-display font-bold text-[#121217]">
-                  Transaction Line Items
-                </h3>
-                <p className="text-xs text-[#6c6c89]">
-                  Detailed line item entries recorded for {client.name}
-                </p>
-              </div>
+        <div className="rounded-[8px] bg-white border border-[#eaeaea] overflow-hidden">
+          <div className="p-4 border-b border-[#eaeaea] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-bold text-[#1a1a1a]">
+                Transaction Line Items
+              </h3>
+              <p className="text-xs text-[#838383]">
+                Detailed entries recorded for {client.name}
+              </p>
             </div>
 
             {/* Filter by Type */}
             <div className="flex items-center gap-1.5">
               {[
                 { key: "all", label: "All Items" },
-                { key: "revenue", label: "Revenue Only" },
-                { key: "cost", label: "Costs Only" },
+                { key: "revenue", label: "Revenue" },
+                { key: "cost", label: "Costs" },
               ].map((btn) => (
                 <button
                   key={btn.key}
@@ -424,10 +400,10 @@ export default function ClientDetailPage() {
                     setTypeFilter(btn.key);
                     setTxPage(1);
                   }}
-                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+                  className={`px-2.5 py-1 rounded-[4px] text-xs transition-colors ${
                     typeFilter === btn.key
-                      ? "bg-[#121217] text-white"
-                      : "bg-[#f7f7f8] text-[#6c6c89] hover:text-[#121217] border border-[#d1d1db]"
+                      ? "border border-[#1a1a1a] bg-white text-[#1a1a1a] font-bold"
+                      : "border border-[#eaeaea] bg-white text-[#6f6f6f] hover:text-[#1a1a1a]"
                   }`}
                 >
                   {btn.label}
@@ -436,28 +412,28 @@ export default function ClientDetailPage() {
             </div>
           </div>
 
-          <div className="overflow-x-auto mt-2">
+          <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#f7f7f8] border-b border-[#d1d1db] text-[11px] font-bold text-[#6c6c89] uppercase tracking-[1.5px]">
+              <thead className="bg-[#f7f7f7] border-b border-[#eaeaea] text-rows-caption">
                 <tr>
-                  <th className="py-3 px-4 rounded-l-xl">Date</th>
-                  <th className="py-3 px-4">Type</th>
-                  <th className="py-3 px-4">Category</th>
-                  <th className="py-3 px-4">Description</th>
-                  <th className="py-3 px-4 text-right">Amount</th>
-                  <th className="py-3 px-4 text-right rounded-r-xl">Source File</th>
+                  <th className="py-2.5 px-4">Date</th>
+                  <th className="py-2.5 px-4">Type</th>
+                  <th className="py-2.5 px-4">Category</th>
+                  <th className="py-2.5 px-4">Description</th>
+                  <th className="py-2.5 px-4 text-right">Amount</th>
+                  <th className="py-2.5 px-4 text-right">Source File</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#d1d1db]">
+              <tbody className="divide-y divide-[#e1e1e1]">
                 {txLoading ? (
                   <tr>
-                    <td colSpan={6} className="p-4 text-center text-[#6c6c89]">
+                    <td colSpan={6} className="p-4 text-center text-[#838383]">
                       Loading transactions...
                     </td>
                   </tr>
                 ) : transactions.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-xs text-[#6c6c89]">
+                    <td colSpan={6} className="py-8 text-center text-xs text-[#838383]">
                       No transactions recorded under this filter.
                     </td>
                   </tr>
@@ -465,32 +441,28 @@ export default function ClientDetailPage() {
                   transactions.map((tx) => {
                     const isRev = tx.type.toLowerCase() === "revenue";
                     return (
-                      <tr key={tx.id} className="hover:bg-[#f7f7f8]">
-                        <td className="py-3.5 px-4 tabular-nums text-[#121217] font-mono text-[11px]">
+                      <tr key={tx.id} className="hover:bg-[#f7f7f7]">
+                        <td className="py-3 px-4 tabular-nums text-[#1a1a1a] font-mono text-[11px]">
                           {tx.date}
                         </td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-3 px-4">
                           <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                              isRev
-                                ? "bg-[#5423e7]/10 text-[#5423e7] border border-[#5423e7]/20"
-                                : "bg-[#ffc233]/20 text-[#996500] border border-[#ffc233]/40"
-                            }`}
+                            className="inline-flex items-center px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold uppercase tracking-[0.21px] border border-[#eaeaea] bg-[#f7f7f7] text-[#1a1a1a]"
                           >
                             {tx.type}
                           </span>
                         </td>
-                        <td className="py-3.5 px-4 text-[#121217] font-semibold">{tx.category}</td>
-                        <td className="py-3.5 px-4 text-[#6c6c89] max-w-xs truncate">
+                        <td className="py-3 px-4 text-[#1a1a1a] font-normal">{tx.category}</td>
+                        <td className="py-3 px-4 text-[#6f6f6f] max-w-xs truncate">
                           {tx.description || "—"}
                         </td>
-                        <td className="py-3.5 px-4 text-right tabular-nums font-bold">
-                          <span className={isRev ? "text-[#1e874c]" : "text-[#121217]"}>
+                        <td className="py-3 px-4 text-right tabular-nums font-bold">
+                          <span className={isRev ? "text-[#16a34a]" : "text-[#1a1a1a]"}>
                             {isRev ? "+" : "-"}
                             {formatCurrency(tx.amount)}
                           </span>
                         </td>
-                        <td className="py-3.5 px-4 text-right text-[#6c6c89] font-mono text-[10px]">
+                        <td className="py-3 px-4 text-right text-[#838383] font-mono text-[10px]">
                           {tx.sourceFile}
                         </td>
                       </tr>
@@ -503,7 +475,7 @@ export default function ClientDetailPage() {
 
           {/* Transactions Pagination */}
           {txTotalPages > 1 && (
-            <div className="pt-4 mt-2 border-t border-[#d1d1db] flex items-center justify-between text-xs text-[#6c6c89]">
+            <div className="p-3 border-t border-[#eaeaea] bg-white flex items-center justify-between text-xs text-[#838383]">
               <div>
                 Showing {(txPage - 1) * txLimit + 1} to {Math.min(txPage * txLimit, txTotal)} of{" "}
                 {txTotal} transactions
@@ -512,17 +484,17 @@ export default function ClientDetailPage() {
                 <button
                   disabled={txPage <= 1}
                   onClick={() => setTxPage((p) => Math.max(1, p - 1))}
-                  className="p-1.5 rounded-lg bg-white hover:bg-[#f7f7f8] disabled:opacity-40 text-[#121217] border border-[#d1d1db]"
+                  className="p-1 rounded-[4px] bg-white hover:bg-[#f7f7f7] disabled:opacity-40 text-[#1a1a1a] border border-[#eaeaea]"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                 </button>
-                <span className="font-semibold text-[#121217]">
+                <span className="font-normal text-[#1a1a1a] tabular-nums">
                   Page {txPage} of {txTotalPages}
                 </span>
                 <button
                   disabled={txPage >= txTotalPages}
                   onClick={() => setTxPage((p) => Math.min(txTotalPages, p + 1))}
-                  className="p-1.5 rounded-lg bg-white hover:bg-[#f7f7f8] disabled:opacity-40 text-[#121217] border border-[#d1d1db]"
+                  className="p-1 rounded-[4px] bg-white hover:bg-[#f7f7f7] disabled:opacity-40 text-[#1a1a1a] border border-[#eaeaea]"
                 >
                   <ChevronRight className="w-3.5 h-3.5" />
                 </button>
