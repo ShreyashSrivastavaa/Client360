@@ -64,10 +64,17 @@ export async function POST(req: NextRequest) {
     );
 
     if (validationResult.validRows.length === 0) {
+      const firstError = validationResult.errors[0];
+      const mappedCol = columnMapping[firstError?.field as keyof ColumnMapping] || firstError?.field;
+      const sampleVal = firstError?.rawRow?.[mappedCol];
+      const errorDetail = firstError
+        ? `Column '${mappedCol}' cannot be parsed as ${firstError.field === "transactionDate" ? "a valid date or year" : firstError.field} (e.g. value "${sampleVal}").`
+        : "Please verify column headers.";
+
       return NextResponse.json(
         {
-          error: "No valid rows could be imported. Please review column mappings and errors.",
-          errors: validationResult.errors,
+          error: `No valid rows could be imported: ${errorDetail} Please review column mappings.`,
+          errors: validationResult.errors.slice(0, 50),
         },
         { status: 400 }
       );
@@ -78,6 +85,7 @@ export async function POST(req: NextRequest) {
     // 1. Fetch existing clients for this org to match case-insensitively
     const existingClients = await prisma.client.findMany({
       where: { organizationId: orgId },
+      select: { id: true, name: true },
     });
 
     const clientMap = new Map<string, string>(); // normalized name -> id
@@ -94,16 +102,29 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Create new clients
-    for (const name of newClientNames) {
-      const created = await prisma.client.create({
-        data: {
-          organizationId: orgId,
-          name,
-          isActive: true,
-        },
+    // Batch create new clients in chunks of 100 for high performance
+    if (newClientNames.size > 0) {
+      const namesList = Array.from(newClientNames);
+      const clientBatchSize = 100;
+      for (let i = 0; i < namesList.length; i += clientBatchSize) {
+        const batch = namesList.slice(i, i + clientBatchSize);
+        await prisma.client.createMany({
+          data: batch.map((name) => ({
+            organizationId: orgId,
+            name,
+            isActive: true,
+          })),
+        });
+      }
+
+      // Re-fetch all clients to map their IDs
+      const refreshedClients = await prisma.client.findMany({
+        where: { organizationId: orgId },
+        select: { id: true, name: true },
       });
-      clientMap.set(name.toLowerCase(), created.id);
+      refreshedClients.forEach((c) => {
+        clientMap.set(c.name.trim().toLowerCase(), c.id);
+      });
     }
 
     // 3. Create Upload record

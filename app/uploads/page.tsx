@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/lib/toast-context";
 import { useCurrency } from "@/lib/currency-context";
 import { apiFetch } from "@/lib/api-client";
+import { parseFlexibleDate } from "@/lib/csv/parser";
 import { TableSkeleton } from "@/components/ui/Skeleton";
 import {
   UploadCloud,
@@ -133,6 +134,15 @@ export default function UploadsPage() {
     if (!columnMapping.clientName || !columnMapping.transactionDate || !columnMapping.amount) {
       error("Client Name, Transaction Date, and Amount are required column mappings.");
       return;
+    }
+
+    // Check if the selected date column sample value can actually be parsed
+    if (parsedData.sampleRows && parsedData.sampleRows.length > 0) {
+      const sampleDateVal = parsedData.sampleRows[0][columnMapping.transactionDate];
+      if (sampleDateVal && !parseFlexibleDate(sampleDateVal)) {
+        error(`Column "${columnMapping.transactionDate}" has value "${sampleDateVal}" which cannot be parsed as a date or year. Please select a valid date column (like "date" or "year").`);
+        return;
+      }
     }
 
     setIsImporting(true);
@@ -358,6 +368,11 @@ export default function UploadsPage() {
                         </option>
                       ))}
                     </select>
+                    {columnMapping.clientName && parsedData?.sampleRows?.[0] && (
+                      <p className="text-[11px] text-[#5d5d5d] mt-1 truncate">
+                        Sample: <span className="font-mono text-[#272727] font-medium">{String(parsedData.sampleRows[0][columnMapping.clientName] || "—")}</span>
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -379,6 +394,23 @@ export default function UploadsPage() {
                         </option>
                       ))}
                     </select>
+                    {columnMapping.transactionDate && parsedData?.sampleRows?.[0] && (() => {
+                      const sampleVal = parsedData.sampleRows[0][columnMapping.transactionDate];
+                      const isValid = sampleVal ? parseFlexibleDate(sampleVal) !== null : false;
+                      return (
+                        <div className="mt-1">
+                          <p className="text-[11px] text-[#5d5d5d] truncate">
+                            Sample: <span className="font-mono text-[#272727] font-medium">{String(sampleVal || "—")}</span>
+                          </p>
+                          {!isValid && sampleVal && (
+                            <p className="text-[11px] text-[#e11d48] font-medium flex items-center gap-1 mt-0.5">
+                              <AlertCircle className="w-3 h-3 shrink-0" />
+                              <span>Cannot parse as date/year. Select a date or year column.</span>
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   <div>
@@ -400,6 +432,11 @@ export default function UploadsPage() {
                         </option>
                       ))}
                     </select>
+                    {columnMapping.amount && parsedData?.sampleRows?.[0] && (
+                      <p className="text-[11px] text-[#5d5d5d] mt-1 truncate">
+                        Sample: <span className="font-mono text-[#272727] font-medium">{String(parsedData.sampleRows[0][columnMapping.amount] || "—")}</span>
+                      </p>
+                    )}
                   </div>
 
                   {uploadType === "combined" && (

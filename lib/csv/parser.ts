@@ -75,6 +75,15 @@ export function parseNumericAmount(val: any): { amount: number; amountCents: num
   let str = String(val).trim();
   if (!str) return null;
 
+  // Accounting zero notation: "-", "—", "N/A", "null", "none", "0"
+  if (str === "-" || str === "—" || str.toLowerCase() === "n/a" || str.toLowerCase() === "null" || str === "0") {
+    return {
+      amount: 0,
+      amountCents: 0,
+      isNegative: false,
+    };
+  }
+
   let isNegative = false;
   if (str.startsWith("(") && str.endsWith(")")) {
     isNegative = true;
@@ -83,7 +92,13 @@ export function parseNumericAmount(val: any): { amount: number; amountCents: num
 
   // Remove currency signs, commas, and whitespace
   str = str.replace(/[^0-9.-]/g, "");
-  if (!str || str === "-" || str === ".") return null;
+  if (!str || str === "-" || str === ".") {
+    return {
+      amount: 0,
+      amountCents: 0,
+      isNegative: false,
+    };
+  }
 
   const num = parseFloat(str);
   if (isNaN(num)) return null;
@@ -99,14 +114,22 @@ export function parseNumericAmount(val: any): { amount: number; amountCents: num
 }
 
 /**
- * Robust date parser supporting YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, etc.
+ * Robust date parser supporting YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, 4-digit years (e.g. 1970), etc.
  */
 export function parseFlexibleDate(val: any): Date | null {
   if (!val) return null;
   const str = String(val).trim();
   if (!str) return null;
 
-  // Direct ISO parsing YYYY-MM-DD
+  // 1. Standalone 4-digit year format (e.g., "1970", "2024")
+  if (/^\d{4}$/.test(str)) {
+    const y = parseInt(str, 10);
+    if (y >= 1900 && y <= 2100) {
+      return new Date(Date.UTC(y, 0, 1));
+    }
+  }
+
+  // 2. Direct ISO parsing YYYY-MM-DD
   const d1 = new Date(str);
   if (!isNaN(d1.getTime()) && str.includes("-")) {
     const parts = str.split("-");
@@ -116,7 +139,7 @@ export function parseFlexibleDate(val: any): Date | null {
     return d1;
   }
 
-  // Handle slash formats MM/DD/YYYY or DD/MM/YYYY
+  // 3. Handle slash formats MM/DD/YYYY or DD/MM/YYYY
   const slashParts = str.split(/[\/\.]/);
   if (slashParts.length === 3) {
     const p0 = parseInt(slashParts[0], 10);
@@ -134,7 +157,8 @@ export function parseFlexibleDate(val: any): Date | null {
     }
   }
 
-  if (!isNaN(d1.getTime())) {
+  // Fallback for valid JS Date string (e.g. "January 15, 2024")
+  if (!isNaN(d1.getTime()) && d1.getFullYear() >= 1900 && d1.getFullYear() <= 2100) {
     return d1;
   }
 
@@ -155,12 +179,43 @@ export function autoDetectColumnMapping(headers: string[], uploadType: "combined
     return "";
   };
 
-  const clientName = findHeader(["client name", "customer name", "client", "customer", "account name", "company", "account"]);
-  const transactionDate = findHeader(["transaction date", "invoice date", "date", "period", "timestamp", "trans_date"]);
-  const amount = findHeader(["amount", "revenue", "cost", "expense", "total", "price", "value", "sum"]);
+  const clientName = findHeader([
+    "client name",
+    "customer name",
+    "client",
+    "customer",
+    "account name",
+    "company",
+    "account",
+    "theme",
+    "product",
+    "item name",
+  ]);
+  const transactionDate = findHeader([
+    "transaction date",
+    "invoice date",
+    "date",
+    "period",
+    "timestamp",
+    "trans_date",
+    "tx_date",
+    "year",
+    "time",
+  ]);
+  const amount = findHeader([
+    "amount",
+    "revenue",
+    "cost",
+    "expense",
+    "total",
+    "retailprice",
+    "price",
+    "value",
+    "sum",
+  ]);
   const type = uploadType === "combined" ? findHeader(["type", "transaction type", "entry type", "kind", "revenue/cost"]) : "";
-  const category = findHeader(["category", "cost category", "expense category", "department", "service", "item type"]);
-  const description = findHeader(["description", "notes", "memo", "details", "summary", "item"]);
+  const category = findHeader(["category", "cost category", "expense category", "department", "service", "item type", "themegroup"]);
+  const description = findHeader(["description", "notes", "memo", "details", "summary", "item", "subtheme"]);
 
   return {
     clientName: clientName || (headers[0] ?? ""),
